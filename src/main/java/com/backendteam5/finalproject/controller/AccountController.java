@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AccountController {
     private final AccountService accountService;
 
-    @GetMapping("/user/login")
+    @GetMapping("/account/login")
     public String login() {
         return "login";
     }
 
-    @GetMapping("/user/signup")
+    @GetMapping("/account/signup")
     public String signup() {
         return "signup";
     }

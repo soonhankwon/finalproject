@@ -1,9 +1,11 @@
 package com.backendteam5.finalproject.controller;
 
+import com.backendteam5.finalproject.dto.SignupRequestDto;
 import com.backendteam5.finalproject.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RequiredArgsConstructor
 @Controller
@@ -18,5 +20,11 @@ public class AccountController {
     @GetMapping("/account/signup")
     public String signup() {
         return "signup";
+    }
+
+    @PostMapping("/account/signup")
+    public String registerAccount(SignupRequestDto requestDto){
+        accountService.registerAccount(requestDto);
+        return "redirect: /account/login";
     }
 }

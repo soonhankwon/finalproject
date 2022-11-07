@@ -25,6 +25,6 @@ public class AccountController {
     @PostMapping("/account/signup")
     public String registerAccount(SignupRequestDto requestDto){
         accountService.registerAccount(requestDto);
-        return "redirect: /account/login";
+        return "login";
     }
 }

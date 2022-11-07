@@ -34,7 +34,6 @@ public class AccountService {
             }
             role = UserRoleEnum.ADMIN;
         }
-        account = new Account(requestDto.getUsername(), passwordEncoder.encode(requestDto.getPassword()), role);
-        accountRepository.save()
+        accountRepository.save(new Account(requestDto.getUsername(), passwordEncoder.encode(requestDto.getPassword()), requestDto.getArea(),role));
     }
 }

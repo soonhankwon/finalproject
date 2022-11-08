@@ -17,12 +17,12 @@ public class CourierInfo {
     private String route;
 
     @Column(nullable = false)
-    private Long subRoute;
+    private int subRoute;
 
     @Column(nullable = false)
     private String location;
 
-    public CourierInfo(String route, Long subRoute, String location){
+    public CourierInfo(String route, int subRoute, String location){
         this.route = route;
         this.subRoute = subRoute;
         this.location = location;

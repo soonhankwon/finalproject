@@ -33,16 +33,8 @@ public class CourierService {
 
 
         for (int i=0;i<=20;i++) {
-            String index = Integer.toString(i);
-
-            Courier courier = new Courier(area + index, state, customer + index, arrivalDate, username);
+            Courier courier = new Courier(area, i, state, customer + Integer.toString(i), arrivalDate, username);
             courierRepository.save(courier);
         }
-
-
-
-
-
-
     }
 }

@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface CourierRepository extends JpaRepository<Courier, Long> {
     List<Courier> findByRoute(String route);
-    List<Courier> findByRouteAndSubRoute(String route, Long subRoute);
+    List<Courier> findByRouteAndSubRoute(String route, int subRoute);
+    List<Courier> findByUsernameAndStateOrderByArrivalDateDesc(String username, Boolean state);
+    List<Courier> findByUsernameAndStateOrderByArrivalDateAsc(String username, Boolean state);
 }

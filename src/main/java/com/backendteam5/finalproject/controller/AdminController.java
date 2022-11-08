@@ -31,13 +31,16 @@ public class AdminController {
 
     @GetMapping("/search/courier/route")
     public List<Courier> searchRoute(
-            @RequestParam("subRoute") List<Long> subRoute,
+            @RequestParam("subRoute") List<Integer> subRoute,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.searchRoute(subRoute, userDetails);
     }
 
     @GetMapping("/search/courier/sorted")
     public List<Courier> sortedCourier(
-            @RequestParam("state")
-    )
+            @RequestParam("username") String username,
+            @RequestParam("state") Boolean state,
+            @RequestParam("arri") int arri){
+        return adminService.sortedCourier(username, state, arri);
+    }
 }

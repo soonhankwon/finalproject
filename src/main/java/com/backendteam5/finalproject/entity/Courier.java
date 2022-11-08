@@ -15,9 +15,6 @@ public class Courier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
     private String area;
     private Boolean state;
     private String customer;

@@ -20,10 +20,10 @@ public class Account {
     private String password;
 
     @Column
-    private String roleGu;
+    private String route;
 
     @Column
-    private Long roleDong;
+    private Long subRoute;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -32,7 +32,8 @@ public class Account {
     public Account(String username, String password, String area, UserRoleEnum role){
         this.username = username;
         this.password = password;
-        this.roleGu = area;
+        this.route = area;
+//        this.subRoute = subRoute;
         this.role = role;
     }
 }

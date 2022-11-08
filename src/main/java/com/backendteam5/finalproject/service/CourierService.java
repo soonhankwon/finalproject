@@ -28,7 +28,7 @@ public class CourierService {
         String customer = "수령인";
 
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
         String arrivalDate = formatter.format(date);
         String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();

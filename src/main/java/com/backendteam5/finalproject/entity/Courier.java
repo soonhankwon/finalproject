@@ -1,10 +1,10 @@
 package com.backendteam5.finalproject.entity;
 
+import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 
 
 @Entity
@@ -28,5 +28,11 @@ public class Courier {
         this.customer = customer;
         this.arrivalDate = arrivalDate;
         this.username = username;
+    }
+
+    public void update(CourierReqUpdateDto courierReqUpdateDto) {
+        this.state = courierReqUpdateDto.getState();
+        this.arrivalDate = courierReqUpdateDto.getArrivalDate();
+        this.username = courierReqUpdateDto.getUsername();
     }
 }

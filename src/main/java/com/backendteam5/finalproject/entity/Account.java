@@ -22,9 +22,6 @@ public class Account {
     @Column
     private String route;
 
-    @Column
-    private Long subRoute;
-
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -33,7 +30,6 @@ public class Account {
         this.username = username;
         this.password = password;
         this.route = area;
-//        this.subRoute = subRoute;
         this.role = role;
     }
 }

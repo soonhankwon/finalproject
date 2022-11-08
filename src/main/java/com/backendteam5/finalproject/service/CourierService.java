@@ -33,7 +33,7 @@ public class CourierService {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
         String arrivalDate = formatter.format(date);
-        String username = "";
+        String username = "region";
 
 
         for (int i = 0; i <= 20; i++) {
@@ -45,16 +45,14 @@ public class CourierService {
     }
 
     @Transactional
-    public CourierResUpdateDto updateCourier(String username, UserDetailsImpl userDetails,
+    public String updateCourier(Long courierId, UserDetailsImpl userDetails,
                                              CourierReqUpdateDto courierReqUpdateDto) {
-        Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new NullPointerException("등록되어있지 않은 택배기사입니다"));
 
-        Courier courier = new Courier(courierReqUpdateDto.getArea(), courierReqUpdateDto.getState(),
-                courierReqUpdateDto.getCustomer(), courierReqUpdateDto.getArrivalDate(), courierReqUpdateDto.getUsername());
-
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
+        courier.update(courierReqUpdateDto);
         courierRepository.save(courier);
-        return new CourierResUpdateDto();
+        return "할당완료";
     }
 
     public CourierResUpdateDto checkCourierState(Long courierId, UserDetailsImpl userDetails,

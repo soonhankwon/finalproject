@@ -63,9 +63,6 @@ public class CourierService {
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
         if (!courier.getState() && courier.getUsername().equals(courierReqUpdateDto.getUsername())) {
-            System.out.println(courier.getUsername());
-            System.out.println(courier.getState());
-            System.out.println(courierReqUpdateDto.getUsername());
             courier.check(courierReqUpdateDto);
             courierRepository.save(courier);
             return "배송완료";

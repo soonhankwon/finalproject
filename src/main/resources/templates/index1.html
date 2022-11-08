@@ -1,67 +1,73 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta property="og:title" content="00만의 셀렉샵">
-  <meta property="og:description" content="관심상품을 선택하고, 최저가 알림을 확인해보세요!">
-  <meta property="og:image" content="images/og_selectshop.png">
-  <link href="https://fonts.googleapis.com/css2?family=family=Nanum+Gothic&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="basic.js"></script>
-  <title>관리자 메인</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property="og:title" content="운송 관리 시스템">
+    <meta property="og:description" content="운송장번호에 기반한 운송관리시스템 5조">
+<!--    <meta property="og:image" content="images/og_chadda.png">-->
+    <!-- Favicon-->
+<!--    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script th:src="@{/js/main.js}" ></script>
+    <title>Transportation Management System</title>
 </head>
 <body>
 <div class="header" style="position:relative;">
-  <div id="header-title-login-user">
-    <span th:text="${username}"></span> 님의
-  </div>
-  <div id="header-title-select-shop">
-    Select Shop
-  </div>
 
-  <form id="my_form" method="post" action="/account/logout">
-    <a id="logout-text" href="javascript:{}" onclick="document.getElementById('my_form').submit();">로그아웃</a>
-  </form>
+    <div id="header-title-select-shop">
+<!--        <img id="header-title-image" src = "images/chadda_logo.png" alt="">-->
+        TMS For Admin
+    </div>
+    <form id="signin_form" method="get" action="/user/loginView" >
+
+        <a id="login-text" href="javascript:{}" onclick="document.getElementById('signin_form').submit(); "> 로그인</a>
+    </form>
+    <form id="signout_form" method="post" action="/user/logout" >
+        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> <span id="username">user</span>님 로그아웃</a>
+    </form>
 </div>
 <div class="nav">
-  <div class="nav-see active">
-    모아보기
-  </div>
-  <div class="nav-search">
-    탐색하기
-  </div>
 </div>
+
 <div id="see-area">
-  <div id="product-container">
+    <div id="user-posts">
 
-  </div>
-</div>
-<div id="search-area">
-  <div>
-    <input type="text" id="query">
-    <!--    <img src="images/icon-search.png" alt="">-->
-  </div>
-  <div id="search-result-box">
-
-  </div>
-  <div id="container" class="popup-container">
-    <div class="popup">
-      <button id="close" class="close">
-        X
-      </button>
-      <h1>⏰최저가 설정하기</h1>
-      <p>최저가를 설정해두면 선택하신 상품의 최저가가 떴을 때<br/> 표시해드려요!</p>
-      <div>
-        <input type="text" id="myprice" placeholder="200,000">원
-      </div>
-      <button class="cta" onclick="setMyprice()">설정하기</button>
     </div>
-  </div>
 </div>
-<div th:if="${admin_role}" id="admin"></div>
+
+<div id="search-area">
+    <div>
+        <input type="text" id="query">
+    </div>
+    <div class="search-title"  onclick="move()"> 운송장정보 </div>
+    <div id="search-result-box-post">
+        <div class="search-itemDto">
+        </div>
+    </div>
+    <div class="search-title"> 배송담당자 </div>
+    <div id="search-result-box-profile">
+        <div class="search-itemDto">
+        </div>
+    </div>
+    <div class="search-title"> 배송담당지역 </div>
+    <div id="search-result-box-location">
+        <div class="search-itemDto">
+        </div>
+    </div>
+    <div id="container" class="popup-container">
+        <div class="popup">
+            <button id="close" class="close">
+                X
+            </button>
+            <div id="profile-detail">
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

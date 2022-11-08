@@ -34,6 +34,7 @@ public class CourierController {
     public List<Courier> searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
                              @RequestParam Long state,
                              @RequestParam Long arri) {
+
         System.out.println(state);
         System.out.println(arri);
         System.out.println(userDetails.getUsername());

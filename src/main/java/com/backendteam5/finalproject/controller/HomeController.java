@@ -19,7 +19,11 @@ public class HomeController {
 
         if (userDetails.getUser().getRole() == UserRoleEnum.ADMIN) {
             model.addAttribute("admin_role", true);
+            model.addAttribute("username", userDetails.getUsername());
             return "index1";
-        } else{return "index2";}
+        } else{
+            model.addAttribute("username", userDetails.getUsername());
+            return "index2";
+        }
     }
 }

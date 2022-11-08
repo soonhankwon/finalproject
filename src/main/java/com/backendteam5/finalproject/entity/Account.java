@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,13 +18,11 @@ public class Account {
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private String route;
-
-    @Column
-    private Long subroute;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

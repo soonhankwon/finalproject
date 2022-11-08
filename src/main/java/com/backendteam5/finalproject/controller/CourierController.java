@@ -2,7 +2,6 @@ package com.backendteam5.finalproject.controller;
 
 
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
-import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.CourierService;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +24,15 @@ public class CourierController {
                                              @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return courierService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
+
     @PatchMapping("/api/post/{courierId}/check")
-    public CourierResUpdateDto checkCourierState(@PathVariable Long courierId,
+    public String checkCourierState(@PathVariable Long courierId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                  @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return courierService.checkCourierState(courierId, userDetails, courierReqUpdateDto);
     }
     @PatchMapping("/api/post/{courierId}/uncheck")
-    public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId,
+    public String uncheckCourierState(@PathVariable Long courierId,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                    @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return courierService.uncheckCourierState(courierId, userDetails, courierReqUpdateDto);

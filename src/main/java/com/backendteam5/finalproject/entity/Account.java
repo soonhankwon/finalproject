@@ -26,10 +26,10 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public Account(String username, String password, String area, UserRoleEnum role){
+    public Account(String username, String password, String route, UserRoleEnum role){
         this.username = username;
         this.password = password;
-        this.route = area;
+        this.route = route;
         this.role = role;
     }
 }

@@ -19,6 +19,6 @@ public class AdminService {
     public MainResponseDto searchAll(UserDetailsImpl userDetails) {
         String route = userDetails.getUser().getRoute();
         return new MainResponseDto(accountRepository.findByRouteAndRole(route, UserRoleEnum.USER),
-                courierRepository.findByAreaStartingWith(route));
+                courierRepository.findByRouteStartingWith(route));
     }
 }

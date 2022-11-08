@@ -1,7 +1,6 @@
 package com.backendteam5.finalproject.service;
 
 
-import com.backendteam5.finalproject.entity.Area;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.repository.CourierRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -30,13 +27,13 @@ public class CourierService {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
         String arrivalDate = formatter.format(date);
-//        String username = "";
+        String username = "";
 
 
         for (int i=0;i<=20;i++) {
             String index = Integer.toString(i);
 
-            Courier courier = new Courier(area + index, state, customer + index, arrivalDate);
+            Courier courier = new Courier(area + index, state, customer + index, arrivalDate, username);
             courierRepository.save(courier);
         }
 

@@ -19,13 +19,13 @@ public class Courier {
     private Boolean state;
     private String customer;
     private String arrivalDate;
-//    private String username;
+    private String username;
 
-    public Courier(String area, Boolean state, String customer, String arrivalDate) {
+    public Courier(String area, Boolean state, String customer, String arrivalDate, String username) {
         this.area = area;
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
-//        this.username = username;
+        this.username = username;
     }
 }

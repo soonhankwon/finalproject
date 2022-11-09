@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class SearchResponseDto {
-
     private List<Courier> data;
     private Long cnt;
 }

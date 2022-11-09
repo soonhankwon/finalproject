@@ -6,6 +6,7 @@ import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
 import com.backendteam5.finalproject.entity.Courier;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
@@ -111,8 +112,6 @@ public class CourierService {
     }
 
     public SearchResponseDto searchFilter(UserDetailsImpl userDetails, Long state) {
-
-
         Boolean status = false;
         if (state == 1) {
             status = true;
@@ -124,15 +123,9 @@ public class CourierService {
         List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
         Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
         return new SearchResponseDto(courierList, cnt);
-
-
-
-
     }
 
     public void searchCustomer(UserDetailsImpl userDetails, String customer) {
-
-
 
     }
 }

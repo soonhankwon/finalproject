@@ -1,22 +1,15 @@
 package com.backendteam5.finalproject.controller;
 
 
-import com.backendteam5.finalproject.dto.SearchResponseDto;
-import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
+import com.backendteam5.finalproject.dto.SearchResponseDto;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.CourierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -44,10 +37,6 @@ public class CourierController {
         return courierService.updateCourierBySubRoute(subRouteId, userDetails, courierReqUpdateDto);
     }
 
-    @GetMapping("/api/search/user/courier")
-    public String searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                             @RequestParam Long state,
-                              Model model ) {
     @PatchMapping("/api/post/{courierId}/check")
     public CourierResUpdateDto checkCourierState(@PathVariable Long courierId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -60,6 +49,11 @@ public class CourierController {
                                                    @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return courierService.uncheckCourierState(courierId, userDetails, courierReqUpdateDto);
     }
+
+    @GetMapping("/api/search/user/courier")
+    public String searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                               @RequestParam Long state,
+                               Model model ) {
 
         System.out.println(state);
         System.out.println(userDetails.getUsername());
@@ -80,6 +74,4 @@ public class CourierController {
         courierService.searchCustomer(userDetails, customer);
         return "test";
     }
-
-
 }

@@ -20,7 +20,7 @@ public class HomeController {
         try {
             model.addAttribute("username", userDetails.getUsername());
         } catch (NullPointerException e) {
-            return "redirect:/user/login";
+            return "redirect:/account/login";
         }
 
         if (userDetails.getUser().getRole() == UserRoleEnum.ADMIN) {

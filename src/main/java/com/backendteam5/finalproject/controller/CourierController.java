@@ -23,20 +23,6 @@ public class CourierController {
         courierService.createDommie();
         return "redirect:/";
     }
-    @PatchMapping("/api/post/{courierId}")
-    public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
-                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                             @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
-        return courierService.updateCourier(courierId, userDetails, courierReqUpdateDto);
-    }
-
-    @PatchMapping("/api/post/{subRouteId}/updateBySubRoute")
-    public CourierResUpdateDto updateCourierBySubRoute(@PathVariable int subRouteId,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
-        return courierService.updateCourierBySubRoute(subRouteId, userDetails, courierReqUpdateDto);
-    }
-
     @PatchMapping("/api/post/{courierId}/check")
     public CourierResUpdateDto checkCourierState(@PathVariable Long courierId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails,

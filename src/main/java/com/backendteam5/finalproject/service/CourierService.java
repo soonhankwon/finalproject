@@ -51,34 +51,6 @@ public class CourierService {
             courierRepository.save(courier2);
         }
     }
-
-    @Transactional
-    public CourierResUpdateDto updateCourier(Long courierId, UserDetailsImpl userDetails,
-                                CourierReqUpdateDto courierReqUpdateDto) {
-
-        Courier courier = courierRepository.findById(courierId)
-                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
-
-        courier.update(courierReqUpdateDto);
-        courierRepository.save(courier);
-        return new CourierResUpdateDto("운송장 할당완료");
-    }
-
-    @Transactional
-    public CourierResUpdateDto updateCourierBySubRoute(int subRouteId, UserDetailsImpl userDetails,
-                                          CourierReqUpdateDto courierReqUpdateDto) {
-        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
-                .orElseThrow(() -> new NullPointerException("해당 택배기사가 존재하지 않습니다"));
-
-        List<Courier> courier = courierRepository.findBySubRoute(subRouteId);
-
-        for (int i = 0; i < courier.size(); i++) {
-            courier.get(i).setUpdate(5, courierReqUpdateDto.getUsername());
-            courierRepository.save(courier.get(i));
-        }
-        return new CourierResUpdateDto("운송장 할당완료");
-    }
-
     @Transactional
     public CourierResUpdateDto checkCourierState(Long courierId, UserDetailsImpl userDetails,
                                                  CourierReqUpdateDto courierReqUpdateDto) {

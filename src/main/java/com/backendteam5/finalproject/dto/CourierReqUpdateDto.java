@@ -3,8 +3,6 @@ package com.backendteam5.finalproject.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalTime;
-
 @Getter
 @Setter
 public class CourierReqUpdateDto {

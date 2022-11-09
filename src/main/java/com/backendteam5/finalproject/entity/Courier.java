@@ -39,14 +39,15 @@ public class Courier {
         this.username = courierReqUpdateDto.getUsername();
     }
 
+    public void setUpdate(int i, String username) {
+        this.username = username;
+    }
+
     public void check(CourierReqUpdateDto courierReqUpdateDto) {
         this.state = courierReqUpdateDto.getState();
     }
+
     public void uncheck(CourierReqUpdateDto courierReqUpdateDto) {
         this.state = courierReqUpdateDto.getState();
-    }
-
-    public void setUpdate(int i, String username) {
-        this.username = username;
     }
 }

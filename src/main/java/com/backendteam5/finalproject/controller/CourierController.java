@@ -25,6 +25,13 @@ public class CourierController {
         return courierService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
 
+    @PatchMapping("/api/post/{subRouteId}/updateBySubRoute")
+    public String updateCourierBySubRoute(@PathVariable int subRouteId,
+                                @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
+        return courierService.updateCourierBySubRoute(subRouteId, userDetails, courierReqUpdateDto);
+    }
+
     @PatchMapping("/api/post/{courierId}/check")
     public String checkCourierState(@PathVariable Long courierId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails,

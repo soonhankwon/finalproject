@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +40,13 @@ public class CourierService {
             Courier courier = new Courier(route, i, state, customer + index, arrivalDate, username);
             courierRepository.save(courier);
         }
+
+        for (int i = 21; i <= 40; i++) {
+            String index = Integer.toString(i);
+
+            Courier courier2 = new Courier(route, 5, state, customer + index, arrivalDate, username);
+            courierRepository.save(courier2);
+        }
     }
 
     @Transactional
@@ -52,6 +58,21 @@ public class CourierService {
 
         courier.update(courierReqUpdateDto);
         courierRepository.save(courier);
+        return "운송장 할당완료";
+    }
+
+    @Transactional
+    public String updateCourierBySubRoute(int subRouteId, UserDetailsImpl userDetails,
+                                CourierReqUpdateDto courierReqUpdateDto) {
+        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
+                .orElseThrow(() -> new NullPointerException("해당 택배기사가 존재하지 않습니다"));
+
+        List<Courier> courier = courierRepository.findBySubRoute(subRouteId);
+
+        for (int i = 0; i < courier.size(); i++) {
+            courier.get(i).setUpdate(5, courierReqUpdateDto.getUsername());
+            courierRepository.save(courier.get(i));
+        }
         return "운송장 할당완료";
     }
 

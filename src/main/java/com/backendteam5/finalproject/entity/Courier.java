@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -37,10 +38,15 @@ public class Courier {
         this.arrivalDate = courierReqUpdateDto.getArrivalDate();
         this.username = courierReqUpdateDto.getUsername();
     }
+
     public void check(CourierReqUpdateDto courierReqUpdateDto) {
         this.state = courierReqUpdateDto.getState();
     }
     public void uncheck(CourierReqUpdateDto courierReqUpdateDto) {
         this.state = courierReqUpdateDto.getState();
+    }
+
+    public void setUpdate(int i, String username) {
+        this.username = username;
     }
 }

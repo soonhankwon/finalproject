@@ -72,13 +72,10 @@ function showUserInfo() {
 }
 
 function showLogin(isAuth) {
-    if (isAuth) {
-        $('#signout_form').show();
-        $('#signin_form').hide();
-    } else {
-        $('#signout_form').hide();
-        $('#signin_form').show();
-    }
+
+    $('#signout_form').show();
+    $('#signin_form').hide();
+
 }
 
 function reissue() {

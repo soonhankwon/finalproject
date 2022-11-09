@@ -11,5 +11,6 @@ import java.util.List;
 @Getter
 public class SearchResponseDto {
     private List<Courier> data;
-    private Long cnt;
+    private Long completeCnt;
+    private Long progressCnt;
 }

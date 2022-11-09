@@ -112,9 +112,9 @@ public class AdminService {
 
     public List<Account> checkuser(Account account, String username) {
         List<Account> accountList;
-        if (username.isEmpty() || username.equals(account.getUsername())) {
+        if (username.isEmpty()) {
             accountList = accountRepository.findByRouteAndRole(account.getRoute(), UserRoleEnum.USER);
-        } else {
+        } else{
             Account user = accountRepository.findByUsername(username).orElseThrow(
                     () -> new IllegalArgumentException("해당 유저는 존재하지 않습니다.")
             );

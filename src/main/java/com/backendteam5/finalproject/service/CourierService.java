@@ -35,8 +35,7 @@ public class CourierService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
         String arrivalDate = formatter.format(date);
-//        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
-        String username = "dlwotjs";
+        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
         for (int i = 1; i <= 20; i++) {
             String index = Integer.toString(i);
 
@@ -47,7 +46,7 @@ public class CourierService {
         for (int i = 21; i <= 40; i++) {
             String index = Integer.toString(i);
 
-            Courier courier2 = new Courier(route, 5, state, customer + index, arrivalDate, username);
+            Courier courier2 = new Courier(route, 5, state, customer + index, arrivalDate, "q");
             courierRepository.save(courier2);
         }
     }

@@ -1,52 +1,3 @@
-$(document).ready(function () {
-    if ($.cookie('access') && $.cookie('refresh')) {
-        showLogin(true)
-        console.log("success authorization")
-        $.ajaxSetup({
-            headers: {
-                'Authorization': $.cookie('access'),
-                'Refresh-Token': $.cookie('refresh')
-            }
-        })
-        showUserInfo()
-
-    } else if ($.cookie('refresh')) {
-        reissue()
-    } else {
-        showLogin()
-        console.log("No access")
-    }
-
-
-    // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행.
-    $('#query').on('keypress', function (e) {
-        if (e.key == 'Enter') {
-            execSearch();
-        }
-    });
-
-    $('#close').on('click', function () {
-        $('#container').removeClass('active');
-    })
-
-    $('.nav div.nav-see').on('click', function () {
-        $('div.nav-see').addClass('active');
-        $('div.nav-search').removeClass('active');
-
-        $('#see-area').show();
-        $('#search-area').hide();
-    })
-    $('.nav div.nav-search').on('click', function () {
-        $('div.nav-see').removeClass('active');
-        $('div.nav-search').addClass('active');
-
-        $('#see-area').hide();
-        $('#search-area').show();
-    })
-
-    $('#see-area').hide();
-    $('#search-area').show();
-});
 
 function showUserInfo() {
     $.ajax({
@@ -76,49 +27,6 @@ function showLogin(isAuth) {
     $('#signout_form').show();
     $('#signin_form').hide();
 
-}
-
-function reissue() {
-    $.ajaxSetup({
-        headers: {
-            'Refresh-Token': $.cookie('refresh')
-        }
-    })
-    $.ajax({
-        type: "POST",
-        url: `/user/reissue`,
-        contentType: "application/json",
-        success: function (response, status, request) {
-            const accessToken = request.getResponseHeader('Authorization')
-            const refreshToken = request.getResponseHeader('Refresh-Token')
-            if (accessToken && refreshToken) {
-                $.ajaxSetup({
-                    headers: {
-                        'Authorization': $.cookie('access', accessToken, {
-                            path: '/',
-                            expires: new Date(Date.now() + 30 * 60 * 1000)
-                        }),
-                        'Refresh-Token': $.cookie('refresh', refreshToken, {
-                            path: '/',
-                            expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
-                        })
-                    }
-                });
-                console.log(request.getResponseHeader('Authorization'))
-                console.log(request.getResponseHeader('Refresh-Token'))
-                window.location.reload();
-            } else {
-                console.log("reissue failed")
-                showLogin()
-            }
-        }, error: function (request, status, error) {
-            console.log(request)
-            console.log(status)
-            console.log(error)
-            console.log("reissue error")
-            showLogin()
-        }
-    })
 }
 
 function execSearch() {

@@ -1,0 +1,44 @@
+.body_top {
+    background: linear-gradient(to top right, rgb(23, 50, 115) 0%, rgb(78, 98, 148) 100%);
+    color: white;
+    text-align: center;
+    padding: 50px;
+    font-size: 45px;
+    font-weight: bold;
+}
+
+#title-TMS {
+    color : white;
+    margin-top: 20px;
+    font-size: 45px;
+    letter-spacing: 1.1px;
+}
+
+#logout-text {
+    position:absolute;
+    top:48px;
+    right:48px;
+    font-size: 18px;
+    font-family: SpoqaHanSansNeo,;
+    font-size: 18px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: 0.36px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.button {
+    background-color: blue;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}

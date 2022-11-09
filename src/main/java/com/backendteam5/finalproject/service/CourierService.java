@@ -1,6 +1,7 @@
 package com.backendteam5.finalproject.service;
 
 
+import com.backendteam5.finalproject.dto.SearchResponseDto;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.CourierInfo;
 import com.backendteam5.finalproject.repository.CourierRepository;
@@ -42,28 +43,28 @@ public class CourierService {
         }
     }
 
-    public List<Courier> searchAll(UserDetailsImpl userDetails) {
+    public SearchResponseDto searchFilter(UserDetailsImpl userDetails, Long state) {
 
-        System.out.println(userDetails.getUser());
-        System.out.println(userDetails.getUser().getUsername());
-
-        return courierRepository.findByUsername(userDetails.getUsername());
-    }
-
-    public List<Courier> searchFilter(UserDetailsImpl userDetails, Long state, Long arri) {
 
         Boolean status = false;
-        if (state == 1) status = true;
+        if (state == 1) {
+            status = true;
+            List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
+            Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+            return new SearchResponseDto(courierList, cnt);
 
-        List<Courier> arr;
-        if (arri == 1) {
-            arr = courierRepository.findByUsernameAndStateOrderByArrivalDateAsc(userDetails.getUsername(), status);
         }
-        else {
-            arr = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
-        }
+        List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
+        Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+        return new SearchResponseDto(courierList, cnt);
 
-        return arr;
+
+
+
+    }
+
+    public void searchCustomer(UserDetailsImpl userDetails, String customer) {
+
 
 
     }

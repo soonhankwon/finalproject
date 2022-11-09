@@ -21,7 +21,7 @@ public class CourierController {
     @PostMapping("/test")
     public String dummieTest() {
         courierService.createDommie();
-        return "index2";
+        return "redirect:/";
     }
     @PatchMapping("/api/post/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,

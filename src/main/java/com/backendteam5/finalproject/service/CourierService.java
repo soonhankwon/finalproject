@@ -35,8 +35,8 @@ public class CourierService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
         String arrivalDate = formatter.format(date);
-        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
-
+//        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
+        String username = "dlwotjs";
         for (int i = 1; i <= 20; i++) {
             String index = Integer.toString(i);
 
@@ -116,13 +116,18 @@ public class CourierService {
         if (state == 1) {
             status = true;
             List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
-            Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
-            return new SearchResponseDto(courierList, cnt);
+            Long completeCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+            status = false;
+            Long progressCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+            return new SearchResponseDto(courierList, completeCnt, progressCnt);
 
         }
         List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
-        Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
-        return new SearchResponseDto(courierList, cnt);
+        status = true;
+        Long completeCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+        status = false;
+        Long progressCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+        return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
     public void searchCustomer(UserDetailsImpl userDetails, String customer) {

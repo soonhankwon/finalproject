@@ -30,10 +30,10 @@ public class CourierService {
         String customer = "수령인";
 
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
         String arrivalDate = formatter.format(date);
-        String username = "region";
+        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
 
         for (int i = 1; i <= 20; i++) {
             String index = Integer.toString(i);
@@ -107,5 +107,11 @@ public class CourierService {
         } else {
             return new CourierResUpdateDto("해당 운송장은 배송대기중입니다.");
         }
+
+
+
+
+
+
     }
 }

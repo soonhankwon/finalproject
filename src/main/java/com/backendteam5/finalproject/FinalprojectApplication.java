@@ -7,7 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class FinalprojectApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception{
         List<CourierInfo> courierInfoList = new LinkedList<>();
-        for(long i = 1L; i <= 20L; i++){
+        for(int i = 1; i <= 20; i++){
             courierInfoList.add(new CourierInfo("A", i, "구로구 "+ i +"지역"));
         }
         courierInfoRepository.saveAll(courierInfoList);

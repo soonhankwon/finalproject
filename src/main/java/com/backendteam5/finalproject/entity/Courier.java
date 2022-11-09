@@ -16,7 +16,6 @@ public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String route;
     private int subRoute;
     private Boolean state;

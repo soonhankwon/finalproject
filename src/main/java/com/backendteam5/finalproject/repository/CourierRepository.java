@@ -4,6 +4,7 @@ import com.backendteam5.finalproject.entity.Courier;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CourierRepository extends JpaRepository<Courier, Long> {
     List<Courier> findByRouteStartingWith(String route);
@@ -49,5 +50,10 @@ public interface CourierRepository extends JpaRepository<Courier, Long> {
     //username이 없음, subRoute 없음, state 없음, 올림
     List<Courier> findByRouteOrderByArrivalDateDesc (String route);
     //username이 없음, subRoute 없음, state 없음, 내림
+
+    List<Courier> findByUsername(String username);
+    List<Courier> findByUsernameAndStateOrderByArrivalDateDesc(String username, Boolean state);
+    Long countByUsernameAndState(String username, Boolean state);
+    List<Courier> findByUsernameAndStateOrderByArrivalDateAsc(String username, Boolean state);
 
 }

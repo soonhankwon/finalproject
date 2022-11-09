@@ -4,6 +4,7 @@ package com.backendteam5.finalproject.service;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.dto.SearchResponseDto;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
@@ -107,9 +108,29 @@ public class CourierService {
         } else {
             return new CourierResUpdateDto("해당 운송장은 배송대기중입니다.");
         }
+    }
+
+    public SearchResponseDto searchFilter(UserDetailsImpl userDetails, Long state) {
+
+
+        Boolean status = false;
+        if (state == 1) {
+            status = true;
+            List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
+            Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+            return new SearchResponseDto(courierList, cnt);
+
+        }
+        List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
+        Long cnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+        return new SearchResponseDto(courierList, cnt);
 
 
 
+
+    }
+
+    public void searchCustomer(UserDetailsImpl userDetails, String customer) {
 
 
 

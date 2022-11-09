@@ -32,7 +32,7 @@ public class HomeController {
             return "index1";
         } else{
             model.addAttribute("username", userDetails.getUsername());
-            return "index2";
+            return "redirect:/api/search/user/courier?state=0";
         }
     }
 }

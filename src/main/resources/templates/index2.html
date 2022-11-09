@@ -44,29 +44,25 @@
   <div>
     <input type="text" id="query">
   </div>
-  <div class="search-title"  onclick="move()"> 운송장정보 </div>
-  <div id="search-result-box-post">
-    <div class="search-itemDto">
-    </div>
-  </div>
-  <div class="search-title"> Profiles </div>
-  <div id="search-result-box-profile">
-    <div class="search-itemDto">
-    </div>
-  </div>
-  <div class="search-title"> Locations </div>
-  <div id="search-result-box-location">
-    <div class="search-itemDto">
-    </div>
-  </div>
-  <div id="container" class="popup-container">
-    <div class="popup">
-      <button id="close" class="close">
-        X
-      </button>
-      <div id="profile-detail">
-      </div>
-    </div>
+  <div class="search-itemDto">
+<!--    <tr th:each="list : ${searchList}">-->
+<!--      <td th:text="${list.id}"></td><hr>-->
+<!--      <td th:text="${list.area}"></td><hr>-->
+<!--      <td th:text="${list.state}"></td><hr>-->
+<!--      <td th:text="${list.customer}"></td><hr>-->
+<!--      <td th:text="${list.arrivalDate}"></td><hr>-->
+<!--      <td th:text="${list.username}"></td><hr>-->
+<!--    </tr>-->
+<!--    <br>-->
+<!--    <tr th:each="list : ${searchFilter}">-->
+<!--      <td th:text="${list.id}"></td><hr>-->
+<!--      <td th:text="${list.area}"></td><hr>-->
+<!--      <td th:text="${list.state}"></td><hr>-->
+<!--      <td th:text="${list.customer}"></td><hr>-->
+<!--      <td th:text="${list.arrivalDate}"></td><hr>-->
+<!--      <td th:text="${list.username}"></td><hr>-->
+<!--    </tr>-->
+    <span th:text="${#response}"></span>
   </div>
 </div>
 </body>

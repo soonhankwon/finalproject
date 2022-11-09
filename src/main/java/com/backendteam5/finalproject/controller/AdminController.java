@@ -37,13 +37,13 @@ public class AdminController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return adminService.sortedCourier(username, subRoute, state, arri, userDetails);
     }
-    @PatchMapping("/api/post/{courierId}")
+    @PatchMapping("/post/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
-    @PatchMapping("/api/post/{subRouteId}/updateBySubRoute")
+    @PatchMapping("/post/{subRouteId}/updateBySubRoute")
     public CourierResUpdateDto updateCourierBySubRoute(@PathVariable int subRouteId,
                                                        @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @RequestBody CourierReqUpdateDto courierReqUpdateDto) {

@@ -21,12 +21,14 @@ public class AdminService {
     private final AccountRepository accountRepository;
     private final CourierRepository courierRepository;
 
+    @Transactional(readOnly = true)
     public AdminMainResDto findAll(UserDetailsImpl userDetails) {
         String route = userDetails.getUser().getRoute();
         return new AdminMainResDto(accountRepository.findByRouteAndRole(route, UserRoleEnum.USER),
                 courierRepository.findByRoute(route));
     }
 
+    @Transactional(readOnly = true)
     public AdminMainResDto searchCourier(Long courierId, UserDetailsImpl userDetails) {
         Courier courier = courierRepository.findById(courierId).orElseThrow(
                 () -> new IllegalArgumentException("해당 courier가 존재하지 않습니다.")
@@ -38,6 +40,7 @@ public class AdminService {
                 Collections.singletonList(courier));
     }
 
+    @Transactional(readOnly = true)
     public AdminMainResDto sortedCourier(String username, List<Integer> subRoute,
                                          int state, Boolean arri, UserDetailsImpl userDetails) {
         List<Courier> courierList = new LinkedList<>();

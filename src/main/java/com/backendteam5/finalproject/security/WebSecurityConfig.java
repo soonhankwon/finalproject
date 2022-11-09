@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                         // 회원 관리 처리 API 전부를 login 없이 허용
                         .antMatchers("/test").permitAll()
                         .antMatchers("/account/**").permitAll()
+                        .antMatchers("/api/**").permitAll()
                         // 어떤 요청이든 '인증'
                         .anyRequest().authenticated()
                 )

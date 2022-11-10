@@ -4,6 +4,7 @@ package com.backendteam5.finalproject.controller;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
+import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.CourierService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
 public class CourierController {
 
@@ -51,7 +54,7 @@ public class CourierController {
     }
 
     @GetMapping("/api/search/user/courier")
-    public String searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public SearchResponseDto searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                @RequestParam Long state,
                                Model model ) {
 
@@ -63,15 +66,15 @@ public class CourierController {
 
         model.addAttribute("searchFilter", responseDto);
         model.addAttribute("username", userDetails.getUsername());
-        return "index2";
+//        return "index2";
+        return responseDto;
     }
 
     @GetMapping("/api/search/user/courier/customer")
-    public String searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public List<Courier> searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                  @RequestParam String customer,
                                  Model model) {
 
-        courierService.searchCustomer(userDetails, customer);
-        return "test";
+        return courierService.searchCustomer(userDetails, customer);
     }
 }

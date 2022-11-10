@@ -130,7 +130,7 @@ public class CourierService {
         return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
-    public void searchCustomer(UserDetailsImpl userDetails, String customer) {
-
+    public List<Courier> searchCustomer(UserDetailsImpl userDetails, String customer) {
+        return courierRepository.findByCustomer(customer);
     }
 }

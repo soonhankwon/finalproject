@@ -52,4 +52,5 @@ public interface CourierRepository extends JpaRepository<Courier, Long> {
     List<Courier> findByUsername(String username);
     List<Courier> findByUsernameAndStateOrderByArrivalDateDesc(String username, Boolean state);
     Long countByUsernameAndState(String username, Boolean state);
+    List<Courier> findByCustomer(String customer);
 }

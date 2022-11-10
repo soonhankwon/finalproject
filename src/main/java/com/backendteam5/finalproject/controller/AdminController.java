@@ -1,6 +1,8 @@
 package com.backendteam5.finalproject.controller;
 
 import com.backendteam5.finalproject.dto.AdminMainResDto;
+import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
+import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +36,17 @@ public class AdminController {
             @RequestParam("arri") Boolean arri,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return adminService.sortedCourier(username, subRoute, state, arri, userDetails);
+    }
+    @PatchMapping("/post/{courierId}")
+    public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                             @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
+        return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
+    }
+    @PatchMapping("/post/{subRouteId}/updateBySubRoute")
+    public CourierResUpdateDto updateCourierBySubRoute(@PathVariable int subRouteId,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
+        return adminService.updateCourierBySubRoute(subRouteId, userDetails, courierReqUpdateDto);
     }
 }

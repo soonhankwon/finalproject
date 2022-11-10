@@ -16,12 +16,13 @@ function searchAll(){
             userTable.empty();
             courierTable.empty();
             if(userList.length === 0){
-                userTable.append("<tr><td colspan='2'>검색된 정보가 없습니다.</td></tr>");
+                userTable.append("<tr><td colspan='3'>검색된 정보가 없습니다.</td></tr>");
             }else{
                 for(let i =0; i< userList.length; i++){
                     let html = "<tr>"+
-                        "<td><input type='radio' name='User-Select'></td>"+
-                        "<td>"+userList[i]['username']+"</td>"
+                        "<td><input type='checkbox' name='User-select'</td>"+
+                        "<td>"+userList[i]['id']+"</td>"+
+                        "<td>"+userList[i]['username']+"</td></tr>"
                     userTable.append(html);
                 }
             }
@@ -31,6 +32,7 @@ function searchAll(){
             }else{
                 for(let i=0; i<courierList.length; i++){
                     let username = courierList[i]['username'];
+                    let id = courierList[i]['id'];
                     let nowname = $("#title-TMS span").text();
                     let state;
                     if(username === nowname){
@@ -41,14 +43,14 @@ function searchAll(){
                         else    state="배송 중";
                     }
                     let html = "<tr>"+
-                        "<td><input type='checkbox' class='Courier-select'></td>"+
-                        "<td>"+courierList[i]['id']+"</td>"+
+                        "<td><input type='checkbox' name='Courier-select'></td>"+
+                        `<td onclick="updateOne(${i})" align='middle'><input name='Select-row-${i}' type='text' value='${id}'readonly/>`+"</td>"+
                         "<td>"+courierList[i]['route']+"</td>"+
                         "<td>"+courierList[i]['subRoute']+"</td>"+
                         "<td>"+state+"</td>"+
                         "<td>"+courierList[i]['customer']+"</td>"+
                         "<td>"+courierList[i]['arrivalDate']+"</td>"+
-                        "<td>"+username+"</td>"
+                        "<td>"+username+"</td></tr>"
                     courierTable.append(html);
                 }
             }
@@ -64,9 +66,10 @@ function openDetail() {
 
 function setDone(){
     let Params = '?username='+$('#username').val();
-    let subRoute = new Array();
+    let subRoute = [];
     $('input:checkbox[name=subRoute]').each(function (index){
-        if($(this).is(":checked") == true){
+        if($(this).is(":checked") === true){
+            console.log(typeof($(this).val()));
             subRoute.push($(this).val());
         }
     })
@@ -86,12 +89,13 @@ function setDone(){
             let courierList = response['courierList'];
             let userList = response['userList'];
             if(userList.length === 0){
-                userTable.append("<tr><td colspan='2'>검색된 정보가 없습니다.</td></tr>");
+                userTable.append("<tr><td colspan='3'>검색된 정보가 없습니다.</td></tr>");
             }else{
                 for(let i =0; i< userList.length; i++){
                     let html = "<tr>"+
-                        "<td><input type='radio' name='User-Select'></td>"+
-                        "<td>"+userList[i]['username']+"</td>"
+                        "<td><input type='checkbox' name='User-select'></td>"+
+                        "<td>"+userList[i]['id']+"</td>"+
+                        "<td>"+userList[i]['username']+"</td></tr>"
                     userTable.append(html);
                 }
             }
@@ -101,6 +105,7 @@ function setDone(){
             }else{
                 for(let i=0; i<courierList.length; i++){
                     let username = courierList[i]['username'];
+                    let id = courierList[i]['id'];
                     let nowname = $(opener.document).find("#title-TMS span").text();
                     let state;
                     if(username === nowname){
@@ -111,20 +116,19 @@ function setDone(){
                         else    state="배송 중";
                     }
                     let html = "<tr>"+
-                        "<td><input type='checkbox' class='Courier-select'></td>"+
-                        "<td>"+courierList[i]['id']+"</td>"+
+                        "<td><input type='checkbox' name='Courier-select'></td>"+
+                        `<td onclick="updateOne(${i})" align='middle'><input name='Select-row-${i}' type='text' value='${id}'readonly/>`+"</td>"+
                         "<td>"+courierList[i]['route']+"</td>"+
                         "<td>"+courierList[i]['subRoute']+"</td>"+
                         "<td>"+state+"</td>"+
                         "<td>"+courierList[i]['customer']+"</td>"+
                         "<td>"+courierList[i]['arrivalDate']+"</td>"+
-                        "<td>"+username+"</td>"
+                        "<td>"+username+"</td></tr>"
                     courierTable.append(html);
                 }
             }
         }
     })
-
     setTimeout(() => window.close(), 2000);
 }
 
@@ -145,12 +149,13 @@ function searchCourier(){
                 userTable.empty();
                 courierTable.empty();
                 if(userList.length === 0){
-                    userTable.append("<tr><td colspan='2'>검색된 정보가 없습니다.</td></tr>");
+                    userTable.append("<tr><td colspan='3'>검색된 정보가 없습니다.</td></tr>");
                 }else{
                     for(let i =0; i< userList.length; i++){
                         let html = "<tr>"+
-                            "<td><input type='radio' name='User-Select'></td>"+
-                            "<td>"+userList[i]['username']+"</td>"
+                            "<td><input type='checkbox' name='User-select'></td>"+
+                            "<td>"+userList[i]['id']+"</td>"+
+                            "<td>"+userList[i]['username']+"</td></tr>"
                         userTable.append(html);
                     }
                 }
@@ -160,6 +165,7 @@ function searchCourier(){
                 }else{
                     for(let i=0; i<courierList.length; i++){
                         let username = courierList[i]['username'];
+                        let id = courierList[i]['id'];
                         let nowname = $("#title-TMS span").text();
                         let state;
                         if(username === nowname){
@@ -171,16 +177,18 @@ function searchCourier(){
                         }
                         let html = "<tr>"+
                             "<td><input type='checkbox' name='Courier-select'></td>"+
-                            "<td>"+courierList[i]['id']+"</td>"+
+                            `<td onclick="updateOne(${i})" align='middle'><input name='Select-row-${i}' type='text' value='${id}'readonly/>`+"</td>"+
                             "<td>"+courierList[i]['route']+"</td>"+
                             "<td>"+courierList[i]['subRoute']+"</td>"+
                             "<td>"+state+"</td>"+
                             "<td>"+courierList[i]['customer']+"</td>"+
                             "<td>"+courierList[i]['arrivalDate']+"</td>"+
-                            "<td>"+username+"</td>"
+                            "<td>"+username+"</td></tr>"
                         courierTable.append(html);
                     }
                 }
+                let input = document.getElementById('courierId');
+                input.value = '';
             },
             error: function (response){
                 /* 에러시 메시지 뽑는 방법 */
@@ -189,19 +197,95 @@ function searchCourier(){
         })
     }
 }
-// class='User-select'
-// class='Courier-select'
-// http://localhost:8080/api/save/subroute/{{usernameId}}/courier
-/* 1대 다중 할당 */
-function updateCourier(){
-    let userId =
-    $('input:checkbox[class=User-select]').each(function (index){
-        if($(this).is(":checked")===true){
 
+/* 다대다 할당 */
+function updateCourier(){
+    let usernames = [];
+    let courierIds = [];
+    let checkbox = $("input:checkbox[name=User-select]:checked");
+    checkbox.each(function (i){
+        let tr = checkbox.parent().parent().eq(i);
+        let td = tr.children();
+        usernames.push(td.eq(1).text());
+    })
+    checkbox = $("input:checkbox[name=Courier-select]:checked");
+    checkbox.each(function (i){
+        let tr = checkbox.parent().parent().eq(i);
+        let td = tr.children();
+        courierIds.push(td.eq(1).text());
+    })
+
+    let Params = '?usernameIds='+usernames+"&courierIds="+courierIds;
+    $.ajax({
+        type: 'PATCH',
+        url: '/api/save/subroute/courier'+Params,
+        contentType: 'application/json; charset=utf-8',
+        success: function (response){
+            alert(response['msg']);
+            location.reload();
+        },
+        error: function (response){
+            /* 에러시 메시지 뽑는 방법 */
+            alert(response['responseJSON']['message']);
         }
-    }
+    })
 }
 
+// 오늘까지
+function openSubRoute(){
+    let saveCount = $('#saveCount').val();
+    if(isNaN(saveCount) || saveCount==0){
+        alert("갯수를 입력하세요");
+        return;
+    }
+    let savetable = $("#subRoute-table-body");
+    savetable.empty();
+    const table = $('#subRoute-Save');
+    for(let i=0; i < saveCount; i++){
+        let html = "<tr>"+
+            `<td align='middle'><input id='user-${i}' type='text'></td>`+
+            `<td align='middle'><input id='subroute-${i}' type='text'></td>`+
+            "</tr>"
+        savetable.append(html);
+    }
+    table.show();
+}
+
+function saveSubRoute(){
+    let saveCount = $('#saveCount').val();
+    let usernames = [];
+    let courierIds = [];
+    for(let i=0; i<saveCount; i++){
+        usernames.push($(`#user-${i}`).val());
+        courierIds.push($(`#subroute-${i}`).val());
+    }
+
+    $('#subRoute-table-body').empty();
+    $('#subRoute-Save').hide();
+
+    let input = document.getElementById('saveCount');
+    input.value = '';
+
+    let Params = '?'
+    $.ajax()
+}
+
+// 내일하자
+function updateOne(select){
+    $('#detailSave_send').attr('value', select);
+    console.log($('#detailSave_send').val());
+    window.name = "parentForm";
+    openWin = window.open("http://localhost:8080/detailSave", "detailSave",
+        "width=500, height=700, resizable = no, scrollbars = yes");
+}
+
+// 전체선택 함수
+function selectAll(selectAll){
+    const checkboxes = document.getElementsByName('Courier-select');
+    checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked;
+    })
+}
 
 /** 태그값을 가져오는 여러 가지 방법
 console.log("입력된 username : "+$('#username').val());

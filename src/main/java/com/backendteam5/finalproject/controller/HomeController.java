@@ -26,10 +26,4 @@ public class HomeController {
             return "redirect:/api/search/user/courier?state=0";
         }
     }
-
-    // admin detail 새창 띄울때 필요함
-    @GetMapping("/detailSearch")
-    public String detail(){
-        return "detailSearch";
-    }
 }

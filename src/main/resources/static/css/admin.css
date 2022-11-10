@@ -17,6 +17,13 @@
     vertical-align: middle;
 }
 
+.subRoute-Save {
+    background: #fdfeff;
+    margin: 0 auto;
+    width: 25%;
+    text-align: center;
+}
+
 .search-bar-element{
     height: 50px;
     line-height: 50px;
@@ -24,12 +31,12 @@
 
 .search-bar:before{
     display: inline-block;
-    width: 100px;
+    width: 25px;
 }
 
 .search-bar:after{
     display: inline-block;
-    width: 100px;
+    width: 25px;
 }
 
 #title-TMS {
@@ -104,24 +111,22 @@ caption{
 }
 
 table td{
-    padding: 10px;
+    padding: 10px 0;
     background-color: #eee;
 }
 
 table th{
     background-color: #333;
     color: #fff;
-    padding: 10px;
+    padding: 10px 0;
 }
 
 input[type=text]{
     width: auto;
     height: 32px;
-    font-size: 15px;
     border: 0;
     border-radius: 15px;
     outline: none;
-    margin-right: 20px;
     background-color: rgb(233, 233, 233);
     text-align: center;
 }

@@ -7,67 +7,66 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta property="og:title" content="운송 관리 시스템">
     <meta property="og:description" content="운송장번호에 기반한 운송관리시스템 5조">
-<!--    <meta property="og:image" content="images/og_chadda.png">-->
-    <!-- Favicon-->
-<!--    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />-->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script th:src="@{/js/main.js}" ></script>
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
+    <script th:src="@{/js/admin.js}" ></script>
     <title>Transportation Management System</title>
 </head>
 <body>
-<div class="header" style="position:relative;">
-
-    <div id="header-title-select-shop">
-        <!--        <img id="header-title-image" src = "images/chadda_logo.png" alt="">-->
+<div class="body_top" style="position:relative;">
+    <div id="title-TMS">
         WELCOME 오늘의 택배 🚚 <span th:text="${username}"></span>님 반갑습니다.
     </div>
-    <form id="signin_form" method="get" action="/user/loginView" >
-
-        <a id="login-text" href="javascript:{}" onclick="document.getElementById('signin_form').submit(); "> 로그인</a>
-    </form>
     <form id="signout_form" method="post" action="/account/logout" >
-        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> <span th:text="${username}"></span>님 로그아웃</a>
+        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> 로그아웃</a>
     </form>
 </div>
-<div class="nav">
-</div>
-
-<div id="see-area">
-    <div id="user-posts">
-
+<div class="search-bar" style="position:relative;">
+    <div class="search-bar-element">
+    <button value="상세조건 검색" onclick="openDetail()">상세조건 검색</button>
+    </div>
+    <div class="search-bar-element">
+    <input type="text" id="courierId" value = "" placeholder="검색할 송장번호 입력"><button value="송장 검색" onclick="searchCourier()">개별 송장 검색</button>
+    </div>
+    <div class="search-bar-element"><input type="text" id="courierCnt" readonly/>
+    </div>
+    <div class="search-bar-element">
+    <button value="송장 할당" onclick="updateCourier()">1:다수 할당 적용</button>
     </div>
 </div>
-
-<div id="search-area">
-    <div>
-        <input type="text" id="query">
-    </div>
-    <div class="search-title"  onclick="move()"> 운송장정보 </div>
-    <div id="search-result-box-post">
-        <div class="search-itemDto">
-        </div>
-    </div>
-    <div class="search-title"> 배송담당자 </div>
-    <div id="search-result-box-profile">
-        <div class="search-itemDto">
-        </div>
-    </div>
-    <div class="search-title"> 배송담당지역 </div>
-    <div id="search-result-box-location">
-        <div class="search-itemDto">
-        </div>
-    </div>
-    <div id="container" class="popup-container">
-        <div class="popup">
-            <button id="close" class="close">
-                X
-            </button>
-            <div id="profile-detail">
-            </div>
-        </div>
-    </div>
+<div class="user-table">
+    <table id="user-table">
+        <caption>유저 테이블</caption>
+        <thead class="user-table-header">
+            <tr>
+                <th width="15%">Check</th>
+                <th>UserName</th>
+            </tr>
+        </thead>
+        <tbody class="user-table-body" id="user-table-body">
+        </tbody>
+    </table>
 </div>
+<div class="courier-table">
+    <table id="courier-table">
+        <caption>송장 테이블</caption>
+        <thead class="courier-table-header">
+        <tr>
+            <th width="5%">Check</th>
+            <th width="20%">Number</th>
+            <th width="5%">Route</th>
+            <th width="5%">SubRoute</th>
+            <th width="12.5%">State</th>
+            <th width="12.5%">Customer</th>
+            <th width="20%">ArrivalDate</th>
+            <th width="20%">UserName</th>
+        </tr>
+        </thead>
+        <tbody class="courier-table-body" id="courier-table-body">
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>

@@ -25,6 +25,7 @@ public class AdminController {
     @GetMapping("/search/courier/{courierId}")
     public AdminMainResDto searchCourier(@PathVariable Long courierId,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
+        System.out.println("받은 Path: " + courierId);
         return adminService.searchCourier(courierId, userDetails);
     }
 
@@ -37,16 +38,20 @@ public class AdminController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return adminService.sortedCourier(username, subRoute, state, arri, userDetails);
     }
-    @PatchMapping("/post/{courierId}")
+
+    //운송장 번호 기준 조회하여 택배기사에게 할당 => 상세 바꾸는 기능
+    @PatchMapping("/save/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
-    @PatchMapping("/post/{subRouteId}/updateBySubRoute")
-    public CourierResUpdateDto updateCourierBySubRoute(@PathVariable int subRouteId,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                       @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
-        return adminService.updateCourierBySubRoute(subRouteId, userDetails, courierReqUpdateDto);
+
+    //서브라우트 번호로 배송 담당자에게 일괄 할당
+    @PatchMapping("/save/subroute/{usernameId}/courier")
+    public CourierResUpdateDto updateCourierBySubRoute(@PathVariable Long usernameId,
+                                                       @RequestParam(value = "subRoutes", required = false) List<Integer> subRoutes,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return adminService.updateCourierBySubRoute(usernameId, subRoutes, userDetails);
     }
 }

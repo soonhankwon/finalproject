@@ -256,17 +256,22 @@ function saveSubRoute(){
     let usernames = [];
     let courierIds = [];
     for(let i=0; i<saveCount; i++){
-        usernames.push($(`#user-${i}`).val());
-        courierIds.push($(`#subroute-${i}`).val());
+        let user = $(`#user-${i}`).val();
+        let sub = $(`#subroute-${i}`).val();
+        if(user === '' || sub === '' || isNaN(sub)){
+            alert("입력값에 이상이 있습니다.");
+            return;
+        }
+        usernames.push();
+        courierIds.push();
     }
-
     $('#subRoute-table-body').empty();
     $('#subRoute-Save').hide();
 
     let input = document.getElementById('saveCount');
     input.value = '';
 
-    let Params = '?'
+    let Params = '?'+
     $.ajax()
 }
 

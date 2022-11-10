@@ -43,7 +43,7 @@ public class CourierService {
             Courier courier = new Courier(route, i, state, customer + index, arrivalDate, username);
             courierRepository.save(courier);
         }
-
+        state = true;
         for (int i = 21; i <= 40; i++) {
             String index = Integer.toString(i);
 
@@ -102,7 +102,7 @@ public class CourierService {
         return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
-    public void searchCustomer(UserDetailsImpl userDetails, String customer) {
-
+    public List<Courier> searchCustomer(UserDetailsImpl userDetails, String customer) {
+        return courierRepository.findByCustomer(customer);
     }
 }

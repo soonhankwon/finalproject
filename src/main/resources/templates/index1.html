@@ -22,11 +22,50 @@
         <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> 로그아웃</a>
     </form>
 </div>
-<hr width = "100%" color="black" size = "3">
 <div class="search-bar" style="position:relative;">
+    <div class="search-bar-element">
     <button value="상세조건 검색" onclick="openDetail()">상세조건 검색</button>
-    <input type="text" id="courierId" placeholder="검색할 송장번호 입력"><button value="송장 검색" onclick="searchCourier()">개별 송장 검색</button>
+    </div>
+    <div class="search-bar-element">
+    <input type="text" id="courierId" value = "" placeholder="검색할 송장번호 입력"><button value="송장 검색" onclick="searchCourier()">개별 송장 검색</button>
+    </div>
+    <div class="search-bar-element"><input type="text" id="courierCnt" readonly/>
+    </div>
+    <div class="search-bar-element">
     <button value="송장 할당" onclick="updateCourier()">할당 적용</button>
+    </div>
+</div>
+<div class="user-table">
+    <table id="user-table">
+        <caption>유저 테이블</caption>
+        <thead class="user-table-header">
+            <tr>
+                <th width="15%"><input type="checkbox" class="User-allChk"></th>
+                <th>UserName</th>
+            </tr>
+        </thead>
+        <tbody class="user-table-body" id="user-table-body">
+        </tbody>
+    </table>
+</div>
+<div class="courier-table">
+    <table id="courier-table">
+        <caption>송장 테이블</caption>
+        <thead class="courier-table-header">
+        <tr>
+            <th width="5%"><input type="checkbox" class="Courier-allChk"></th>
+            <th width="20%">Number</th>
+            <th width="5%">Route</th>
+            <th width="5%">SubRoute</th>
+            <th width="12.5%">State</th>
+            <th width="12.5%">Customer</th>
+            <th width="20%">ArrivalDate</th>
+            <th width="20%">UserName</th>
+        </tr>
+        </thead>
+        <tbody class="courier-table-body" id="courier-table-body">
+        </tbody>
+    </table>
 </div>
 
 </body>

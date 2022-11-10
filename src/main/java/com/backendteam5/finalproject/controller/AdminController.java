@@ -25,6 +25,7 @@ public class AdminController {
     @GetMapping("/search/courier/{courierId}")
     public AdminMainResDto searchCourier(@PathVariable Long courierId,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
+        System.out.println("받은 Path: " + courierId);
         return adminService.searchCourier(courierId, userDetails);
     }
 

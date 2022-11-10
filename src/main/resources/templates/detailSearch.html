@@ -2,29 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script th:src="@{/js/admin.js}" ></script>
     <title>Admin_상세조회 창</title>
-    <style>
-        .button {
-            background-color: blue;
-            border: none;
-            color: white;
-            padding: 15px 30px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 <br>
-<b><center><font size="5" color="black">상세조회 검색창</font></center></b>
-검색할 ID : <input type="text" id="username" placeholder="검색할 택배기사 ID입력"><br><br>
-검색할 세부지역(선택 안하면 전체 검색) : <br>
+<b><center><font size="5" color="black">상세조회 검색창</font></center></b><br>
+<b>검색할 ID :</b><input type="text" id="username" placeholder="검색할 택배기사 ID입력" style="width: auto"><br><br>
+<b>검색할 세부지역(선택 안하면 전체 검색) : </b><br>
 <input type="checkbox" name="subRoute" value="1">1 지역
 <input type="checkbox" name="subRoute" value="2">2 지역
 <input type="checkbox" name="subRoute" value="3">3 지역
@@ -35,7 +22,6 @@
 <input type="checkbox" name="subRoute" value="8">8 지역
 <input type="checkbox" name="subRoute" value="9">9 지역
 <input type="checkbox" name="subRoute" value="10">10 지역
-<br>
 <input type="checkbox" name="subRoute" value="11">11 지역
 <input type="checkbox" name="subRoute" value="12">12 지역
 <input type="checkbox" name="subRoute" value="13">13 지역
@@ -47,16 +33,16 @@
 <input type="checkbox" name="subRoute" value="19">19 지역
 <input type="checkbox" name="subRoute" value="20">20 지역
 <br><br>
-배송 상태 : <select id="state">
+<b>배송 상태 : </b><select id="state">
     <option value=2>--기본 state 전체 조회--</option>
     <option value=0>배송중 || 미할당</option>
     <option value=1>배송완료</option>
     <option value=2>전체 조회</option>
 </select>
 <br><br>
-도착 예정시간 정렬 :
+<b>도착 예정시간 정렬 : </b>
 <input type="radio" name="sorted" value=true checked="checked">오름차순
 <input type="radio" name="sorted" value=false>내림차순<br><br>
-<button value="완료" onclick="setParentValue()">완료</button>
+<button value="완료" onclick="setDone()">완료</button>
 </body>
 </html>

@@ -1,31 +1,5 @@
 $(document).ready(function () {
-
-    $.ajax({
-        url: "/api/search/user/courier?state=0",
-        type: "GET",
-        success : function(datalist){
-            // console.log(datalist);
-            let courierList = datalist.data;
-            console.log(courierList);
-            let html = ``
-            for(key in courierList){
-                console.log(key)
-                html += '<tr>';
-                html += '<td>'+courierList[key].id+'</td>';
-                html += '<td>'+courierList[key].route+'</td>';
-                html += '<td>'+courierList[key].subRoute+'</td>';
-                html += '<td>'+courierList[key].state+'</td>';
-                html += '<td>'+courierList[key].customer+'</td>';
-                html += '<td>'+courierList[key].arrivalDate+'</td>';
-                html += '<td>'+courierList[key].username+'</td>';
-                html += '</tr>';
-            }
-            $("#dynamicTbody").append(html);
-
-            alert("성공")
-        },
-        error : function(){alert("통신실패")}
-    })
+    ajaxTest()
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행.
     $('#query').on('keypress', function (e) {
@@ -50,13 +24,14 @@ function execSearch() {
         type: "GET",
         success : function(datalist){
             console.log(datalist);
-            $("#dynamicTbody").empty();
+            $("#courier-table-body").empty();
             let courierList = datalist
             console.log(courierList);
             let html = ``
             for(key in courierList){
               console.log(key)
               html += '<tr>';
+              html += "<td><input type='checkbox' class='Courier-select'></td>";
               html += '<td>'+courierList[key].id+'</td>';
               html += '<td>'+courierList[key].route+'</td>';
               html += '<td>'+courierList[key].subRoute+'</td>';
@@ -66,7 +41,7 @@ function execSearch() {
               html += '<td>'+courierList[key].username+'</td>';
               html += '</tr>';
             }
-            $("#dynamicTbody").append(html);
+            $("#courier-table-body").append(html);
 
             alert("성공3")
         },
@@ -82,13 +57,14 @@ function ajaxTest2(){
         type: "GET",
         success : function(datalist){
             // console.log(datalist);
-            $("#dynamicTbody").empty();
+            $("#courier-table-body").empty();
             let courierList = datalist.data;
             console.log(courierList);
             let html = ``
             for(key in courierList){
                 console.log(key)
                 html += '<tr>';
+                html += "<td><input type='checkbox' class='Courier-select'></td>";
                 html += '<td>'+courierList[key].id+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
@@ -98,7 +74,7 @@ function ajaxTest2(){
                 html += '<td>'+courierList[key].username+'</td>';
                 html += '</tr>';
             }
-            $("#dynamicTbody").append(html);
+            $("#courier-table-body").append(html);
 
             alert("성공2")
         },
@@ -119,6 +95,7 @@ function ajaxTest(){
             for(key in courierList){
                 console.log(key)
                 html += '<tr>';
+                html += "<td><input type='checkbox' class='Courier-select'></td>";
                 html += '<td>'+courierList[key].id+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
@@ -128,7 +105,7 @@ function ajaxTest(){
                 html += '<td>'+courierList[key].username+'</td>';
                 html += '</tr>';
             }
-            $("#dynamicTbody").append(html);
+            $("#courier-table-body").append(html);
 
             alert("성공")
         },

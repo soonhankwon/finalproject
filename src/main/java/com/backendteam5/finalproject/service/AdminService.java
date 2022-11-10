@@ -168,9 +168,7 @@ public class AdminService {
 
     @Transactional
     public CourierResUpdateDto updateCourierByAllUserBySubRoute(List<Long> usernamesId, List<Integer> subRoutes, UserDetailsImpl userDetails) {
-//        accountRepository.findByUsernameAndRole(userDetails.getUsername(), UserRoleEnum.ADMIN).orElseThrow(
-//                () -> new IllegalArgumentException("수정권한이 없습니다.")
-//        );
+
         for (int i = 0; i < usernamesId.size(); i++) {
             Optional<Account> account = accountRepository.findById(usernamesId.get(i));
             List<Courier> courier = courierRepository.findBySubRoute(subRoutes.get(i));

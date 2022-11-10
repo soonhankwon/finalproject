@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    ajaxTest()
+    doing()
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행.
     $('#query').on('keypress', function (e) {
@@ -51,7 +51,7 @@ function execSearch() {
 }
 
 
-function ajaxTest2(){
+function complete(){
     $.ajax({
         url: "/api/search/user/courier?state=1",
         type: "GET",
@@ -83,7 +83,7 @@ function ajaxTest2(){
 }
 
 
-function ajaxTest(){
+function doing(){
     $.ajax({
         url: "/api/search/user/courier?state=0",
         type: "GET",

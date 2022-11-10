@@ -46,7 +46,7 @@ public class CourierService {
         for (int i = 21; i <= 40; i++) {
             String index = Integer.toString(i);
 
-            Courier courier2 = new Courier(route, 5, state, customer + index, arrivalDate, "q");
+            Courier courier2 = new Courier(route, 5, state, customer + index, arrivalDate, username);
             courierRepository.save(courier2);
         }
     }

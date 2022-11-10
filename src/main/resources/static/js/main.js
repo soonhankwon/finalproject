@@ -31,7 +31,6 @@ function execSearch() {
             for(key in courierList){
               console.log(key)
               html += '<tr>';
-              html += "<td><input type='checkbox' class='Courier-select'></td>";
               html += '<td>'+courierList[key].id+'</td>';
               html += '<td>'+courierList[key].route+'</td>';
               html += '<td>'+courierList[key].subRoute+'</td>';
@@ -39,6 +38,9 @@ function execSearch() {
               html += '<td>'+courierList[key].customer+'</td>';
               html += '<td>'+courierList[key].arrivalDate+'</td>';
               html += '<td>'+courierList[key].username+'</td>';
+              if (!courierList[key].state) {
+                  html += "<td><button>배송완료</button></td>";
+              }
               html += '</tr>';
             }
             $("#courier-table-body").append(html);
@@ -64,7 +66,6 @@ function complete(){
             for(key in courierList){
                 console.log(key)
                 html += '<tr>';
-                html += "<td><input type='checkbox' class='Courier-select'></td>";
                 html += '<td>'+courierList[key].id+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
@@ -88,6 +89,7 @@ function doing(){
         url: "/api/search/user/courier?state=0",
         type: "GET",
         success : function(datalist){
+            $("#courier-table-body").empty();
             // console.log(datalist);
             let courierList = datalist.data;
             console.log(courierList);
@@ -95,7 +97,6 @@ function doing(){
             for(key in courierList){
                 console.log(key)
                 html += '<tr>';
-                html += "<td><input type='checkbox' class='Courier-select'></td>";
                 html += '<td>'+courierList[key].id+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
@@ -103,6 +104,7 @@ function doing(){
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
+                html += "<td><button>배송완료</button></td>";
                 html += '</tr>';
             }
             $("#courier-table-body").append(html);

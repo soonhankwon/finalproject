@@ -43,7 +43,7 @@ public class CourierService {
             Courier courier = new Courier(route, i, state, customer + index, arrivalDate, username);
             courierRepository.save(courier);
         }
-
+        state = true;
         for (int i = 21; i <= 40; i++) {
             String index = Integer.toString(i);
 

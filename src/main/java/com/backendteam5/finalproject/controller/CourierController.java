@@ -23,13 +23,13 @@ public class CourierController {
         courierService.createDommie();
         return "redirect:/";
     }
-    @PatchMapping("/api/post/{courierId}/check")
+    @PatchMapping("/api/save/{courierId}/check")
     public CourierResUpdateDto checkCourierState(@PathVariable Long courierId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                  @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return courierService.checkCourierState(courierId, userDetails, courierReqUpdateDto);
     }
-    @PatchMapping("/api/post/{courierId}/uncheck")
+    @PatchMapping("/api/save/{courierId}/uncheck")
     public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                    @RequestBody CourierReqUpdateDto courierReqUpdateDto) {

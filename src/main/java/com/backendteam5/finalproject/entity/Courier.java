@@ -37,8 +37,7 @@ public class Courier {
         this.arrivalDate = courierReqUpdateDto.getArrivalDate();
         this.username = courierReqUpdateDto.getUsername();
     }
-
-    public void setUpdate(int i, String username) {
+    public void setUpdate(int j, String username) {
         this.username = username;
     }
 

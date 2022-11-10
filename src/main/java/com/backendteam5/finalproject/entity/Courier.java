@@ -3,11 +3,13 @@ package com.backendteam5.finalproject.entity;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Courier {
 

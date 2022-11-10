@@ -126,7 +126,6 @@ public class AdminService {
     @Transactional
     public CourierResUpdateDto updateCourier(Long courierId, UserDetailsImpl userDetails,
                                              CourierReqUpdateDto courierReqUpdateDto) {
-
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
@@ -136,16 +135,17 @@ public class AdminService {
     }
 
     @Transactional
-    public CourierResUpdateDto updateCourierBySubRoute(int subRouteId, UserDetailsImpl userDetails,
-                                                       CourierReqUpdateDto courierReqUpdateDto) {
-        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
+    public CourierResUpdateDto updateCourierBySubRoute(Long usernameId, List<Integer> subRoutes, UserDetailsImpl userDetails) {
+        accountRepository.findByUsernameAndRole(userDetails.getUsername(), UserRoleEnum.ADMIN).orElseThrow(
+                () -> new IllegalArgumentException("수정권한이 없습니다.")
+        );
+        Account account = accountRepository.findById(usernameId)
                 .orElseThrow(() -> new NullPointerException("해당 택배기사가 존재하지 않습니다"));
 
-        List<Courier> courier = courierRepository.findBySubRoute(subRouteId);
-
-        for (int i = 0; i < courier.size(); i++) {
-            courier.get(i).setUpdate(5, courierReqUpdateDto.getUsername());
-            courierRepository.save(courier.get(i));
+        for(int subRoute : subRoutes){
+            for(Courier courier : courierRepository.findBySubRoute(subRoute)){
+                courier.setUsername(account.getUsername());
+            }
         }
         return new CourierResUpdateDto("운송장 할당완료");
     }

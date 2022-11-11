@@ -135,51 +135,44 @@ public class AdminService {
     }
 
     @Transactional
-    public CourierResUpdateDto updateCouriers(List<Long> courierIds, Long usernameId, UserDetailsImpl userDetails) {
+    public CourierResUpdateDto updateCouriers(List<Long> courierIds, List<String> usernames, UserDetailsImpl userDetails) {
 //        accountRepository.findByUsernameAndRole(userDetails.getUsername(), UserRoleEnum.ADMIN).orElseThrow(
 //                () -> new IllegalArgumentException("수정권한이 없습니다.")
 //        );
-        Account account = accountRepository.findById(usernameId)
-                .orElseThrow(() -> new NullPointerException("해당 택배기사가 존재하지 않습니다"));
+        if (courierIds.size() != usernames.size()) {
+            for (int i = 0; i < usernames.size(); i++) {
+                Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
 
-        for (int i = 0; i < courierIds.size(); i++) {
-            Optional<Courier> courier = courierRepository.findById(courierIds.get(i));
-            courier.get().setUpdate(5, account.getUsername());
-        }
-
-        return new CourierResUpdateDto("운송장 할당완료");
-    }
-
-    @Transactional
-    public CourierResUpdateDto updateCourierBySubRoute(Long usernameId, List<Integer> subRoutes, UserDetailsImpl userDetails) {
-//        accountRepository.findByUsernameAndRole(userDetails.getUsername(), UserRoleEnum.ADMIN).orElseThrow(
-//                () -> new IllegalArgumentException("수정권한이 없습니다.")
-//        );
-        Account account = accountRepository.findById(usernameId)
-                .orElseThrow(() -> new NullPointerException("해당 택배기사가 존재하지 않습니다"));
-
-        for (int subRoute : subRoutes) {
-            for (Courier courier : courierRepository.findBySubRoute(subRoute)) {
-                courier.setUsername(account.getUsername());
-            }
-        }
-        return new CourierResUpdateDto("운송장 할당완료");
-    }
-
-    @Transactional
-    public CourierResUpdateDto updateCourierByAllUserBySubRoute(List<Long> usernamesId, List<Integer> subRoutes, UserDetailsImpl userDetails) {
-        if (usernamesId.size() == subRoutes.size()) {
-            for (int i = 0; i < usernamesId.size(); i++) {
-                Optional<Account> account = accountRepository.findById(usernamesId.get(i));
-                List<Courier> courier = courierRepository.findBySubRoute(subRoutes.get(i));
-
-                for (int j = 0; j < courier.size(); j++) {
-                    courier.get(j).setUpdate(5, String.valueOf(account.get().getUsername()));
+                for (int j = 0; j < courierIds.size(); j++) {
+                    Optional<Courier> courier = courierRepository.findById(courierIds.get(j));
+                    courier.get().setUpdate(5, String.valueOf(account.get().getUsername()));
                 }
             }
             return new CourierResUpdateDto("운송장 할당완료");
         } else {
-            return new CourierResUpdateDto("할당오류, 택배기사와 서브라우트의 수가 일치하지 않습니다.");
+            for (int i = 0; i < usernames.size(); i++) {
+                Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
+                Optional<Courier> courier = courierRepository.findById(courierIds.get(i));
+                for (int j = 0; j < courierIds.size(); j++) {
+                    courier.get().setUpdate(5, String.valueOf(account.get().getUsername()));
+                }
+            }
         }
+        return new CourierResUpdateDto("운송장 할당완료");
+
+    }
+
+    @Transactional
+    public CourierResUpdateDto updateCourierByAllUserBySubRoute(List<String> usernames, List<Integer> subRoutes, UserDetailsImpl userDetails) {
+
+        for (int i = 0; i < usernames.size(); i++) {
+            Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
+            List<Courier> courier = courierRepository.findBySubRoute(subRoutes.get(i));
+
+            for (int j = 0; j < courier.size(); j++) {
+                courier.get(j).setUpdate(5, String.valueOf(account.get().getUsername()));
+            }
+        }
+        return new CourierResUpdateDto("운송장 할당완료");
     }
 }

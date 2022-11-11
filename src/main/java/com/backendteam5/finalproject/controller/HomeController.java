@@ -23,7 +23,8 @@ public class HomeController {
             return "index1";
         } else{
             model.addAttribute("username", userDetails.getUsername());
-            return "redirect:/api/search/user/courier?state=0";
+//            return "redirect:/api/search/user/courier?state=0";
+            return "index2";
         }
     }
 }

@@ -1,9 +1,9 @@
 $(document).ready(function () {
     setDate();
 });
-let select = $(opener.document).find("#detailSave_send").val();
 
 function setDate(){
+    var select = $(opener.document).find("#detailSave_send").val();
     setting(select);
 }
 
@@ -18,17 +18,16 @@ function setting(select){
 }
 
 function setDone(){
-    let data={
-        "state" : $('#state').val(),
-        "arrivalDate" : $('#arrivaldate').val(),
-        "username" : $('#username').val()
-    }
-
     $.ajax({
         type: 'PATCH',
         url: '/api/save/' + $('#number').val(),
         contentType: 'application/json; charset=utf-8',
-        data: data,
+        dataType: "json",
+        data: JSON.stringify({
+            "state" : $('#state').val(),
+            "arrivalDate" : $('#arrivaldate').val(),
+            "username" : $('#username').val()
+        }),
         success: function (response) {
             alert(response['msg']);
             opener.document.location.reload();

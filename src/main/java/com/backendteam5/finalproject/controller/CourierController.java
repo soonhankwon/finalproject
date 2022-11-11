@@ -26,17 +26,13 @@ public class CourierController {
         courierService.createDommie();
         return "redirect:/";
     }
-    @PatchMapping("/api/save/{courierId}/check")
-    public CourierResUpdateDto checkCourierState(@PathVariable Long courierId,
-                                                 @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                 @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
-        return courierService.checkCourierState(courierId, userDetails, courierReqUpdateDto);
+    @PatchMapping("/api/save/check")
+    public CourierResUpdateDto checkCourierState(@RequestParam(value = "courierId") Long courierId) {
+        return courierService.checkCourierState(courierId);
     }
-    @PatchMapping("/api/save/{courierId}/uncheck")
-    public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                   @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
-        return courierService.uncheckCourierState(courierId, userDetails, courierReqUpdateDto);
+    @PatchMapping("/api/save/uncheck")
+    public CourierResUpdateDto uncheckCourierState(@RequestParam(value = "courierId") Long courierId) {
+        return courierService.uncheckCourierState(courierId);
     }
 
     @GetMapping("/api/search/user/courier")

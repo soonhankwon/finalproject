@@ -40,12 +40,4 @@ public class Courier {
     public void setUpdate(int j, String username) {
         this.username = username;
     }
-
-    public void check(CourierReqUpdateDto courierReqUpdateDto) {
-        this.state = courierReqUpdateDto.getState();
-    }
-
-    public void uncheck(CourierReqUpdateDto courierReqUpdateDto) {
-        this.state = courierReqUpdateDto.getState();
-    }
 }

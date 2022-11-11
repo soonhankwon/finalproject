@@ -206,7 +206,9 @@ function openSubRoute(){
 function saveSubRoute(){
     let saveCount = $('#saveCount').val();
     let usernames = [];
+    let usernamelength = 0;
     let subRoutes = [];
+    alert("입력 값에 대한 유효성을 검사합니다.");
     for(let i=0; i<saveCount; i++){
         let user = $(`#user-${i}`).val();
         let sub = $(`#subroute-${i}`).val();
@@ -214,8 +216,18 @@ function saveSubRoute(){
             alert("입력값에 이상이 있습니다.");
             return;
         }
+        usernamelength += user.length;
         usernames.push(user);
         subRoutes.push(sub);
+    }
+    if(usernamelength + saveCount > 2080){
+        alert("입력 문자가 너무 많습니다. 총 입력 문자 길이: " + usernamelength+ saveCount);
+        return;
+    }
+
+    if(!confirm("작업을 수행하시겟습니까?")){
+        alert("작업 취소");
+        return;
     }
 
     let Params = '?subRoutes='+subRoutes+"&usernames="+usernames;

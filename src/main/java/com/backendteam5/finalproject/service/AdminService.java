@@ -164,6 +164,7 @@ public class AdminService {
 
     @Transactional
     public CourierResUpdateDto updateCourierByAllUserBySubRoute(List<String> usernames, List<Integer> subRoutes, UserDetailsImpl userDetails) {
+
         for (int i = 0; i < usernames.size(); i++) {
             Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
             List<Courier> courier = courierRepository.findBySubRoute(subRoutes.get(i));

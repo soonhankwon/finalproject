@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -54,14 +53,14 @@ public class AdminController {
         return adminService.updateCouriers(courierIds, usernameId, userDetails);
     }
 
-    @PatchMapping("/save/subroute/{usernameId}/courier")
-    public CourierResUpdateDto updateCourierBySubRoute(@PathVariable Long usernameId,
+    @PatchMapping("/save/subroute/courier")
+    public CourierResUpdateDto updateCourierBySubRoute(@RequestParam(value = "usernameId", required = false) Long usernameId,
                                                        @RequestParam(value = "subRoutes", required = false) List<Integer> subRoutes,
                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.updateCourierBySubRoute(usernameId, subRoutes, userDetails);
     }
 
-    @PatchMapping("/save/subroute/courier")
+    @PatchMapping("/save/subroutes/courier")
     public CourierResUpdateDto updateCourierByAllUserBySubRoute(@RequestParam(value = "subRoutes", required = false) List<Integer> subRoutes,
                                                                 @RequestParam(value = "usernameIds", required = false) List<Long> usernameIds,
                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {

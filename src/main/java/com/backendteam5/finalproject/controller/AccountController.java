@@ -4,6 +4,7 @@ import com.backendteam5.finalproject.dto.SignupRequestDto;
 import com.backendteam5.finalproject.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -23,7 +24,7 @@ public class AccountController {
     }
 
     @PostMapping("/account/signup")
-    public String registerAccount(SignupRequestDto requestDto){
+    public String registerAccount(@Validated SignupRequestDto requestDto){
         accountService.registerAccount(requestDto);
         return "login";
     }

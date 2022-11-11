@@ -57,9 +57,10 @@ function searchAll(){
 }
 
 function openDetail() {
-    window.name = "parentForm";
-    openWin = window.open("http://localhost:8080/detailSearch", "detailSearch",
-        "width=500, height=700, resizable = no, scrollbars = yes");
+    const width = 500;
+    const height = 700
+
+    openWin = window.open("http://localhost:8080/detailSearch", "detailSearch", stroption(width, height));
 }
 
 function searchCourier(){
@@ -137,7 +138,7 @@ function updateCourier(){
         usernames.push(td.eq(2).text());
     })
     if(usernames.length <1){
-        alert("유저를 한명만 선태하세요");
+        alert("유저를 한명만 선택하세요");
         return;
     }
     checkbox = $("input:checkbox[name=Courier-select]:checked");
@@ -148,6 +149,11 @@ function updateCourier(){
         if(!isNaN(result))  courierIds.push(result);
     })
 
+    if(usernames.length !== courierIds.length){
+        alert("user 다중 선택시 운송장 갯수와 같아야 합니다.");
+        return;
+    }
+
     let Params = '?usernames='+usernames+"&courierIds="+courierIds;
     $.ajax({
         type: 'PATCH',
@@ -155,8 +161,7 @@ function updateCourier(){
         contentType: 'application/json; charset=utf-8',
         success: function (response){
             alert(response['msg']);
-            location.reload();
-        },
+            location.reload();},
         error: function (response){
             /* 에러시 메시지 뽑는 방법 */
             alert(response['responseJSON']['message']);
@@ -220,9 +225,12 @@ function saveSubRoute(){
 // 상세수정 창
 function updateOne(select){
     $('#detailSave_send').attr('value', select);
+
+    const width = 900;
+    const height = 300;
+
     window.name = "parentForm";
-    openWin = window.open("http://localhost:8080/detailSave", "detailSave",
-        "width=900, height=500, resizable = no, scrollbars = yes");
+    openWin = window.open("http://localhost:8080/detailSave", "detailSave", stroption(width, height));
 }
 
 // 전체선택 함수
@@ -233,20 +241,20 @@ function selectAll(selectAll) {
     })
 }
 
-/** 태그값을 가져오는 여러 가지 방법
-console.log("입력된 username : "+$('#username').val());
-console.log("입력된 state : "+$('#state').val());
-console.log("입력된 sorted : "+$('input[name=sorted]').val());
-$('input:checkbox[name=subRoute]').each(function (index){
-    if($(this).is(":checked")==true){
-        console.log($(this).val());
-    }
-}) */
+function stroption(width, height){
+    let curX = window.screenLeft;
+    let curY = window.screenTop;
+    let curWidth = document.body.clientWidth;
+    let curHeight = document.body.clientHeight;
 
-/** 테그 비우는 방법들
-$('#subRoute-table-body').empty();
-$('#subRoute-Save').hide();
+    let nLeft = curX + (curWidth / 2) - (width / 2);
+    let nTop = curY + (curHeight / 2) - (height / 2);
 
-let input = document.getElementById('saveCount');
-input.value = '';
- */
+    let strOption = "";
+    strOption += "left=" + nLeft + "px,";
+    strOption += "top=" + nTop + "px,";
+    strOption += "width=" + width + "px,";
+    strOption += "height=" + height + "px,";
+    strOption += "resizable=yes,status=yes";
+    return strOption;
+}

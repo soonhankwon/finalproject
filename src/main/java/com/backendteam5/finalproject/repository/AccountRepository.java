@@ -9,6 +9,5 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long>  {
     Optional<Account> findByUsername(String username);
-    Optional<Account> findByUsernameAndRole(String username, UserRoleEnum role);
     List<Account> findByRouteAndRole(String route, UserRoleEnum role);
 }

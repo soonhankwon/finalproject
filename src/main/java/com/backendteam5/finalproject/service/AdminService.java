@@ -24,20 +24,25 @@ public class AdminService {
     @Transactional(readOnly = true)
     public AdminMainResDto findAll(UserDetailsImpl userDetails) {
         String route = userDetails.getUser().getRoute();
-        return new AdminMainResDto(accountRepository.findByRouteAndRole(route, UserRoleEnum.USER),
-                courierRepository.findByRoute(route));
+        List<Account> accountList = new LinkedList<>();
+        accountList.add(userDetails.getUser());
+        accountList.addAll(accountRepository.findByRouteAndRole(route, UserRoleEnum.USER));
+        return new AdminMainResDto(accountList, courierRepository.findByRoute(route));
     }
 
     @Transactional(readOnly = true)
     public AdminMainResDto searchCourier(Long courierId, UserDetailsImpl userDetails) {
+        List<Account> accountList = new LinkedList<>();
+        accountList.add(userDetails.getUser());
         Courier courier = courierRepository.findById(courierId).orElseThrow(
                 () -> new IllegalArgumentException("해당 courier가 존재하지 않습니다.")
         );
-        Account account = accountRepository.findByUsername(courier.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("해당 배정자가 존재하지 않습니다.")
-        );
-        return new AdminMainResDto(Collections.singletonList(account),
-                Collections.singletonList(courier));
+        if(!courier.getUsername().equals(userDetails.getUsername())) {
+            accountList.add(accountRepository.findByUsername(courier.getUsername()).orElseThrow(
+                    () -> new IllegalArgumentException("해당 배정자가 존재하지 않습니다.")
+            ));
+        }
+        return new AdminMainResDto(accountList, Collections.singletonList(courier));
     }
 
     @Transactional(readOnly = true)
@@ -111,14 +116,15 @@ public class AdminService {
     }
 
     public List<Account> checkuser(Account account, String username) {
-        List<Account> accountList;
+        List<Account> accountList = new LinkedList<>();
+        accountList.add(account);
         if (username.isEmpty()) {
-            accountList = accountRepository.findByRouteAndRole(account.getRoute(), UserRoleEnum.USER);
-        } else {
+            accountList.addAll(accountRepository.findByRouteAndRole(account.getRoute(), UserRoleEnum.USER));
+        } else if(!account.getUsername().equals(username)) {
             Account user = accountRepository.findByUsername(username).orElseThrow(
                     () -> new IllegalArgumentException("해당 유저는 존재하지 않습니다.")
             );
-            accountList = Collections.singletonList(user);
+            accountList.add(user);
         }
         return accountList;
     }

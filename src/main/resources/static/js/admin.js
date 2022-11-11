@@ -149,7 +149,7 @@ function updateCourier(){
         if(!isNaN(result))  courierIds.push(result);
     })
 
-    if(usernames.length !== courierIds.length){
+    if(usernames.length !== 1 && usernames.length !== courierIds.length){
         alert("user 다중 선택시 운송장 갯수와 같아야 합니다.");
         return;
     }

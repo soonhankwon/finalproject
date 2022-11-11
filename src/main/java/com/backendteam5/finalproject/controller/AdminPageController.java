@@ -12,13 +12,6 @@ public class AdminPageController {
     }
 
     // admin detail하게 수정하는 창
-//    @GetMapping("/detailSave")
-//    public String detailSave(){return "detailSave";}
-//
-//            if (userDetails.getUser().getRole() == UserRoleEnum.ADMIN) {
-//        return "index1";
-//    } else{
-//        model.addAttribute("username", userDetails.getUsername());
-//        return "redirect:/api/search/user/courier?state=0";
-//    }
+    @GetMapping("/detailSave")
+    public String detailSave(){return "detailSave";}
 }

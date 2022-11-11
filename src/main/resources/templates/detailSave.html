@@ -2,47 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/detailSave.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script th:src="@{/js/admin.js}" ></script>
-    <title>Admin_상세조회 창</title>
+    <script th:src="@{/js/detailSave.js}" ></script>
+    <title>Admin_상세수정 창</title>
 </head>
 <body>
-<br>
-<b><center><font size="5" color="black">상세조회 검색창</font></center></b><br>
-<b>검색할 ID :</b><input type="text" id="username" placeholder="검색할 택배기사 ID입력" style="width: auto"><br><br>
-<b>검색할 세부지역(선택 안하면 전체 검색) : </b><br>
-<input type="checkbox" name="subRoute" value="1" id="1"><label for="1">1 지역</label>
-<input type="checkbox" name="subRoute" value="2" id="2"><label for="2">2 지역</label>
-<input type="checkbox" name="subRoute" value="3" id="3"><label for="3">3 지역</label>
-<input type="checkbox" name="subRoute" value="4" id="4"><label for="4">4 지역</label>
-<input type="checkbox" name="subRoute" value="5" id="5"><label for="5">5 지역</label>
-<input type="checkbox" name="subRoute" value="6" id="6"><label for="6">6 지역</label>
-<input type="checkbox" name="subRoute" value="7" id="7"><label for="7">7 지역</label>
-<input type="checkbox" name="subRoute" value="8" id="8"><label for="8">8 지역</label>
-<input type="checkbox" name="subRoute" value="9" id="9"><label for="9">9 지역</label>
-<input type="checkbox" name="subRoute" value="10" id="10"><label for="10">10 지역</label>
-<input type="checkbox" name="subRoute" value="11" id="11"><label for="11">11 지역</label>
-<input type="checkbox" name="subRoute" value="12" id="12"><label for="12">12 지역</label>
-<input type="checkbox" name="subRoute" value="13" id="13"><label for="13">13 지역</label>
-<input type="checkbox" name="subRoute" value="14" id="14"><label for="14">14 지역</label>
-<input type="checkbox" name="subRoute" value="15" id="15"><label for="15">15 지역</label>
-<input type="checkbox" name="subRoute" value="16" id="16"><label for="16">16 지역</label>
-<input type="checkbox" name="subRoute" value="17" id="17"><label for="17">17 지역</label>
-<input type="checkbox" name="subRoute" value="18" id="18"><label for="18">18 지역</label>
-<input type="checkbox" name="subRoute" value="19" id="19"><label for="19">19 지역</label>
-<input type="checkbox" name="subRoute" value="20" id="20"><label for="20">20 지역</label>
-<br><br>
-<b>배송 상태 : </b><select id="state">
-    <option value=2>--기본 state 전체 조회--</option>
-    <option value=0>배송중 || 미할당</option>
-    <option value=1>배송완료</option>
-    <option value=2>전체 조회</option>
-</select>
-<br><br>
-<b>도착 예정시간 정렬 : </b>
-<input type="radio" name="sorted" value=true checked="checked">오름차순
-<input type="radio" name="sorted" value=false>내림차순<br><br>
-<button value="완료" onclick="setDone()">완료</button>
+<div class="tg-wrap" style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%">
+    <table class="tg" style="table-layout: fixed; width: 100%; height: 70%">
+    <colgroup>
+        <col style="width: 33%">
+        <col style="width: 33%">
+        <col style="width: 33%">
+    </colgroup>
+    <tbody>
+        <tr>
+            <td class="tg-m7to" colspan="3">상세 수정 창 <button style="float: right; margin: 0; padding: 0; display: flex" onclick="setDone()">변경사항 저장</button></td>
+        </tr>
+        <tr>
+            <td class="tg-y3y5" colspan="3">Number</td>
+        </tr>
+        <tr>
+            <td class="tg-bhk7" colspan="3"><label for="number"></label><input id="number" type="text" style="text-align: center" readonly></td>
+        </tr>
+        <tr>
+            <td class="tg-y3y5">Route</td>
+            <td class="tg-y3y5">Customer</td>
+            <td class="tg-y3y5">SubRoute</td>
+        </tr>
+        <tr>
+            <td class="tg-bhk7"><label for="route"></label><input id="route" type="text" value="" style="text-align: center" readonly></td>
+            <td class="tg-bhk7"><label for="customer"></label><input id="customer" type="text" value="" style="text-align: center" readonly></td>
+            <td class="tg-bhk7"><label for="subroute"></label><input id="subroute" type="text" value="" style="text-align: center" readonly></td>
+        </tr>
+        <tr>
+            <td class="tg-97qk">State</td>
+            <td class="tg-97qk">UserName</td>
+            <td class="tg-97qk">ArrivalDate</td>
+        </tr>
+        <tr>
+            <td class="tg-xh62"><label for="state"></label><input id="state" type="text" value="" style="text-align: center"></td>
+            <td class="tg-xh62"><label for="username"></label><input id="username" type="text" value="" style="text-align: center"></td>
+            <td class="tg-xh62"><label for="arrivaldate"></label><input id="arrivaldate" type="text" value="" style="text-align: center"></td>
+        </tr>
+    </tbody>
+    </table>
+</div>
 </body>
 </html>

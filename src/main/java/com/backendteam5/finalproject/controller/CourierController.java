@@ -57,9 +57,8 @@ public class CourierController {
     }
 
     @GetMapping("/api/search/user/courier/customer")
-    public List<Courier> searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                 @RequestParam String customer,
-                                 Model model) {
+    public SearchResponseDto searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                 @RequestParam String customer) {
 
         return courierService.searchCustomer(userDetails, customer);
     }

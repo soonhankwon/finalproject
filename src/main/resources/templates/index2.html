@@ -27,9 +27,8 @@
     <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> <span th:text="${username}"></span>님 로그아웃</a>
   </form>
 </div>
-<div class="button-center">
-  <button type="button" class="button-js" onclick="doing()">배송중</button>
-  <button type="button" class="button-js" onclick="complete()">배송완료</button>
+<div class="button-center" id="button-cnt">
+
 </div>
 <div id="search-area">
   <div>

@@ -18,13 +18,14 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/search/courier")
-    public AdminMainResDto findAll(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public AdminMainResDto findAll(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.findAll(userDetails);
     }
 
     @GetMapping("/search/courier/{courierId}")
     public AdminMainResDto searchCourier(@PathVariable Long courierId,
-                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println("받은 Path: " + courierId);
         return adminService.searchCourier(courierId, userDetails);
     }
 
@@ -34,19 +35,28 @@ public class AdminController {
             @RequestParam(value = "subRoute", required = false) List<Integer> subRoute,
             @RequestParam("state") int state,
             @RequestParam("arri") Boolean arri,
-            @AuthenticationPrincipal UserDetailsImpl userDetails){
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.sortedCourier(username, subRoute, state, arri, userDetails);
     }
-    @PatchMapping("/post/{courierId}")
+
+    @PatchMapping("/save/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
-    @PatchMapping("/post/{subRouteId}/updateBySubRoute")
-    public CourierResUpdateDto updateCourierBySubRoute(@PathVariable int subRouteId,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                       @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
-        return adminService.updateCourierBySubRoute(subRouteId, userDetails, courierReqUpdateDto);
+
+    @PatchMapping("/save/courier")
+    public CourierResUpdateDto updateCouriers(@RequestParam(value = "courierIds", required = false) List<Long> courierIds,
+                                              @RequestParam(value = "usernames", required = false) List<String> usernames,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return adminService.updateCouriers(courierIds, usernames, userDetails);
+    }
+
+    @PatchMapping("/save/subroutes/courier")
+    public CourierResUpdateDto updateCourierByAllUserBySubRoute(@RequestParam(value = "subRoutes", required = false) List<Integer> subRoutes,
+                                                                @RequestParam(value = "usernames", required = false) List<String> usernames,
+                                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return adminService.updateCourierByAllUserBySubRoute(usernames, subRoutes, userDetails);
     }
 }

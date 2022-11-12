@@ -3,11 +3,13 @@ package com.backendteam5.finalproject.entity;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Courier {
 
@@ -35,16 +37,7 @@ public class Courier {
         this.arrivalDate = courierReqUpdateDto.getArrivalDate();
         this.username = courierReqUpdateDto.getUsername();
     }
-
-    public void setUpdate(int i, String username) {
+    public void setUpdate(int j, String username) {
         this.username = username;
-    }
-
-    public void check(CourierReqUpdateDto courierReqUpdateDto) {
-        this.state = courierReqUpdateDto.getState();
-    }
-
-    public void uncheck(CourierReqUpdateDto courierReqUpdateDto) {
-        this.state = courierReqUpdateDto.getState();
     }
 }

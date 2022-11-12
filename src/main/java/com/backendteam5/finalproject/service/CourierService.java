@@ -35,15 +35,14 @@ public class CourierService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
         String arrivalDate = formatter.format(date);
-//        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
-        String username = "dlwotjs";
+        String username = accountRepository.findByRouteAndRole(route, UserRoleEnum.ADMIN).get(0).getUsername();
         for (int i = 1; i <= 20; i++) {
             String index = Integer.toString(i);
 
             Courier courier = new Courier(route, i, state, customer + index, arrivalDate, username);
             courierRepository.save(courier);
         }
-        state = true;
+        state = false;
         for (int i = 21; i <= 40; i++) {
             String index = Integer.toString(i);
 
@@ -51,16 +50,15 @@ public class CourierService {
             courierRepository.save(courier2);
         }
     }
+
     @Transactional
-    public CourierResUpdateDto checkCourierState(Long courierId, UserDetailsImpl userDetails,
-                                                 CourierReqUpdateDto courierReqUpdateDto) {
+    public CourierResUpdateDto checkCourierState(Long courierId) {
 
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
-        if (!courier.getState() && courier.getUsername().equals(courierReqUpdateDto.getUsername())) {
-            courier.check(courierReqUpdateDto);
-            courierRepository.save(courier);
+        if (!courier.getState()) {
+            courier.setState(true);
             return new CourierResUpdateDto("배송완료");
         } else {
             return new CourierResUpdateDto("해당 운송장상태 변경이 불가능합니다.");
@@ -68,15 +66,13 @@ public class CourierService {
     }
 
     @Transactional
-    public CourierResUpdateDto uncheckCourierState(Long courierId, UserDetailsImpl userDetails,
-                                      CourierReqUpdateDto courierReqUpdateDto) {
+    public CourierResUpdateDto uncheckCourierState(Long courierId) {
 
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
-        if (courier.getState() && courier.getUsername().equals(courierReqUpdateDto.getUsername())) {
-            courier.uncheck(courierReqUpdateDto);
-            courierRepository.save(courier);
+        if (courier.getState()) {
+            courier.setState(false);
             return new CourierResUpdateDto("배송대기상태로 수정되었습니다.");
         } else {
             return new CourierResUpdateDto("해당 운송장은 배송대기중입니다.");

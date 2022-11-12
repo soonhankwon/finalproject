@@ -25,8 +25,17 @@ function execSearch() {
         success : function(datalist){
             console.log(datalist);
             $("#courier-table-body").empty();
-            let courierList = datalist
+            $("#button-cnt").empty();
+
+            let courierList = datalist.data;
             console.log(courierList);
+
+            let temphtml = `
+                            <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
+                            <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                           `
+            $("#button-cnt").append(temphtml);
+
             let html = ``
             for(key in courierList){
               console.log(key)
@@ -60,8 +69,17 @@ function complete(){
         success : function(datalist){
             // console.log(datalist);
             $("#courier-table-body").empty();
+            $("#button-cnt").empty();
             let courierList = datalist.data;
             console.log(courierList);
+
+            let temphtml = `
+                            <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
+                            <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                           `
+            $("#button-cnt").append(temphtml);
+
+
             let html = ``
             for(key in courierList){
                 console.log(key)
@@ -90,9 +108,16 @@ function doing(){
         type: "GET",
         success : function(datalist){
             $("#courier-table-body").empty();
-            // console.log(datalist);
+            $("#button-cnt").empty();
             let courierList = datalist.data;
             console.log(courierList);
+
+            let temphtml = `
+                            <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
+                            <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                           `
+            $("#button-cnt").append(temphtml);
+
             let html = ``
             for(key in courierList){
                 console.log(key)

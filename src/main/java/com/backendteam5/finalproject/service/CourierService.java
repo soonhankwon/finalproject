@@ -102,7 +102,15 @@ public class CourierService {
         return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
-    public List<Courier> searchCustomer(UserDetailsImpl userDetails, String customer) {
-        return courierRepository.findByCustomer(customer);
+    public SearchResponseDto searchCustomer(UserDetailsImpl userDetails, String customer) {
+        Boolean status;
+        status = true;
+        Long completeCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+        status = false;
+        Long progressCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
+        List<Courier> courList = courierRepository.findByCustomer(customer);
+
+        return new SearchResponseDto(courList, completeCnt, progressCnt);
+
     }
 }

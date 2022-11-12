@@ -1,9 +1,6 @@
 package com.backendteam5.finalproject.service;
 
-
-import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
-import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;

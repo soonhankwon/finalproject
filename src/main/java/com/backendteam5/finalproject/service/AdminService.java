@@ -38,9 +38,9 @@ public class AdminService {
                 () -> new IllegalArgumentException("해당 courier가 존재하지 않습니다.")
         );
         if(!courier.getUsername().equals(userDetails.getUsername())) {
-            accountList.add(accountRepository.findByUsername(courier.getUsername()).orElseThrow(
-                    () -> new IllegalArgumentException("해당 배정자가 존재하지 않습니다.")
-            ));
+            List<Account> accounts = accountRepository.findByUsernameStartingWith(courier.getUsername());
+            if(accounts.isEmpty())  throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
+            accountList.addAll(accounts);
         }
         return new AdminMainResDto(accountList, Collections.singletonList(courier));
     }
@@ -121,10 +121,9 @@ public class AdminService {
         if (username.isEmpty()) {
             accountList.addAll(accountRepository.findByRouteAndRole(account.getRoute(), UserRoleEnum.USER));
         } else if(!account.getUsername().equals(username)) {
-            Account user = accountRepository.findByUsername(username).orElseThrow(
-                    () -> new IllegalArgumentException("해당 유저는 존재하지 않습니다.")
-            );
-            accountList.add(user);
+            List<Account> accounts = accountRepository.findByUsernameStartingWith(username);
+            if(accounts.isEmpty())  throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
+            accountList.addAll(accounts);
         }
         return accountList;
     }

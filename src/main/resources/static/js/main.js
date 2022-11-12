@@ -38,19 +38,19 @@ function execSearch() {
 
             let html = ``
             for(key in courierList){
-              console.log(key)
-              html += '<tr>';
-              html += '<td>'+courierList[key].id+'</td>';
-              html += '<td>'+courierList[key].route+'</td>';
-              html += '<td>'+courierList[key].subRoute+'</td>';
-              html += '<td>'+courierList[key].state+'</td>';
-              html += '<td>'+courierList[key].customer+'</td>';
-              html += '<td>'+courierList[key].arrivalDate+'</td>';
-              html += '<td>'+courierList[key].username+'</td>';
-              if (!courierList[key].state) {
-                  html += "<td><button>배송완료</button></td>";
-              }
-              html += '</tr>';
+                console.log(key)
+                html += '<tr>';
+                html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].route+'</td>';
+                html += '<td>'+courierList[key].subRoute+'</td>';
+                html += '<td>'+courierList[key].state+'</td>';
+                html += '<td>'+courierList[key].customer+'</td>';
+                html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].username+'</td>';
+                if (!courierList[key].state) {
+                    html += "<td><button>배송완료</button></td>";
+                }
+                html += '</tr>';
             }
             $("#courier-table-body").append(html);
 
@@ -91,6 +91,7 @@ function complete(){
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
+                html += `<td><button onclick="completeCancel(${courierList[key].id})">배송완료취소</button></td>`;
                 html += '</tr>';
             }
             $("#courier-table-body").append(html);
@@ -129,12 +130,80 @@ function doing(){
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
-                html += "<td><button>배송완료</button></td>";
+                html += `<td><button onclick="completeSave(${courierList[key].id})">배송완료처리</button></td>`;
                 html += '</tr>';
             }
             $("#courier-table-body").append(html);
 
             alert("성공")
+        },
+        error : function(){alert("통신실패")}
+    })
+}
+
+function completeSave(id){
+    let courierId = id;
+    let Params = '?courierId='+courierId;
+    $.ajax({
+        url: "/api/save/check"+Params,
+        type: "PATCH",
+        success : function(datalist){
+            $("#courier-table-body").empty();
+            let courierList = datalist.data;
+            console.log(courierList);
+            let html = ``
+            for(key in courierList){
+                console.log(key)
+                html += '<tr>';
+                html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].route+'</td>';
+                html += '<td>'+courierList[key].subRoute+'</td>';
+                html += '<td>'+courierList[key].state+'</td>';
+                html += '<td>'+courierList[key].customer+'</td>';
+                html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].username+'</td>';
+                html += "<td><button>배송완료취소</button></td>";
+                html += '</tr>';
+            }
+            $("#courier-table-body").append(html);
+
+            alert("배송완료")
+            doing()
+        },
+        error : function(){alert("통신실패")}
+    })
+}
+
+function completeCancel(id){
+    console.log(id)
+    let courierId = id;
+    let Params = '?courierId='+courierId;
+    $.ajax({
+            url: "/api/save/uncheck"+Params,
+        type: "PATCH",
+        success : function(datalist){
+            $("#courier-table-body").empty();
+            // console.log(datalist);
+            let courierList = datalist.data;
+            console.log(courierList);
+            let html = ``
+            for(key in courierList){
+                console.log(key)
+                html += '<tr>';
+                html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].route+'</td>';
+                html += '<td>'+courierList[key].subRoute+'</td>';
+                html += '<td>'+courierList[key].state+'</td>';
+                html += '<td>'+courierList[key].customer+'</td>';
+                html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].username+'</td>';
+                html += "<td><button>배송완료</button></td>";
+                html += '</tr>';
+            }
+            $("#courier-table-body").append(html);
+
+            alert("배송완료취소")
+            doing()
         },
         error : function(){alert("통신실패")}
     })

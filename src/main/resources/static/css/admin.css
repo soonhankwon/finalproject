@@ -1,0 +1,132 @@
+.body_top {
+    background: linear-gradient(to top right, rgb(23, 50, 115) 0%, rgb(78, 98, 148) 100%);
+    color: white;
+    text-align: center;
+    padding: 50px;
+    font-size: 45px;
+    font-weight: bold;
+}
+
+.search-bar {
+    background: linear-gradient(to top right, rgb(89, 194, 70) 0%, rgb(30, 175, 0) 100%);
+    margin: 0 auto;
+    padding: 5px 50px;
+    height: 50px;
+    display: flex;
+    justify-content : space-between;
+    vertical-align: middle;
+}
+
+.subRoute-Save {
+    background: #fdfeff;
+    margin: 0 auto;
+    width: 30%;
+    text-align: center;
+}
+
+.search-bar-element{
+    height: 50px;
+    line-height: 50px;
+}
+
+.search-bar:before{
+    display: inline-block;
+    width: 25px;
+}
+
+.search-bar:after{
+    display: inline-block;
+    width: 25px;
+}
+
+#title-TMS {
+    color : white;
+    margin-top: 20px;
+    font-size: 45px;
+    letter-spacing: 1.1px;
+}
+
+#logout-text {
+    position:absolute;
+    top:48px;
+    right:48px;
+    font-size: 18px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: 0.36px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.button {
+    background-color: blue;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.user-table{
+    float: left;
+    width: 28%;
+    box-sizing: border-box;
+    height: 600px;
+    overflow: auto;
+    background-color: antiquewhite;
+    border: 2px solid darkgray;
+    margin-top: 3px;
+}
+
+.courier-table{
+    float: right;
+    width: 71.7%;
+    box-sizing: border-box;
+    height: 600px;
+    overflow: auto;
+    background-color: #e7efff;
+    border: 2px solid rgb(192 217 206);
+    margin-top: 3px;
+}
+
+table{
+    width: 100%;
+    text-align: center;
+    border: 1px solid #fff;
+    border-spacing: 1px;
+    font-family: 'Cairo', sans-serif;
+    margin: auto;
+}
+
+caption{
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+table td{
+    padding: 10px 5px;
+    background-color: #eee;
+}
+
+table th{
+    background-color: #333;
+    color: #fff;
+    padding: 10px 5px;
+}
+
+input[type=text]{
+    width: auto;
+    height: 32px;
+    border: 0;
+    border-radius: 15px;
+    outline: none;
+    background-color: rgb(233, 233, 233);
+    text-align: center;
+}

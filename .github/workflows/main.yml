@@ -30,13 +30,13 @@ jobs:
         distribution: 'temurin'
         
     - uses: actions/checkout@v3
-    - run: touch ./src/main/resources/test.properties
-    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/test.properties
-    - run: cat ./src/main/resources/test.properties
+    - run: touch ./src/main/resources/application-information.properties
+    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application-information.properties
+    - run: cat ./src/main/resources/application-information.properties
     - uses: actions/upload-artifact@v3
       with:
-        name: test.properties
-        path: ./src/main/resources/test.properties
+        name: application-information.properties
+        path: ./src/main/resources/application-information.properties
 
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1

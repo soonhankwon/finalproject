@@ -52,7 +52,7 @@ jobs:
         docker push ${{ secrets.USERNAME }}/final-project:${GITHUB_SHA::7}
       
     - name: Deploy
-      uses: appleboy/ssh-action@develop
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ec2-user

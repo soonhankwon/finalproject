@@ -140,10 +140,12 @@ function updateCourier(){
         usernames.push(td.eq(2).text());
         usernamelenth += td.eq(2).text().length;
     })
+
     if(usernames.length <1){
         alert("유저를 한명만 선택하세요");
         return;
     }
+
     checkbox = $("input:checkbox[name=Courier-select]:checked");
     checkbox.each(function (i){
         let tr = checkbox.parent().parent().eq(i);
@@ -155,22 +157,22 @@ function updateCourier(){
     if(usernames.length !== 1 && usernames.length !== courierIds.length){
         alert("user 다중 선택시 운송장 갯수와 같아야 합니다.");
         return;
-    } else if(usernames.length===1 && usernames[0].length + courierIds.length > 2080){
-        alert("courier의 갯수가 너무 많습니다.");
-        return;
-    } else if(usernamelenth + courierIds.length > 2080){
-        alert("username의 문자 총 길이가 너무 많습니다.");
-        return;
     }
+
     if(!confirm("작업을 수행하시겟습니까?")){
         alert("작업 취소");
         return;
     }
-    let Params = '?usernames='+usernames+"&courierIds="+courierIds;
+
     $.ajax({
         type: 'PATCH',
-        url: '/api/save/courier'+Params,
+        url: '/api/save/courier',
         contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify({
+            "usernames" : usernames,
+            "courierIds" : courierIds
+        }),
         success: function (response){
             alert(response['msg']);
             location.reload();},
@@ -230,11 +232,15 @@ function saveSubRoute(){
         return;
     }
 
-    let Params = '?subRoutes='+subRoutes+"&usernames="+usernames;
     $.ajax({
         type: 'PATCH',
-        url: '/api/save/subroutes/courier'+Params,
+        url: '/api/save/subroutes/courier',
         contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify({
+            "usernames" : usernames,
+            "subRoutes" : subRoutes
+        }),
         success: function (response){
             alert(response['msg']);
             location.reload()

@@ -1,6 +1,7 @@
 package com.backendteam5.finalproject.controller;
 
 import com.backendteam5.finalproject.dto.AdminMainResDto;
+import com.backendteam5.finalproject.dto.AssisReqDto;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
@@ -47,16 +48,14 @@ public class AdminController {
     }
 
     @PatchMapping("/save/courier")
-    public CourierResUpdateDto updateCouriers(@RequestParam(value = "courierIds", required = false) List<Long> courierIds,
-                                              @RequestParam(value = "usernames", required = false) List<String> usernames,
+    public CourierResUpdateDto updateCouriers(@RequestBody AssisReqDto assisReqDto,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return adminService.updateCouriers(courierIds, usernames, userDetails);
+        return adminService.updateCouriers(assisReqDto, userDetails);
     }
 
     @PatchMapping("/save/subroutes/courier")
-    public CourierResUpdateDto updateCourierByAllUserBySubRoute(@RequestParam(value = "subRoutes", required = false) List<Integer> subRoutes,
-                                                                @RequestParam(value = "usernames", required = false) List<String> usernames,
+    public CourierResUpdateDto updateCourierByAllUserBySubRoute(@RequestBody AssisReqDto assisReqDto,
                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return adminService.updateCourierByAllUserBySubRoute(usernames, subRoutes, userDetails);
+        return adminService.updateCourierByAllUserBySubRoute(assisReqDto, userDetails);
     }
 }

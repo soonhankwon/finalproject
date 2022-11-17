@@ -1,6 +1,7 @@
 package com.backendteam5.finalproject.service;
 
 import com.backendteam5.finalproject.dto.AdminMainResDto;
+import com.backendteam5.finalproject.dto.AssisReqDto;
 import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.entity.Account;
@@ -140,25 +141,25 @@ public class AdminService {
     }
 
     @Transactional
-    public CourierResUpdateDto updateCouriers(List<Long> courierIds, List<String> usernames, UserDetailsImpl userDetails) {
+    public CourierResUpdateDto updateCouriers(AssisReqDto assisReqDto, UserDetailsImpl userDetails) {
 //        accountRepository.findByUsernameAndRole(userDetails.getUsername(), UserRoleEnum.ADMIN).orElseThrow(
 //                () -> new IllegalArgumentException("수정권한이 없습니다.")
 //        );
-        if (courierIds.size() != usernames.size()) {
-            for (int i = 0; i < usernames.size(); i++) {
-                Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
+        if (assisReqDto.getCourierIds().size() != assisReqDto.getUsernames().size()) {
+            for (int i = 0; i < assisReqDto.getUsernames().size(); i++) {
+                Optional<Account> account = accountRepository.findByUsername(assisReqDto.getUsernames().get(i));
 
-                for (int j = 0; j < courierIds.size(); j++) {
-                    Optional<Courier> courier = courierRepository.findById(courierIds.get(j));
+                for (int j = 0; j < assisReqDto.getCourierIds().size(); j++) {
+                    Optional<Courier> courier = courierRepository.findById(assisReqDto.getCourierIds().get(j));
                     courier.get().setUpdate(5, String.valueOf(account.get().getUsername()));
                 }
             }
             return new CourierResUpdateDto("운송장 할당완료");
         } else {
-            for (int i = 0; i < usernames.size(); i++) {
-                Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
-                Optional<Courier> courier = courierRepository.findById(courierIds.get(i));
-                for (int j = 0; j < courierIds.size(); j++) {
+            for (int i = 0; i < assisReqDto.getUsernames().size(); i++) {
+                Optional<Account> account = accountRepository.findByUsername(assisReqDto.getUsernames().get(i));
+                Optional<Courier> courier = courierRepository.findById(assisReqDto.getCourierIds().get(i));
+                for (int j = 0; j < assisReqDto.getCourierIds().size(); j++) {
                     courier.get().setUpdate(5, String.valueOf(account.get().getUsername()));
                 }
             }
@@ -168,11 +169,11 @@ public class AdminService {
     }
 
     @Transactional
-    public CourierResUpdateDto updateCourierByAllUserBySubRoute(List<String> usernames, List<Integer> subRoutes, UserDetailsImpl userDetails) {
+    public CourierResUpdateDto updateCourierByAllUserBySubRoute(AssisReqDto assisReqDto, UserDetailsImpl userDetails) {
 
-        for (int i = 0; i < usernames.size(); i++) {
-            Optional<Account> account = accountRepository.findByUsername(usernames.get(i));
-            List<Courier> courier = courierRepository.findBySubRoute(subRoutes.get(i));
+        for (int i = 0; i < assisReqDto.getUsernames().size(); i++) {
+            Optional<Account> account = accountRepository.findByUsername(assisReqDto.getUsernames().get(i));
+            List<Courier> courier = courierRepository.findBySubRoute(assisReqDto.getSubRoutes().get(i));
 
             for (int j = 0; j < courier.size(); j++) {
                 courier.get(j).setUpdate(5, String.valueOf(account.get().getUsername()));

@@ -159,10 +159,10 @@ function updateCourier(){
         return;
     }
 
-    if(!confirm("작업을 수행하시겟습니까?")){
-        alert("작업 취소");
-        return;
-    }
+    // if(!confirm("작업을 수행하시겟습니까?")){
+    //     alert("작업 취소");
+    //     return;
+    // }
 
     $.ajax({
         type: 'PATCH',

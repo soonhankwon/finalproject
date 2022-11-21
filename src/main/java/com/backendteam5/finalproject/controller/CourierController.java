@@ -52,10 +52,10 @@ public class CourierController {
         return responseDto;
     }
 
-    @GetMapping("/api/search/user/courier/customer")
-    public SearchResponseDto searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                 @RequestParam String customer) {
-
-        return courierService.searchCustomer(userDetails, customer);
-    }
+//    @GetMapping("/api/search/user/courier/customer")
+//    public SearchResponseDto searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
+//                                 @RequestParam String customer) {
+//
+//        return courierService.searchCustomer(userDetails, customer);
+//    }
 }

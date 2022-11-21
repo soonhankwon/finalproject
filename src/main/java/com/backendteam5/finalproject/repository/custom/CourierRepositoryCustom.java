@@ -1,10 +1,11 @@
 package com.backendteam5.finalproject.repository.custom;
 
-import com.backendteam5.finalproject.entity.Courier;
+import com.backendteam5.finalproject.dto.CourierDto;
 
 import java.util.List;
 
 public interface CourierRepositoryCustom {
 
-    List<Courier> searchByUsernameAndState(String username, Boolean state);
+    List<CourierDto> searchByUsernameAndState(String username, Boolean state);
+    Long countUsernameAndState(String username, Boolean state);
 }

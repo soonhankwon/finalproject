@@ -76,6 +76,11 @@ public class CourierService {
         }
     }
 
+    /**
+     * select c from courier c
+     * where c.username = username and c.state = state
+     * orderBy c.arrivalDate.desc
+     */
     public SearchResponseDto searchFilter(UserDetailsImpl userDetails, Long state) {
         Boolean status = false;
         if (state == 1) {

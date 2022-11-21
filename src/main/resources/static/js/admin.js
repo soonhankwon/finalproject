@@ -222,10 +222,10 @@ function saveSubRoute(){
         usernames.push(user);
         subRoutes.push(sub);
     }
-    if(usernamelength + saveCount > 2080){
-        alert("입력 문자가 너무 많습니다. 총 입력 문자 길이: " + usernamelength+ saveCount);
-        return;
-    }
+    // if(usernamelength + saveCount > 2080){
+    //     alert("입력 문자가 너무 많습니다. 총 입력 문자 길이: " + usernamelength+ saveCount);
+    //     return;
+    // }
 
     if(!confirm("작업을 수행하시겟습니까?")){
         alert("작업 취소");

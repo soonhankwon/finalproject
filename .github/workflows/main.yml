@@ -8,7 +8,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, develop ]
 
 permissions:
   contents: read
@@ -63,5 +63,4 @@ jobs:
           docker tag leejasun/final-project:${GITHUB_SHA::7} final-project
           docker stop server
           docker run -d --rm --name server -p 80:8080 final-project
-          
           

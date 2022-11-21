@@ -118,7 +118,7 @@ public class CourierService {
         Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
 
         // 수령인 이름으로 조회.
-        List<CourierDto> courList = courierRepository.findByCustomer(customer);
+        List<CourierDto> courList = courierRepository.searchCustomer(customer);
 
         return new SearchResponseDto(courList, completeCnt, progressCnt);
     }

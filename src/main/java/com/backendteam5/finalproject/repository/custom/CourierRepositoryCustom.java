@@ -8,4 +8,5 @@ public interface CourierRepositoryCustom {
 
     List<CourierDto> searchByUsernameAndState(String username, Boolean state);
     Long countUsernameAndState(String username, Boolean state);
+    List<CourierDto> searchCustomer(String customer);
 }

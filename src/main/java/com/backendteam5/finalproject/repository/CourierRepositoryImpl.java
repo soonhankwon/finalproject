@@ -22,24 +22,18 @@ public class CourierRepositoryImpl implements CourierRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+    // 배송 상태별 조회
     @Override
     public List<CourierDto> searchByUsernameAndState(String username, Boolean state) {
         return queryFactory
-                .select(new QCourierDto(
-                        courier.id,
-                        courier.route,
-                        courier.subRoute,
-                        courier.state,
-                        courier.customer,
-                        courier.arrivalDate,
-                        courier.username
-                        ))
+                .select(getCourierConstructor())
                 .from(courier)
                 .where(usernameEq(username), stateEq(state))
                 .orderBy(courier.arrivalDate.desc())
                 .fetch();
     }
 
+    // 배송상태별 택배 개수
     @Override
     public Long countUsernameAndState(String username, Boolean state) {
         return queryFactory
@@ -47,6 +41,32 @@ public class CourierRepositoryImpl implements CourierRepositoryCustom {
                 .from(courier)
                 .where(usernameEq(username), stateEq(state))
                 .fetchOne();
+    }
+
+    // 수령인 이름으로 택배 조회
+    @Override
+    public List<CourierDto> searchCustomer(String customer) {
+        return queryFactory
+                .select(getCourierConstructor())
+                .from(courier)
+                .where(customerEq(customer))
+                .fetch();
+    }
+
+    private static QCourierDto getCourierConstructor() {
+        return new QCourierDto(
+                courier.id,
+                courier.route,
+                courier.subRoute,
+                courier.state,
+                courier.customer,
+                courier.arrivalDate,
+                courier.username
+        );
+    }
+
+    private BooleanExpression customerEq(String customer) {
+        return courier.customer.eq(customer);
     }
 
     private BooleanExpression usernameEq(String username) {

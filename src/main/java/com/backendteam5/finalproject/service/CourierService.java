@@ -78,40 +78,48 @@ public class CourierService {
         }
     }
 
-    /**
-     * select c from courier c
-     * where c.username = username and c.state = state
-     * orderBy c.arrivalDate.desc
-     */
+    // 택배기사 페이지 택배 배송 상태별 조회.
+    @Transactional(readOnly = true)
     public SearchResponseDto searchFilter(UserDetailsImpl userDetails, Long state) {
-        Boolean status = false;
-        if (state == 1) {
-            status = true;
-//            List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
-            List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUsername(), status);
-            Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+
+        /*
+         * progressCnt : 배송중인 택배의 개수
+         * completeCnt : 배송완료한 택배의 개수
+         */
+        boolean status = false;
+        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+        status = true;
+        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+
+        // state == 0 배송중 조회.
+        if (state == 0) {
             status = false;
-            Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+            List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUsername(), status);
             return new SearchResponseDto(courierList, completeCnt, progressCnt);
 
         }
-//        List<Courier> courierList = courierRepository.findByUsernameAndStateOrderByArrivalDateDesc(userDetails.getUsername(), status);
+
+        // state == 1 배송 완료 조회.
         List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUsername(), status);
-        status = true;
-        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
-        status = false;
-        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
         return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
-//    public SearchResponseDto searchCustomer(UserDetailsImpl userDetails, String customer) {
-//        Boolean status;
-//        status = true;
-//        Long completeCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
-//        status = false;
-//        Long progressCnt = courierRepository.countByUsernameAndState(userDetails.getUsername(), status);
-//        List<Courier> courList = courierRepository.findByCustomer(customer);
-//
-//        return new SearchResponseDto(courList, completeCnt, progressCnt);
-//    }
+    // 택배기사 페이지 customer(수령인)으로 조회
+    @Transactional(readOnly = true)
+    public SearchResponseDto searchCustomer(UserDetailsImpl userDetails, String customer) {
+
+        /*
+         * progressCnt : 배송중인 택배의 개수
+         * completeCnt : 배송완료한 택배의 개수
+         */
+        boolean status = true;
+        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+        status = false;
+        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+
+        // 수령인 이름으로 조회.
+        List<CourierDto> courList = courierRepository.findByCustomer(customer);
+
+        return new SearchResponseDto(courList, completeCnt, progressCnt);
+    }
 }

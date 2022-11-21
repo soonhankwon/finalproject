@@ -114,6 +114,7 @@ function searchCourier(){
     }
 }
 
+
 /* 다대다 할당 */
 function updateCourier(){
     alert("입력된 값의 유효성을 검사합니다.");

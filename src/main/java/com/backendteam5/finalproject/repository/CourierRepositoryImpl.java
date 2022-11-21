@@ -2,10 +2,7 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
-import com.backendteam5.finalproject.entity.Courier;
-import com.backendteam5.finalproject.entity.QCourier;
-import com.backendteam5.finalproject.repository.custom.CourierRepositoryCustom;
-import com.querydsl.core.types.Predicate;
+import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -14,7 +11,7 @@ import java.util.List;
 
 import static com.backendteam5.finalproject.entity.QCourier.*;
 
-public class CourierRepositoryImpl implements CourierRepositoryCustom {
+public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private final JPAQueryFactory queryFactory;
 

@@ -36,6 +36,7 @@ public class CourierRepositoryImpl implements CourierRepositoryCustom {
                         ))
                 .from(courier)
                 .where(usernameEq(username), stateEq(state))
+                .orderBy(courier.arrivalDate.desc())
                 .fetch();
     }
 

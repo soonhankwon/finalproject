@@ -15,8 +15,10 @@ public class AdminMainResDto {
     private List<Account> userList;
     private List<Courier> courierList;
 
-    public AdminMainResDto(List<Account> userList, List<Courier> courierList){
+    private List<Integer> counts;
+    public AdminMainResDto(List<Account> userList, List<Courier> courierList, List<Integer> count){
         this.userList = userList;
         this.courierList = courierList;
+        this.counts = count;
     }
 }

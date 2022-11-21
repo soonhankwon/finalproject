@@ -7,51 +7,39 @@ function searchAll(){
         type: 'GET',
         url: '/api/search/courier',
         success: function (response){
-            let str = "검색된 송장의 갯수 : " + response['courierList'].length;
-            $('#courierCnt').val(str);
-            let courierList = response['courierList'];
+            let counts = response['counts'];
             let userList = response['userList'];
+
             let userTable = $("#user-table-body");
             let courierTable = $("#courier-table-body");
+            let barstate = $("#savePer");
+            let barInfo = $("#barInfo");
+
             userTable.empty();
             courierTable.empty();
+            barstate.empty();
+
             if(userList.length === 0){
                 userTable.append("<tr><td colspan='3'>검색된 정보가 없습니다.</td></tr>");
             }else{
                 for (let i = 0; i < userList.length; i++) {
                     let html = "<tr>" +
                         "<td><input type='checkbox' name='User-select'></td>" +
-                        "<td>" + userList[i]['id'] + "</td>" +
-                        "<td>" + userList[i]['username'] + "</td></tr>"
+                        "<td>" + userList[i]['username'] + "</td>" +
+                        "<td>" + counts[i] + "</td></tr>"
                     userTable.append(html);
                 }
             }
             courierTable.append("<tr><td colspan='8'>검색된 정보가 없습니다.</td></tr>")
-            // if(courierList.length === 0){
-            //     courierTable.append("<tr><td colspan='8'>검색된 정보가 없습니다.</td></tr>")
-            // }else{
-            //     for(let i=0; i<courierList.length; i++){
-            //
-            //         let id = courierList[i]['id'];
-            //         let route = courierList[i]['route'];
-            //         let subroute = courierList[i]['subRoute'];
-            //         let customer = courierList[i]['customer'];
-            //         let realstate = courierList[i]['state'];
-            //         let arrivalDate = courierList[i]['arrivalDate'];
-            //         let trueusername = courierList[i]['username'];
-            //
-            //         let html = "<tr>"+
-            //             "<td><input type='checkbox' name='Courier-select'></td>"+
-            //             `<td onclick="updateOne(${i})" align='middle'><input id='number-${i}' name='number-${i}' type='text' value='${id}'readonly/>`+"</td>"+
-            //             `<td align='middle'><input id='route-${i}' name='route-${i}' type='text' value='${route}'readonly/>`+"</td>"+
-            //             `<td align='middle'><input id='subroute-${i}' name='subroute-${i}' type='text' value='${subroute}'readonly/>`+"</td>"+
-            //             `<td align='middle'><input id='state-${i}' name='state-${i}' type='text' value='${realstate}'readonly/>`+"</td>"+
-            //             `<td align='middle'><input id='customer-${i}' name='customer-${i}' type='text' value='${customer}'readonly/>`+"</td>"+
-            //             `<td align='middle'><input id='arrivalDate-${i}' name='arrivalDate-${i}' type='text' value='${arrivalDate}'readonly/>`+"</td>"+
-            //             `<td align='middle'><input id='username-${i}' name='username-${i}' type='text' value='${trueusername}'readonly/>`+"</td></tr>"
-            //         courierTable.append(html);
-            //     }
-            // }
+
+            let total = counts.reduce((sum, curr) => sum+curr);
+            let realPer = Math.floor((total - counts[0])/total * 100);
+            console.log(realPer);
+            barInfo.val(`현재 할당 상황 : ${realPer}%`)
+            barstate.val(realPer);
+
+            let str = "검색된 송장의 갯수 : " + total;
+            $('#courierCnt').val(str);
         }
     })
 }
@@ -85,8 +73,7 @@ function searchCourier(){
                     for (let i = 0; i < userList.length; i++) {
                         let html = "<tr>" +
                             "<td><input type='checkbox' name='User-select'></td>" +
-                            "<td>" + userList[i]['id'] + "</td>" +
-                            "<td>" + userList[i]['username'] + "</td></tr>"
+                            "<td colspan='2'>" + userList[i]['username'] + "</td></tr>"
                         userTable.append(html);
                     }
                 }
@@ -137,8 +124,7 @@ function updateCourier(){
     checkbox.each(function (i){
         let tr = checkbox.parent().parent().eq(i);
         let td = tr.children();
-        usernames.push(td.eq(2).text());
-        usernamelenth += td.eq(2).text().length;
+        usernames.push(td.eq(1).text());
     })
 
     if(usernames.length <1){

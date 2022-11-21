@@ -36,6 +36,10 @@
     <div class="search-bar-element">
     <button value="송장 할당" onclick="updateCourier()">할당 내역 적용</button>
     </div>
+    <div class="search-bar-element">
+        <input type="text" value="" id="barInfo" readonly/>
+        <progress style="height: 40px; vertical-align: middle" value="0" max="100" id="savePer"/>
+    </div>
     <div class="search-bar-element"><input type="text" id="courierCnt" readonly/>
     </div>
 </div>
@@ -58,8 +62,8 @@
         <thead class="user-table-header">
             <tr>
                 <th width="15%">Check</th>
-                <th>number</th>
-                <th>UserName</th>
+                <th>유저 이름</th>
+                <th>할당된 갯수</th>
             </tr>
         </thead>
         <tbody class="user-table-body" id="user-table-body">
@@ -72,13 +76,13 @@
         <thead class="courier-table-header">
         <tr>
             <th width="5%"><input type="checkbox" name="Courier-select" onclick="selectAll(this)"></th>
-            <th width="20%">Number</th>
-            <th width="5%">Route</th>
-            <th width="5%">SubRoute</th>
-            <th width="12.5%">State</th>
-            <th width="12.5%">Customer</th>
-            <th width="20%">ArrivalDate</th>
-            <th width="20%">UserName</th>
+            <th width="20%">송장 고유번호</th>
+            <th width="5%">담당 지역</th>
+            <th width="5%">세부 지역</th>
+            <th width="12.5%">배송 상태</th>
+            <th width="12.5%">고객명</th>
+            <th width="20%">도착 날짜</th>
+            <th width="20%">담당자</th>
         </tr>
         </thead>
         <tbody class="courier-table-body" id="courier-table-body">

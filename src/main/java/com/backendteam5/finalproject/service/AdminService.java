@@ -26,9 +26,14 @@ public class AdminService {
     public AdminMainResDto findAll(UserDetailsImpl userDetails) {
         String route = userDetails.getUser().getRoute();
         List<Account> accountList = new LinkedList<>();
+        List<Integer> counts = new LinkedList<>();
+
         accountList.add(userDetails.getUser());
         accountList.addAll(accountRepository.findByRouteAndRole(route, UserRoleEnum.USER));
-        return new AdminMainResDto(accountList, courierRepository.findByRoute(route));
+
+        for(Account account: accountList)   counts.add(courierRepository.countCourierByUsername(account.getUsername()));
+
+        return new AdminMainResDto(accountList, null, counts);
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +48,7 @@ public class AdminService {
             if(accounts.isEmpty())  throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
             accountList.addAll(accounts);
         }
-        return new AdminMainResDto(accountList, Collections.singletonList(courier));
+        return new AdminMainResDto(accountList, Collections.singletonList(courier), null);
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +118,7 @@ public class AdminService {
                 }
             }
         }
-        return new AdminMainResDto(checkuser(account, username), courierList);
+        return new AdminMainResDto(checkuser(account, username), courierList, null);
     }
 
     public List<Account> checkuser(Account account, String username) {

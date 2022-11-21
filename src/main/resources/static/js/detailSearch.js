@@ -14,25 +14,25 @@ function setDone(){
         type: 'GET',
         url: `/api/search/courier/sorted` + Params,
         success: function (response) {
-            let userTable = $(opener.document).find("#user-table-body");
+            // let userTable = $(opener.document).find("#user-table-body");
             let courierTable = $(opener.document).find("#courier-table-body");
-            userTable.empty();
+            // userTable.empty();
             courierTable.empty();
             let str = "검색된 송장의 갯수 : " + response['courierList'].length;
             $(opener.document).find('#courierCnt').val(str);
             let courierList = response['courierList'];
-            let userList = response['userList'];
-            if (userList.length === 0) {
-                userTable.append("<tr><td colspan='3'>검색된 정보가 없습니다.</td></tr>");
-            } else {
-                for (let i = 0; i < userList.length; i++) {
-                    let html = "<tr>" +
-                        "<td><input type='checkbox' name='User-select'></td>" +
-                        "<td>" + userList[i]['id'] + "</td>" +
-                        "<td>" + userList[i]['username'] + "</td></tr>"
-                    userTable.append(html);
-                }
-            }
+            // let userList = response['userList'];
+            // if (userList.length === 0) {
+            //     userTable.append("<tr><td colspan='3'>검색된 정보가 없습니다.</td></tr>");
+            // } else {
+            //     for (let i = 0; i < userList.length; i++) {
+            //         let html = "<tr>" +
+            //             "<td><input type='checkbox' name='User-select'></td>" +
+            //             "<td>" + userList[i]['id'] + "</td>" +
+            //             "<td>" + userList[i]['username'] + "</td></tr>"
+            //         userTable.append(html);
+            //     }
+            // }
 
             if (courierList.length === 0) {
                 courierTable.append("<tr><td colspan='8'>검색된 정보가 없습니다.</td></tr>")

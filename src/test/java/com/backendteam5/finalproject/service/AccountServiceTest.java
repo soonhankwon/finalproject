@@ -6,9 +6,6 @@ import com.backendteam5.finalproject.entity.CourierInfo;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierInfoRepository;
-import com.backendteam5.finalproject.repository.CourierRepository;
-import org.apache.catalina.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,16 +14,11 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,28 +66,32 @@ class AccountServiceTest {
     }
 
 
-    @Test
-    @DisplayName("유저 회원가입 정상 테스트")
-    void successSignup() {
-        // 회원가입Dto 생성
-        SignupRequestDto signupRequestDto = getSignupRequestDto();
+    @Nested
+    @DisplayName("성공 케이스")
+    class successCases {
+        @Test
+        @DisplayName("유저 회원가입 정상 테스트")
+        void successSignup() {
+            // 회원가입Dto 생성
+            SignupRequestDto signupRequestDto = getSignupRequestDto();
 
-        // AccountService 생성자 생성후 Service의 registerAccount함수 실행
-        AccountService accountService = getAccountService();
-        accountService.registerAccount(signupRequestDto);
-    }
+            // AccountService 생성자 생성후 Service의 registerAccount함수 실행
+            AccountService accountService = getAccountService();
+            accountService.registerAccount(signupRequestDto);
+        }
 
-    @Test
-    @DisplayName("어드민 회원가입 정상 테스트")
-    void adminSuccessSignup() {
-        // 회원가입Dto 생성, Admin true로 변경(기본은 false), Admin토큰 할당.
-        SignupRequestDto signupRequestDto = getSignupRequestDto();
-        signupRequestDto.setAdmin(true);
-        signupRequestDto.setAdminToken(ADMIN_TOKEN);
+        @Test
+        @DisplayName("어드민 회원가입 정상 테스트")
+        void adminSuccessSignup() {
+            // 회원가입Dto 생성, Admin true로 변경(기본은 false), Admin토큰 할당.
+            SignupRequestDto signupRequestDto = getSignupRequestDto();
+            signupRequestDto.setAdmin(true);
+            signupRequestDto.setAdminToken(ADMIN_TOKEN);
 
-        // AccountService 생성자 생성후 Service의 registerAccount함수 실행
-        AccountService accountService = getAccountService();
-        accountService.registerAccount(signupRequestDto);
+            // AccountService 생성자 생성후 Service의 registerAccount함수 실행
+            AccountService accountService = getAccountService();
+            accountService.registerAccount(signupRequestDto);
+        }
     }
 
     @Nested
@@ -110,7 +106,8 @@ class AccountServiceTest {
             @DisplayName("아이디 중복확인")
             void failOverlapUsername() {
                 // 정상 회원가입 한번 실행.
-                successSignup();
+                SignupRequestDto signupRequestDtoTest = getSignupRequestDto();
+                accountRepository.save(new Account(signupRequestDtoTest, roleUser));
 
                 // 회원가입Dto 생성
                 SignupRequestDto signupRequestDto = getSignupRequestDto();

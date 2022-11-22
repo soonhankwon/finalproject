@@ -1,6 +1,8 @@
 package com.backendteam5.finalproject.entity;
 
+import com.backendteam5.finalproject.dto.SignupRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,6 +34,13 @@ public class Account {
         this.username = username;
         this.password = password;
         this.route = route;
+        this.role = role;
+    }
+
+    public Account(SignupRequestDto signupRequestDto, UserRoleEnum role) {
+        this.username = signupRequestDto.getUsername();
+        this.password = signupRequestDto.getPassword();
+        this.route = signupRequestDto.getArea();
         this.role = role;
     }
 }

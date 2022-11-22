@@ -165,6 +165,7 @@ function completeSave(id){
                 html += "<td><button>배송완료취소</button></td>";
                 html += '</tr>';
             }
+
             $("#courier-table-body").append(html);
 
             alert("배송완료")

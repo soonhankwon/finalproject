@@ -24,6 +24,11 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public AdminMainResDto findAll(UserDetailsImpl userDetails) {
+        /**
+         * list를 하나더 추가함.
+         * 해당하는 유저네임으로 카운트를 알아내고싶다.
+          */
+
         String route = userDetails.getUser().getRoute();
         List<Account> accountList = new LinkedList<>();
         List<Integer> counts = new LinkedList<>();
@@ -50,6 +55,7 @@ public class AdminService {
         }
         return new AdminMainResDto(accountList, Collections.singletonList(courier), null);
     }
+
 
     @Transactional(readOnly = true)
     public AdminMainResDto sortedCourier(String username, List<Integer> subRoute,

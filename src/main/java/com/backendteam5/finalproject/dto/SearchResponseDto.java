@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class SearchResponseDto {
-    private List<Courier> data;
+    private List<CourierDto> data;
     private Long completeCnt;
     private Long progressCnt;
 }

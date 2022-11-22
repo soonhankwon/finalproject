@@ -21,10 +21,10 @@ public class FinalprojectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-//        List<CourierInfo> courierInfoList = new LinkedList<>();
-//        for(int i = 1; i <= 20; i++){
-//            courierInfoList.add(new CourierInfo("A", i, "구로구 "+ i +"지역"));
-//        }
-//        courierInfoRepository.saveAll(courierInfoList);
+        List<CourierInfo> courierInfoList = new LinkedList<>();
+        for(int i = 1; i <= 20; i++){
+            courierInfoList.add(new CourierInfo("A", i, "구로구 "+ i +"지역"));
+        }
+        courierInfoRepository.saveAll(courierInfoList);
     }
 }

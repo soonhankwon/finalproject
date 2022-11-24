@@ -27,4 +27,8 @@ public class CourierDto {
         this.arrivalDate = arrivalDate;
         this.username = username;
     }
+
+    public void setUpdate(int j, String username) {
+        this.username = username;
+    }
 }

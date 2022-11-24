@@ -1,9 +1,6 @@
 package com.backendteam5.finalproject.service;
 
-import com.backendteam5.finalproject.dto.AdminMainResDto;
-import com.backendteam5.finalproject.dto.AssisReqDto;
-import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
-import com.backendteam5.finalproject.dto.CourierResUpdateDto;
+import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
@@ -27,7 +24,7 @@ public class AdminService {
         /**
          * list를 하나더 추가함.
          * 해당하는 유저네임으로 카운트를 알아내고싶다.
-          */
+         */
 
         String route = userDetails.getUser().getRoute();
         List<Account> accountList = new LinkedList<>();
@@ -36,7 +33,7 @@ public class AdminService {
         accountList.add(userDetails.getUser());
         accountList.addAll(accountRepository.findByRouteAndRole(route, UserRoleEnum.USER));
 
-        for(Account account: accountList)   counts.add(courierRepository.countCourierByUsername(account.getUsername()));
+        for (Account account : accountList) counts.add(courierRepository.countCourierByUsername(account.getUsername()));
 
         return new AdminMainResDto(accountList, null, counts);
     }
@@ -48,9 +45,9 @@ public class AdminService {
         Courier courier = courierRepository.findById(courierId).orElseThrow(
                 () -> new IllegalArgumentException("해당 courier가 존재하지 않습니다.")
         );
-        if(!courier.getUsername().equals(userDetails.getUsername())) {
+        if (!courier.getUsername().equals(userDetails.getUsername())) {
             List<Account> accounts = accountRepository.findByUsernameStartingWith(courier.getUsername());
-            if(accounts.isEmpty())  throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
+            if (accounts.isEmpty()) throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
             accountList.addAll(accounts);
         }
         return new AdminMainResDto(accountList, Collections.singletonList(courier), null);
@@ -132,9 +129,9 @@ public class AdminService {
         accountList.add(account);
         if (username.isEmpty()) {
             accountList.addAll(accountRepository.findByRouteAndRole(account.getRoute(), UserRoleEnum.USER));
-        } else if(!account.getUsername().equals(username)) {
+        } else if (!account.getUsername().equals(username)) {
             List<Account> accounts = accountRepository.findByUsernameStartingWith(username);
-            if(accounts.isEmpty())  throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
+            if (accounts.isEmpty()) throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
             accountList.addAll(accounts);
         }
         return accountList;
@@ -143,51 +140,61 @@ public class AdminService {
     @Transactional
     public CourierResUpdateDto updateCourier(Long courierId, UserDetailsImpl userDetails,
                                              CourierReqUpdateDto courierReqUpdateDto) {
-        Courier courier = courierRepository.findById(courierId)
-                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
+
+        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("해당 계정이 존재하지 않습니다."));
         courier.update(courierReqUpdateDto);
         courierRepository.save(courier);
-        return new CourierResUpdateDto("운송장 할당완료");
+
+        return new CourierResUpdateDto("운송장 상태 변경완료");
     }
 
     @Transactional
-    public CourierResUpdateDto updateCouriers(AssisReqDto assisReqDto, UserDetailsImpl userDetails) {
+    public CourierResUpdateDto updateCouriers(UpdateReqDto updateReqDto, UserDetailsImpl userDetails) {
 
-        if (assisReqDto.getCourierIds().size() != assisReqDto.getUsernames().size()) {
-            for (int i = 0; i < assisReqDto.getUsernames().size(); i++) {
-                Optional<Account> account = accountRepository.findByUsername(assisReqDto.getUsernames().get(i));
+        if (updateReqDto.getCourierIds().size() != updateReqDto.getUsernames().size()) {
+            for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
+                Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
+                        .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
 
-                for (int j = 0; j < assisReqDto.getCourierIds().size(); j++) {
-                    Optional<Courier> courier = courierRepository.findById(assisReqDto.getCourierIds().get(j));
-                    courier.get().setUpdate(5, String.valueOf(account.get().getUsername()));
+                for (int j = 0; j < updateReqDto.getCourierIds().size(); j++) {
+                    courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(j), account.getUsername());
                 }
             }
             return new CourierResUpdateDto("운송장 할당완료");
         } else {
-            for (int i = 0; i < assisReqDto.getUsernames().size(); i++) {
-                Optional<Account> account = accountRepository.findByUsername(assisReqDto.getUsernames().get(i));
-                Optional<Courier> courier = courierRepository.findById(assisReqDto.getCourierIds().get(i));
-                for (int j = 0; j < assisReqDto.getCourierIds().size(); j++) {
-                    courier.get().setUpdate(5, String.valueOf(account.get().getUsername()));
+            for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
+                Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
+                        .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
+
+                Courier courier = courierRepository.findById(updateReqDto.getCourierIds().get(i))
+                        .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
+                for (int j = 0; j < updateReqDto.getCourierIds().size(); j++) {
+                    courier.setUpdate(5, account.getUsername());
                 }
             }
         }
         return new CourierResUpdateDto("운송장 할당완료");
-
     }
 
+
     @Transactional
-    public CourierResUpdateDto updateCourierByAllUserBySubRoute(AssisReqDto assisReqDto, UserDetailsImpl userDetails) {
+    public CourierResUpdateDto updateCourierByAllUserBySubRoute(UpdateReqDto updateReqDto, UserDetailsImpl
+            userDetails) {
 
-        for (int i = 0; i < assisReqDto.getUsernames().size(); i++) {
-            Optional<Account> account = accountRepository.findByUsername(assisReqDto.getUsernames().get(i));
-            List<Courier> courier = courierRepository.findBySubRoute(assisReqDto.getSubRoutes().get(i));
-
-            for (int j = 0; j < courier.size(); j++) {
-                courier.get(j).setUpdate(5, String.valueOf(account.get().getUsername()));
+        for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
+            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
+                    .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
+//            List<CourierDto> courier = courierRepository.findByRouteAndSubRoute(updateReqDto.getRoutes().get(i),updateReqDto.getSubRoutes().get(i));
+            List<Courier> couriers = courierRepository.findBySubRoute(updateReqDto.getSubRoutes().get(i));
+            for (Courier courier : couriers) {
+                courier.setUpdate(5, account.getUsername());
             }
         }
         return new CourierResUpdateDto("운송장 할당완료");
     }
 }
+

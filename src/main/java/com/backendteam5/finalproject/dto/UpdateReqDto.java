@@ -7,8 +7,9 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class AssisReqDto {
+public class UpdateReqDto {
     private List<String> usernames;
     private List<Long> courierIds;
+    private List<String> routes;
     private List<Integer> subRoutes;
 }

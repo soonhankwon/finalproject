@@ -5,6 +5,9 @@ import com.backendteam5.finalproject.dto.QCourierDto;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -14,6 +17,8 @@ import static com.backendteam5.finalproject.entity.QCourier.*;
 public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private final JPAQueryFactory queryFactory;
+    @Autowired
+    EntityManager em;
 
     public CourierRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
@@ -50,6 +55,23 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
+    public List<CourierDto> findByRouteAndSubRoute(String route, int subRoute) {
+        return  queryFactory
+                .select(getCourierConstructor())
+                .from(courier)
+                .where(courier.route.eq(route), courier.subRoute.eq(subRoute))
+                .fetch();
+    }
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    public void updateByCourierId(Long courierId, String username) {
+        long execute = queryFactory
+                .update(courier)
+                .set(courier.username, username)
+                .where(courier.id.eq(courierId))
+                .execute();
+    }
     private static QCourierDto getCourierConstructor() {
         return new QCourierDto(
                 courier.id,

@@ -55,4 +55,6 @@ public interface CourierRepository extends JpaRepository<Courier, Long>, CustomC
     List<Courier> findByUsernameAndStateOrderByArrivalDateDesc(String username, Boolean state);
     Long countByUsernameAndState(String username, Boolean state);
     List<CourierDto> findByCustomer(String customer);
+
+    void updateByCourierId(Long courierId, String username);
 }

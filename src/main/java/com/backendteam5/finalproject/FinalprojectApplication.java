@@ -12,19 +12,19 @@ import java.util.List;
 
 @SpringBootApplication
 @RequiredArgsConstructor
-public class FinalprojectApplication implements CommandLineRunner {
+public class FinalprojectApplication {
     private final CourierInfoRepository courierInfoRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(FinalprojectApplication.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception{
-        List<CourierInfo> courierInfoList = new LinkedList<>();
-        for(int i = 1; i <= 20; i++){
-            courierInfoList.add(new CourierInfo("A", i, "구로구 "+ i +"지역"));
-        }
-        courierInfoRepository.saveAll(courierInfoList);
-    }
+//    @Override
+//    public void run(String... args) throws Exception{
+//        List<CourierInfo> courierInfoList = new LinkedList<>();
+//        for(int i = 1; i <= 20; i++){
+//            courierInfoList.add(new CourierInfo("A", i, "구로구 "+ i +"지역"));
+//        }
+//        courierInfoRepository.saveAll(courierInfoList);
+//    }
 }

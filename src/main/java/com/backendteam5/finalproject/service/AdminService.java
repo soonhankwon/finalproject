@@ -155,26 +155,23 @@ public class AdminService {
     @Transactional
     public CourierResUpdateDto updateCouriers(UpdateReqDto updateReqDto, UserDetailsImpl userDetails) {
 
-        if (updateReqDto.getCourierIds().size() != updateReqDto.getUsernames().size()) {
-            for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
-                Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
-                        .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
+        if (updateReqDto.getUsernames().size() == 1) {
+            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(0))
+                    .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
 
-                for (int j = 0; j < updateReqDto.getCourierIds().size(); j++) {
-                    courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(j), account.getUsername());
-                }
+            for (int i = 0; i < updateReqDto.getCourierIds().size(); i++) {
+                courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(i), account.getUsername());
             }
             return new CourierResUpdateDto("운송장 할당완료");
-        } else {
+        } else if (updateReqDto.getUsernames().size() == updateReqDto.getCourierIds().size()) {
             for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
                 Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
                         .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
 
                 Courier courier = courierRepository.findById(updateReqDto.getCourierIds().get(i))
                         .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
-                for (int j = 0; j < updateReqDto.getCourierIds().size(); j++) {
-                    courier.setUpdate(5, account.getUsername());
-                }
+
+                courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(i), account.getUsername());
             }
         }
         return new CourierResUpdateDto("운송장 할당완료");

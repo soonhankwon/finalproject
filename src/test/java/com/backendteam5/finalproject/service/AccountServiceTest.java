@@ -1,191 +1,123 @@
 package com.backendteam5.finalproject.service;
 
 import com.backendteam5.finalproject.dto.SignupRequestDto;
-import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.CourierInfo;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierInfoRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.LinkedList;
-import java.util.List;
 
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 
-@DataJpaTest
-@DisplayName("회원가입 단위테스트")
+@ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
-    @Autowired
-    AccountRepository accountRepository;
+    @InjectMocks // CourierService 객체가 만들어질 때 CourierServiceTest 파일에 @Mock로 등록된 모든 애들을 주입받는다.
+    private AccountService accountService;
 
     @Mock
-    BCryptPasswordEncoder passwordEncoder;
+    private AccountRepository accountRepository;
 
-    @Autowired
-    CourierInfoRepository courierInfoRepository;
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
 
-    @Value("${manage.ADMIN_TOKEN}")
-    private String ADMIN_TOKEN;
-
-    private String username;
-    private String password;
-    private String route;
-    private UserRoleEnum roleUser;
-    private UserRoleEnum roleAdmin;
-
-    private boolean admin;
-
-    @BeforeEach
-    void setUp() {
-        // 기본 필드 생성.
-        username = "test";
-        password = "1234";
-        route = "구로구";
-        admin = false;
-        roleUser = UserRoleEnum.USER;
-        roleAdmin = UserRoleEnum.ADMIN;
-
-        List<CourierInfo> courierInfoList = new LinkedList<>();
-        for(int i = 1; i <= 20; i++){
-            courierInfoList.add(new CourierInfo("A", i, "구로구 "+ i +"지역"));
-        }
-        courierInfoRepository.saveAll(courierInfoList);
-    }
-
+    @Mock
+    private CourierInfoRepository courierInfoRepository;
 
     @Nested
-    @DisplayName("성공 케이스")
-    class successCases {
-        @Test
-        @DisplayName("유저 회원가입 정상 테스트")
-        void successSignup() {
-            // 회원가입Dto 생성
-            SignupRequestDto signupRequestDto = getSignupRequestDto();
+    @DisplayName("회원가입")
+    class signup {
 
-            // AccountService 생성자 생성후 Service의 registerAccount함수 실행
-            AccountService accountService = getAccountService();
-            accountService.registerAccount(signupRequestDto);
+        private String ADMIN_TOKEN;
+        private SignupRequestDto requestDto;
+        private UserRoleEnum role;
+
+        @Test
+        void setUp() {
+            role = UserRoleEnum.USER;
+            ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+
+            requestDto = new SignupRequestDto();
+            requestDto.setUsername("택배기사");
+            requestDto.setArea("구로구");
+            requestDto.setPassword("비밀번호");
+
         }
 
         @Test
-        @DisplayName("어드민 회원가입 정상 테스트")
-        void adminSuccessSignup() {
-            // 회원가입Dto 생성, Admin true로 변경(기본은 false), Admin토큰 할당.
-            SignupRequestDto signupRequestDto = getSignupRequestDto();
-            signupRequestDto.setAdmin(true);
-            signupRequestDto.setAdminToken(ADMIN_TOKEN);
+        @DisplayName("정상 테스트")
+        void registerAccount() {
+            accountService.registerAccount(requestDto);
+        }
 
-            // AccountService 생성자 생성후 Service의 registerAccount함수 실행
-            AccountService accountService = getAccountService();
-            accountService.registerAccount(signupRequestDto);
+        @Test
+        @DisplayName("중복된 사용자 실패케이스")
+        void overlapUsername() {
+
+            given(accountRepository.findByUsername("택배기사")).willThrow(new IllegalArgumentException("중복된 사용자 ID가 존재합니다."));
+
+            SignupRequestDto requestDto2 = new SignupRequestDto();
+            requestDto2.setUsername("택배기사");
+            requestDto2.setArea("구로구");
+            requestDto2.setPassword("비밀번호");
+
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class, () -> {
+                        accountService.registerAccount(requestDto2);
+                    }
+            );
+            System.out.println("exception.getMessage() = " + exception.getMessage());
+
+            assertThat(exception.getMessage()).isEqualTo("중복된 사용자 ID가 존재합니다.");
+            assertThat(exception.getClass()).isEqualTo(IllegalArgumentException.class);
+        }
+
+        @Test
+        @DisplayName("관리자 암호 틀린경우")
+        void notValidAdminToken() {
+            SignupRequestDto requestDto2 = new SignupRequestDto();
+            requestDto2.setUsername("택배기사");
+            requestDto2.setArea("구로구");
+            requestDto2.setPassword("비밀번호");
+            requestDto2.setAdminToken(ADMIN_TOKEN = "123dsaf");
+            requestDto2.setAdmin(true);
+
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class, () -> {
+                        accountService.registerAccount(requestDto2);
+                    }
+            );
+
+            assertThat(exception.getMessage()).isEqualTo("관리자 암호가 틀려 등록이 불가능합니다.");
+            assertThat(exception.getClass()).isEqualTo(IllegalArgumentException.class);
         }
     }
 
-    @Nested
-    @DisplayName("실패 케이스")
-    class failCases {
+    @Test
+    @DisplayName("구를 입력하지 않았을때")
+    void notFoundArea() {
+        SignupRequestDto requestDto2 = new SignupRequestDto();
+        requestDto2.setUsername("택배기사");
+        requestDto2.setPassword("비밀번호");
 
-        @Nested
-        @DisplayName("Account Username")
-        class AccountUsername {
-
-            @Test
-            @DisplayName("아이디 중복확인")
-            void failOverlapUsername() {
-                // 정상 회원가입 한번 실행.
-                SignupRequestDto signupRequestDtoTest = getSignupRequestDto();
-                accountRepository.save(new Account(signupRequestDtoTest, roleUser));
-
-                // 회원가입Dto 생성
-                SignupRequestDto signupRequestDto = getSignupRequestDto();
-
-                // AccountService 생성자 생성후 Service의 registerAccount함수 실행
-                AccountService accountService = getAccountService();
-
-                // 중복확인 에러 확인
-                IllegalArgumentException exception = assertThrows(
-                        IllegalArgumentException.class, () -> {
-                            accountService.registerAccount(signupRequestDto);
-                        }
-                );
-
-                assertThat(exception.getMessage()).isEqualTo("중복된 사용자 ID가 존재합니다.");
-            }
-        }
-
-        @Nested
-        @DisplayName("어드민 토큰")
-        class adminToken {
-
-            @Test
-            @DisplayName("어드민 토큰값 틀린경우")
-            void notValidToken() {
-                // 회원가입Dto 생성, Admin true로 변경(기본은 false), Admin토큰 틀리게 셋팅.
-                SignupRequestDto signupRequestDto = getSignupRequestDto();
-                signupRequestDto.setAdmin(true);
-                signupRequestDto.setAdminToken("아무토큰값");
-
-                // service생성자 생성.
-                AccountService accountService = getAccountService();
-
-                // 어드민 토큰값 틀린경우 에러 확인
-                IllegalArgumentException exception = assertThrows(
-                        IllegalArgumentException.class, () -> {
-                            accountService.registerAccount(signupRequestDto);
-                        }
-                );
-                assertThat(exception.getMessage()).isEqualTo("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-
-            @Test
-            @DisplayName("어드민 토큰값 없는경우")
-            void emptyToken() {
-                // 회원가입Dto 생성, Admin true로 변경(기본은 false), Admin토큰은 빈값.
-                SignupRequestDto signupRequestDto = getSignupRequestDto();
-                signupRequestDto.setAdmin(true);
-
-                // Service생성자 생성.
-                AccountService accountService = getAccountService();
-
-                // 어드민 토큰 입력안한경우 에러 확인.
-                IllegalArgumentException exception = assertThrows(
-                        IllegalArgumentException.class, () -> {
-                            accountService.registerAccount(signupRequestDto);
-                        }
-                );
-                assertThat(exception.getMessage()).isEqualTo("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-        }
-    }
-
-    private AccountService getAccountService() {
-        return new AccountService(
-                passwordEncoder,
-                accountRepository,
-                courierInfoRepository
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> {
+                    accountService.registerAccount(requestDto2);
+                }
         );
-    }
 
-    private SignupRequestDto getSignupRequestDto() {
-        SignupRequestDto signupRequestDto = new SignupRequestDto();
-        signupRequestDto.setUsername(username);
-        signupRequestDto.setArea(route);
-        signupRequestDto.setPassword(password);
-        signupRequestDto.setAdmin(admin);
-        return signupRequestDto;
+        assertThat(exception.getMessage()).isEqualTo("입력하신 구가 없습니다.");
+        assertThat(exception.getClass()).isEqualTo(IllegalArgumentException.class);
     }
 
 }

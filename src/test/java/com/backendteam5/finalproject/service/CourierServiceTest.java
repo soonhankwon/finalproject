@@ -37,10 +37,8 @@ public class CourierServiceTest {
 
     @InjectMocks // CourierService 객체가 만들어질 때 CourierServiceTest 파일에 @Mock로 등록된 모든 애들을 주입받는다.
     private CourierService courierService;
-
     @Mock
     private CourierRepository courierRepository;
-
 
     @BeforeEach
     void init() {
@@ -52,15 +50,12 @@ public class CourierServiceTest {
                 "받는 날짜",
                 "배송기사"
         );
-
         courierRepository.save(courier);
     }
 
     @Nested
     @DisplayName("택배 운송완료 테스트")
     class checkCourierState {
-
-
         @Test
         @DisplayName("택배 운송완료 정상")
         public void successCase() {
@@ -129,7 +124,6 @@ public class CourierServiceTest {
         }
     }
 
-
     @Nested
     @DisplayName("택배 배송완료 취소")
     class uncheckCourierState {
@@ -182,7 +176,6 @@ public class CourierServiceTest {
             assertThat(updateDto.getMsg()).isEqualTo("해당 운송장은 배송대기중입니다.");
             assertThat(updateDto.getClass()).isEqualTo(CourierResUpdateDto.class);
         }
-
 
         @Test
         @DisplayName("배송완료 취소 운송장 없는 경우")
@@ -252,7 +245,6 @@ public class CourierServiceTest {
                     "테스트 유저"
             );
 
-
             List<CourierDto> courierList = new ArrayList<>();
             courierList.add(courier);
             courierList.add(courier2);
@@ -265,8 +257,6 @@ public class CourierServiceTest {
 
             when(courierRepository.countUsernameAndState("테스트 유저", true))
                     .thenReturn(0L);
-
-
 
             SearchResponseDto responseDto = courierService.searchFilter(userDetails, 0L);
 
@@ -343,5 +333,4 @@ public class CourierServiceTest {
             assertThat(responseDto.getCompleteCnt()).isEqualTo(0L);
         }
     }
-
 }

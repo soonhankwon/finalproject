@@ -21,15 +21,15 @@ public class Courier {
     private Boolean state;
     private String customer;
     private String arrivalDate;
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "username_id", nullable = false)
+    private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String route, int subRoute, Boolean state, String customer, String arrivalDate, String username) {
-        this.route = route;
-        this.subRoute = subRoute;
+    public Courier(String state, String customer, String arrivalDate, DeliveryAssignment deliveryAssignment) {
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
-        this.username = username;
+        this.deliveryAssignment = deliveryAssignment;
     }
 
     public void update(CourierReqUpdateDto courierReqUpdateDto) {

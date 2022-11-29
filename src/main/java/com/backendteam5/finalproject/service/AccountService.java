@@ -20,8 +20,8 @@ public class AccountService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
     private final CourierInfoRepository courierInfoRepository;
-    @Value("${manage.ADMIN_TOKEN}")
-    private String ADMIN_TOKEN;
+//    @Value("${manage.ADMIN_TOKEN}")
+//    private String ADMIN_TOKEN;
 
     @Autowired
     public AccountService(BCryptPasswordEncoder passwordEncoder, AccountRepository accountRepository,
@@ -31,18 +31,22 @@ public class AccountService {
         this.courierInfoRepository = courierInfoRepository;
     }
     public void registerAccount(SignupRequestDto requestDto) {
+        String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
         Optional<Account> account = accountRepository.findByUsername(requestDto.getUsername());
         if(account.isPresent()) throw new IllegalArgumentException("중복된 사용자 ID가 존재합니다.");
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
+            System.out.println("service" + ADMIN_TOKEN);
             if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
+
         List<CourierInfo> courierInfo = courierInfoRepository.findByLocationStartingWith(requestDto.getArea());
         if(courierInfo.size() == 0) throw new IllegalArgumentException("입력하신 구가 없습니다.");
-        accountRepository.save(new Account(requestDto.getUsername(), passwordEncoder.encode(requestDto.getPassword()),
-                courierInfo.get(0).getRoute(), role));
+//        accountRepository.save(new Account(requestDto.getUsername(), passwordEncoder.encode(requestDto.getPassword()),
+//                courierInfo.get(0).getRoute(), role));
+        accountRepository.save(new Account(requestDto, role));
     }
 }

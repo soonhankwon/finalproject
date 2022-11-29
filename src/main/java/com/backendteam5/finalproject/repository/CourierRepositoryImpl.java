@@ -68,10 +68,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     public void updateByCourierId(Long courierId, String username) {
         long execute = queryFactory
                 .update(courier)
-                .set(courier.username, username)
+                .set(courier.deliveryAssignment.username, username)
                 .where(courier.id.eq(courierId))
                 .execute();
     }
+
     private static QCourierDto getCourierConstructor() {
         return new QCourierDto(
                 courier.id,
@@ -80,7 +81,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.state,
                 courier.customer,
                 courier.arrivalDate,
-                courier.username
+                courier.deliveryAssignment.username
         );
     }
 
@@ -89,7 +90,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     private BooleanExpression usernameEq(String username) {
-        return courier.username.eq(username);
+        return courier.deliveryAssignment.username.eq(username);
     }
 
     private BooleanExpression stateEq(Boolean state) {

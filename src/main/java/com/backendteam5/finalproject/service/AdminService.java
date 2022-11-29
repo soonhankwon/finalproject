@@ -3,9 +3,11 @@ package com.backendteam5.finalproject.service;
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
+import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
+import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.*;
 public class AdminService {
     private final AccountRepository accountRepository;
     private final CourierRepository courierRepository;
+    private final DeliveryAssignmentRepository deliveryAssignmentRepository;
 
     @Transactional(readOnly = true)
     public AdminMainResDto findAll(UserDetailsImpl userDetails) {
@@ -45,8 +48,8 @@ public class AdminService {
         Courier courier = courierRepository.findById(courierId).orElseThrow(
                 () -> new IllegalArgumentException("해당 courier가 존재하지 않습니다.")
         );
-        if (!courier.getUsername().equals(userDetails.getUsername())) {
-            List<Account> accounts = accountRepository.findByUsernameStartingWith(courier.getUsername());
+        if (!courier.getDeliveryAssignment().getUsername().equals(userDetails.getUsername())) {
+            List<Account> accounts = accountRepository.findByUsernameStartingWith(courier.getDeliveryAssignment().getUsername());
             if (accounts.isEmpty()) throw new IllegalArgumentException("해당 배정자가 존재하지 않습니다.");
             accountList.addAll(accounts);
         }
@@ -144,7 +147,7 @@ public class AdminService {
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
 
-        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
+        Account account = accountRepository.findByUsername(courierReqUpdateDto.getDeliveryAssignment().getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("해당 계정이 존재하지 않습니다."));
         courier.update(courierReqUpdateDto);
         courierRepository.save(courier);
@@ -183,13 +186,10 @@ public class AdminService {
             userDetails) {
 
         for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
-            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
-                    .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
-//            List<CourierDto> courier = courierRepository.findByRouteAndSubRoute(updateReqDto.getRoutes().get(i),updateReqDto.getSubRoutes().get(i));
-            List<Courier> couriers = courierRepository.findBySubRoute(updateReqDto.getSubRoutes().get(i));
-            for (Courier courier : couriers) {
-                courier.setUpdate(5, account.getUsername());
-            }
+            DeliveryAssignment deliveryAssignment = deliveryAssignmentRepository.findByUsername(updateReqDto.getUsernames().get(i));
+            if(deliveryAssignment.getUsername().isEmpty()) throw new IllegalArgumentException("배정자가 존재하지 않습니다.");
+
+            deliveryAssignmentRepository.updateByUsername(updateReqDto.getUsernames().get(i));
         }
         return new CourierResUpdateDto("운송장 할당완료");
     }

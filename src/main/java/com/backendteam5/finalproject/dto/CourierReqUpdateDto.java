@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.dto;
 
+import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,11 +9,11 @@ import lombok.Setter;
 public class CourierReqUpdateDto {
     private Boolean state;
     private String arrivalDate;
-    private String username;
+    private DeliveryAssignment deliveryAssignment;
 
-    public CourierReqUpdateDto (Boolean state, String arrivalDate, String username) {
+    public CourierReqUpdateDto (Boolean state, String arrivalDate, DeliveryAssignment deliveryAssignment) {
         this.state = state;
         this.arrivalDate = arrivalDate;
-        this.username = username;
+        this.deliveryAssignment = deliveryAssignment;
     }
 }

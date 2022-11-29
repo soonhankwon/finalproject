@@ -42,4 +42,5 @@ public class AreaIndex {
         this.xPos = xPos;
         this.yPos = yPos;
     }
+
 }

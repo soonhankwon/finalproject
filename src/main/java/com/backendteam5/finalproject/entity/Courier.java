@@ -28,9 +28,7 @@ public class Courier {
     @JoinColumn(name = "username_id", nullable = false)
     private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String route, int subRoute, Boolean state, String customer, String arrivalDate, DeliveryAssignment deliveryAssignment) {
-        this.route = route;
-        this.subRoute = subRoute;
+    public Courier(String state, String customer, String arrivalDate, DeliveryAssignment deliveryAssignment) {
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;

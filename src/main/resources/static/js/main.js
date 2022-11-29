@@ -145,7 +145,7 @@ function completeSave(id){
     let courierId = id;
     let Params = '?courierId='+courierId;
     $.ajax({
-        url: "/api/save/check"+Params,
+        url: "/api/save/check/" + courierId,
         type: "PATCH",
         success : function(datalist){
             $("#courier-table-body").empty();
@@ -180,7 +180,7 @@ function completeCancel(id){
     let courierId = id;
     let Params = '?courierId='+courierId;
     $.ajax({
-            url: "/api/save/uncheck"+Params,
+            url: "/api/save/uncheck/" + courierId,
         type: "PATCH",
         success : function(datalist){
             $("#courier-table-body").empty();

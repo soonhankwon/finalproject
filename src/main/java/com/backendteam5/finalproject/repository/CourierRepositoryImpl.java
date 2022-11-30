@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
 import static com.backendteam5.finalproject.entity.QCourier.*;
 import static com.backendteam5.finalproject.entity.QDeliveryAssignment.*;
 
@@ -55,10 +56,12 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     @Override
     public List<CourierDto> test(Account account) {
+
         return queryFactory
                 .select(getCourierConstructor())
                 .from(courier)
-                .where(courier.deliveryAssignment.account.contains(account))
+                .join(courier.areaIndex, areaIndex)
+                .where(areaIndex.deliveryAssignment.account.eq(account))
                 .fetch();
     }
 
@@ -69,8 +72,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.customer,
                 courier.arrivalDate,
                 courier.username,
-                courier.areaIndex,
-                courier.deliveryAssignment
+                courier.areaIndex
         );
     }
 

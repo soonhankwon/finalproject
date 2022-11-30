@@ -57,54 +57,71 @@ public class CourierService {
         Optional<AreaIndex> optionalAreaIndex = areaIndexRepository.findById(1L);
         AreaIndex areaIndex = optionalAreaIndex.get();
 
-//        // route : A, subRoute : 2, zipCode : 집코드
-//        Optional<AreaIndex> optionalAreaIndex1 = areaIndexRepository.findById(2L);
-//        AreaIndex areaIndex1 = optionalAreaIndex1.get();
+
+        // route : A, subRoute : 2, zipCode : 집코드
+        Optional<AreaIndex> optionalAreaIndex1 = areaIndexRepository.findById(2L);
+        AreaIndex areaIndex1 = optionalAreaIndex1.get();
+
+//         route : A, subRoute : 3, zipCode : 집코드
+        Optional<AreaIndex> optionalAreaIndex2 = areaIndexRepository.findById(3L);
+        AreaIndex areaIndex2 = optionalAreaIndex2.get();
+//
+//        // route : A, subRoute : 4, zipCode : 집코드
+//        Optional<AreaIndex> optionalAreaIndex13 = areaIndexRepository.findById(4L);
+//        AreaIndex areaIndex3 = optionalAreaIndex1.get();
+
+
 
         // account 만들기
-        Optional<Account> optionalAccount = accountRepository.findById(1L);
-        Account account = optionalAccount.get();
+//        Optional<Account> optionalAccount = accountRepository.findById(1L);
+//        Account account = optionalAccount.get();
 
-        SignupRequestDto requestDto = new SignupRequestDto();
-        requestDto.setUsername("택배기사2");
-        requestDto.setPassword("비밀번호");
-        requestDto.setArea("구로구");
+//        SignupRequestDto requestDto = new SignupRequestDto();
+//        requestDto.setUsername("택배기사2");
+//        requestDto.setPassword("비밀번호");
+//        requestDto.setArea("구로구");
+//
+//        UserRoleEnum role = UserRoleEnum.USER;
+//
+//        accountRepository.save(new Account(requestDto, role));
+//
+//        Optional<Account> optionalAccount1 = accountRepository.findById(2L);
+//        Account account1 = optionalAccount1.get();
+//        System.out.println("account1.getUsername() = " + account1.getUsername());
 
-        UserRoleEnum role = UserRoleEnum.USER;
 
-        accountRepository.save(new Account(requestDto, role));
-
-        Optional<Account> optionalAccount1 = accountRepository.findById(2L);
-        Account account1 = optionalAccount1.get();
-
-        List<Account> accountList = new ArrayList<>();
-        accountList.add(account);
+//        List<Account> accountList = new ArrayList<>();
+//        accountList.add(account);
 //        accountList.add(account1);
 
-//        List<Account> accountList2 = new ArrayList<>();
-//        accountList.add(account);
+//        List<AreaIndex> areaIndexList = new ArrayList<>();
+//        areaIndexList.add(areaIndex);
+//        areaIndexList.add(areaIndex1);
+
+//        List<AreaIndex> areaIndexList1 = new ArrayList<>();
+//        areaIndexList.add(areaIndex2);
+//        areaIndexList.add(areaIndex3);
 
         // DeliveryAssignment 객체 만들기
-        DeliveryAssignment assignment = deliveryAssignmentRepository.save(new DeliveryAssignment(1L, areaIndex, accountList));
+//        deliveryAssignmentRepository.save(new DeliveryAssignment(account));
+//        Optional<DeliveryAssignment> optionalDeliveryAssignment = deliveryAssignmentRepository.findById(1L);
+//        DeliveryAssignment assignment = optionalDeliveryAssignment.get();
+
 //        DeliveryAssignment assignment1 = deliveryAssignmentRepository.save(new DeliveryAssignment(2L, areaIndex1, accountList2));
+
 
 
         for (int i = 1; i <= 20; i++) {
             String index = Integer.toString(i);
             if (i < 10) {
-                Courier courier = new Courier(areaIndex, state, customer + index, arrivalDate, assignment);
+                // route A, subRoute 2  택배기사 : dlwotjs
+                Courier courier = new Courier(areaIndex1, state, customer + index, arrivalDate, 3.421, 3.123);
                 courierRepository.save(courier);
             }
             else {
-                if (i == 11){
-                    accountList.remove(account);
-                    accountList.add(account1);
-                    assignment = deliveryAssignmentRepository.save(new DeliveryAssignment(2L, areaIndex, accountList));
-                }
-                Courier courier = new Courier(areaIndex, state, customer + index, arrivalDate, assignment);
+                // route A , subRoute 3  택배기사 : 택배기사2
+                Courier courier = new Courier(areaIndex2, state, customer + index, arrivalDate, 3.421, 3.123);
                 courierRepository.save(courier);
-
-
             }
         }
 
@@ -197,13 +214,47 @@ public class CourierService {
 
     @Transactional
     public void test3() {
+        SignupRequestDto requestDto = new SignupRequestDto();
+        requestDto.setUsername("택배기사2");
+        requestDto.setPassword("비밀번호");
+        requestDto.setArea("구로구");
+
+        UserRoleEnum role = UserRoleEnum.USER;
+
+        accountRepository.save(new Account(requestDto, role));
+
+        Optional<Account> optionalAccount1 = accountRepository.findById(2L);
+        Account account1 = optionalAccount1.get();
+        System.out.println("account1.getUsername() = " + account1.getUsername());
+
+
+        // account 만들기
+        Optional<Account> optionalAccount = accountRepository.findById(1L);
+        Account account = optionalAccount.get();
+
+        deliveryAssignmentRepository.save(new DeliveryAssignment(account));
+        deliveryAssignmentRepository.save(new DeliveryAssignment(account1));
+
+        Optional<DeliveryAssignment> optionalDeliveryAssignment = deliveryAssignmentRepository.findById(1L);
+        DeliveryAssignment assignment = optionalDeliveryAssignment.get();
+
+        Optional<DeliveryAssignment> optionalDeliveryAssignment1 = deliveryAssignmentRepository.findById(2L);
+        DeliveryAssignment assignment1 = optionalDeliveryAssignment1.get();
+
         char newRoute = 'A';
         for (int i = 0; i <= 20; i++) {
             for (int j = 1; j <= 10; j++) {
+                if ( j == 3) {
+                    areaIndexRepository.save(
+                            new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드", assignment1)
+                    );
+                    return;
+                }
                 areaIndexRepository.save(
-                        new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드")
+                        new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드", assignment)
                 );
             }
+
         }
     }
 }

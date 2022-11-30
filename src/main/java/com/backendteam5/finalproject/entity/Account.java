@@ -30,6 +30,7 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+
     public Account(String username, String password, String route, UserRoleEnum role){
         this.username = username;
         this.password = password;

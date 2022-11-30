@@ -10,6 +10,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class AreaIndex {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,11 +27,15 @@ public class AreaIndex {
     @Column(nullable = false)
     private String zipCode;
 
+    @ManyToOne
+    private DeliveryAssignment deliveryAssignment;
 
-    public AreaIndex(String area, String route, int subRoute, String zipCode) {
+
+    public AreaIndex(String area, String route, int subRoute, String zipCode, DeliveryAssignment deliveryAssignment) {
         this.area = area;
         this.route = route;
         this.subRoute = subRoute;
         this.zipCode = zipCode;
+        this.deliveryAssignment = deliveryAssignment;
     }
 }

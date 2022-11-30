@@ -2,8 +2,11 @@ package com.backendteam5.finalproject.controller;
 
 
 
+import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
+import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.CourierService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,20 +23,31 @@ public class CourierController {
 
     private final CourierService courierService;
 
-    @PostMapping("/test")
+
+    @GetMapping("/test3")
+    public String test3() {
+        courierService.test3();
+        return "성공";
+    }
+    @GetMapping("/test")
     public String dummieTest() {
         courierService.createDommie();
         return "redirect:/";
     }
-    @PatchMapping("/api/save/check/{courierId}")
-    public CourierResUpdateDto checkCourierState(@PathVariable Long courierId) {
-        System.out.println("courierId = " + courierId);
-        return courierService.checkCourierState(courierId);
+
+    @GetMapping("/test2")
+    public List<CourierDto> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return courierService.test(userDetails);
     }
-    @PatchMapping("/api/save/uncheck/{courierId}")
-    public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId) {
-        return courierService.uncheckCourierState(courierId);
-    }
+//    @PatchMapping("/api/save/check/{courierId}")
+//    public CourierResUpdateDto checkCourierState(@PathVariable Long courierId) {
+//        System.out.println("courierId = " + courierId);
+//        return courierService.checkCourierState(courierId);
+//    }
+//    @PatchMapping("/api/save/uncheck/{courierId}")
+//    public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId) {
+//        return courierService.uncheckCourierState(courierId);
+//    }
 
     @GetMapping("/api/search/user/courier")
     public SearchResponseDto searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,

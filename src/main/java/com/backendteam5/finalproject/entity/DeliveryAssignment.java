@@ -18,15 +18,17 @@ public class DeliveryAssignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    private List<AreaIndex> areaIndex = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "areaIndexId")
+    private AreaIndex areaIndex;
 
     // 택배기사는 1명이고 맡을수 있는 구역은 여러개니깐 OneToMany?
     @ManyToOne
     @JoinColumn(name = "accountId")
     private Account account;
 
-    public DeliveryAssignment(Account account) {
+    public DeliveryAssignment(Account account, AreaIndex areaIndex) {
+        this.areaIndex = areaIndex;
         this.account = account;
     }
 }

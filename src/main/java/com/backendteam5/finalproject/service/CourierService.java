@@ -3,22 +3,21 @@ package com.backendteam5.finalproject.service;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
-import com.backendteam5.finalproject.dto.SignupRequestDto;
-import com.backendteam5.finalproject.entity.*;
+import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.AreaIndex;
+import com.backendteam5.finalproject.entity.Courier;
+import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.AreaIndexRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
 import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,135 +29,34 @@ public class CourierService {
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
 
 
+
     @Transactional
-    public void createDommie() {
+    public CourierResUpdateDto checkCourierState(Long courierId) {
 
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
-
-        String state = "배송중";
-        String customer = "수령인";
-
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-
-        String arrivalDate = formatter.format(date);
-        String username = "dlwotjs";
-        char newRoute = 'A';
-//        for (int i = 0; i <= 20; i++) {
-//            for (int j = 1; j <= 10; j++) {
-//                areaIndexRepository.save(
-//                        new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드")
-//                );
-//            }
-//        }
-
-
-        // route : A, subRoute : 1, zipCode : 집코드
-        Optional<AreaIndex> optionalAreaIndex = areaIndexRepository.findById(1L);
-        AreaIndex areaIndex = optionalAreaIndex.get();
-
-
-        // route : A, subRoute : 2, zipCode : 집코드
-        Optional<AreaIndex> optionalAreaIndex1 = areaIndexRepository.findById(2L);
-        AreaIndex areaIndex1 = optionalAreaIndex1.get();
-
-//         route : A, subRoute : 3, zipCode : 집코드
-        Optional<AreaIndex> optionalAreaIndex2 = areaIndexRepository.findById(3L);
-        AreaIndex areaIndex2 = optionalAreaIndex2.get();
-//
-//        // route : A, subRoute : 4, zipCode : 집코드
-//        Optional<AreaIndex> optionalAreaIndex13 = areaIndexRepository.findById(4L);
-//        AreaIndex areaIndex3 = optionalAreaIndex1.get();
-
-
-
-        // account 만들기
-//        Optional<Account> optionalAccount = accountRepository.findById(1L);
-//        Account account = optionalAccount.get();
-
-//        SignupRequestDto requestDto = new SignupRequestDto();
-//        requestDto.setUsername("택배기사2");
-//        requestDto.setPassword("비밀번호");
-//        requestDto.setArea("구로구");
-//
-//        UserRoleEnum role = UserRoleEnum.USER;
-//
-//        accountRepository.save(new Account(requestDto, role));
-//
-//        Optional<Account> optionalAccount1 = accountRepository.findById(2L);
-//        Account account1 = optionalAccount1.get();
-//        System.out.println("account1.getUsername() = " + account1.getUsername());
-
-
-//        List<Account> accountList = new ArrayList<>();
-//        accountList.add(account);
-//        accountList.add(account1);
-
-//        List<AreaIndex> areaIndexList = new ArrayList<>();
-//        areaIndexList.add(areaIndex);
-//        areaIndexList.add(areaIndex1);
-
-//        List<AreaIndex> areaIndexList1 = new ArrayList<>();
-//        areaIndexList.add(areaIndex2);
-//        areaIndexList.add(areaIndex3);
-
-        // DeliveryAssignment 객체 만들기
-//        deliveryAssignmentRepository.save(new DeliveryAssignment(account));
-//        Optional<DeliveryAssignment> optionalDeliveryAssignment = deliveryAssignmentRepository.findById(1L);
-//        DeliveryAssignment assignment = optionalDeliveryAssignment.get();
-
-//        DeliveryAssignment assignment1 = deliveryAssignmentRepository.save(new DeliveryAssignment(2L, areaIndex1, accountList2));
-
-
-
-        for (int i = 1; i <= 20; i++) {
-            String index = Integer.toString(i);
-            if (i < 10) {
-                // route A, subRoute 2  택배기사 : dlwotjs
-                Courier courier = new Courier(areaIndex1, state, customer + index, arrivalDate, 3.421, 3.123);
-                courierRepository.save(courier);
-            }
-            else {
-                // route A , subRoute 3  택배기사 : 택배기사2
-                Courier courier = new Courier(areaIndex2, state, customer + index, arrivalDate, 3.421, 3.123);
-                courierRepository.save(courier);
-            }
+        if (courier.getState().equals("배송중")) {
+            courier.saveUpdate("배송완료", courier.getDeliveryAssignment().getAccount().getUsername());
+            return new CourierResUpdateDto("배송완료");
+        } else {
+            return new CourierResUpdateDto("해당 운송장상태 변경이 불가능합니다.");
         }
-
-//        for (int i = 21; i <= 40; i++) {
-//            String index = Integer.toString(i);
-//            Courier courier = new Courier(areaIndex1, state, customer+index, arrivalDate, assignment1);
-//            courierRepository.save(courier);
-//        }
     }
 
-//    @Transactional
-//    public CourierResUpdateDto checkCourierState(Long courierId) {
-//
-//        Courier courier = courierRepository.findById(courierId)
-//                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
-//
-//        if (!courier.getState()) {
-//            courier.setState(true);
-//            return new CourierResUpdateDto("배송완료");
-//        } else {
-//            return new CourierResUpdateDto("해당 운송장상태 변경이 불가능합니다.");
-//        }
-//    }
-//
-//    @Transactional
-//    public CourierResUpdateDto uncheckCourierState(Long courierId) {
-//
-//        Courier courier = courierRepository.findById(courierId)
-//                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
-//
-//        if (courier.getState()) {
-//            courier.setState(false);
-//            return new CourierResUpdateDto("배송대기상태로 수정되었습니다.");
-//        } else {
-//            return new CourierResUpdateDto("해당 운송장은 배송대기중입니다.");
-//        }
-//    }
+    @Transactional
+    public CourierResUpdateDto uncheckCourierState(Long courierId) {
+
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
+
+        if (courier.getState().equals("배송완료")) {
+            courier.saveUpdate("배송중", "ADMIN");
+            return new CourierResUpdateDto("배송대기상태로 수정되었습니다.");
+        } else {
+            return new CourierResUpdateDto("해당 운송장은 배송대기중입니다.");
+        }
+    }
 
     // 택배기사 페이지 택배 배송 상태별 조회.
     @Transactional(readOnly = true)
@@ -169,19 +67,19 @@ public class CourierService {
          * completeCnt : 배송완료한 택배의 개수
          */
         String status = "배송중";
-        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
         status = "배송완료";
-        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
         // state == 0 배송중 조회.
         if (state == 0) {
             status = "배송중";
-            List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUsername(), status);
+            List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUser(), status);
             return new SearchResponseDto(courierList, completeCnt, progressCnt);
 
         }
 
         // state == 1 배송 완료 조회.
-        List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUsername(), status);
+        List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUser(), status);
         return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
@@ -194,9 +92,9 @@ public class CourierService {
          * completeCnt : 배송완료한 택배의 개수
          */
         String status = "배송완료";
-        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
         status = "배송중";
-        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUsername(), status);
+        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
 
         // 수령인 이름으로 조회.
         List<CourierDto> courList = courierRepository.searchCustomer(customer);
@@ -204,36 +102,37 @@ public class CourierService {
         return new SearchResponseDto(courList, completeCnt, progressCnt);
     }
 
-    public List<CourierDto> test(UserDetailsImpl userDetails) {
-        Optional<Account> byUsername = accountRepository.findByUsername(userDetails.getUsername());
-        Account account = byUsername.get();
 
-
-        return courierRepository.test(account);
-    }
 
     @Transactional
     public void test3() {
-        SignupRequestDto requestDto = new SignupRequestDto();
-        requestDto.setUsername("택배기사2");
-        requestDto.setPassword("비밀번호");
-        requestDto.setArea("구로구");
 
-        UserRoleEnum role = UserRoleEnum.USER;
+        char newRoute = 'A';
+        for (int i = 0; i <= 20; i++) {
+            for (int j = 1; j <= 10; j++) {
+                areaIndexRepository.save(
+                        new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드")
+                );
+            }
+        }
 
-        accountRepository.save(new Account(requestDto, role));
+        // route : A, subRoute : 1, zipCode : 집코드
+        Optional<AreaIndex> optionalAreaIndex = areaIndexRepository.findById(1L);
+        AreaIndex areaIndex = optionalAreaIndex.get();
 
-        Optional<Account> optionalAccount1 = accountRepository.findById(2L);
-        Account account1 = optionalAccount1.get();
-        System.out.println("account1.getUsername() = " + account1.getUsername());
+
+        // route : A, subRoute : 2, zipCode : 집코드
+        Optional<AreaIndex> optionalAreaIndex1 = areaIndexRepository.findById(2L);
+        AreaIndex areaIndex1 = optionalAreaIndex1.get();
+
 
 
         // account 만들기
         Optional<Account> optionalAccount = accountRepository.findById(1L);
         Account account = optionalAccount.get();
 
-        deliveryAssignmentRepository.save(new DeliveryAssignment(account));
-        deliveryAssignmentRepository.save(new DeliveryAssignment(account1));
+        deliveryAssignmentRepository.save(new DeliveryAssignment(account, areaIndex));
+        deliveryAssignmentRepository.save(new DeliveryAssignment(account, areaIndex1));
 
         Optional<DeliveryAssignment> optionalDeliveryAssignment = deliveryAssignmentRepository.findById(1L);
         DeliveryAssignment assignment = optionalDeliveryAssignment.get();
@@ -241,20 +140,24 @@ public class CourierService {
         Optional<DeliveryAssignment> optionalDeliveryAssignment1 = deliveryAssignmentRepository.findById(2L);
         DeliveryAssignment assignment1 = optionalDeliveryAssignment1.get();
 
-        char newRoute = 'A';
-        for (int i = 0; i <= 20; i++) {
-            for (int j = 1; j <= 10; j++) {
-                if ( j == 3) {
-                    areaIndexRepository.save(
-                            new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드", assignment1)
-                    );
-                    return;
-                }
-                areaIndexRepository.save(
-                        new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드", assignment)
+        String state;
+        String customer = "수령인";
+        String arrivalDate = "2022-12-01";
+        String registerDate = "2022-12-03";
+        for (int i = 0; i < 20;i++) {
+            String index = Integer.toString(i);
+            if (i < 10) {
+                state = "배송중";
+                courierRepository.save(
+                    new Courier(state, customer + index, arrivalDate, registerDate, 3.421, 3.123, assignment)
                 );
             }
-
+            else {
+                state = "배송완료";
+                courierRepository.save(
+                        new Courier(state, customer + index, arrivalDate, registerDate,3.421, 3.123, assignment1)
+                );
+            }
         }
     }
 }

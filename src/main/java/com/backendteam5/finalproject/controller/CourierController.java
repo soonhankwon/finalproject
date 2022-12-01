@@ -29,25 +29,16 @@ public class CourierController {
         courierService.test3();
         return "성공";
     }
-    @GetMapping("/test")
-    public String dummieTest() {
-        courierService.createDommie();
-        return "redirect:/";
+    @PatchMapping("/api/save/check/{courierId}")
+    public CourierResUpdateDto checkCourierState(@PathVariable Long courierId) {
+        System.out.println("courierId = " + courierId);
+        return courierService.checkCourierState(courierId);
     }
 
-    @GetMapping("/test2")
-    public List<CourierDto> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return courierService.test(userDetails);
+    @PatchMapping("/api/save/uncheck/{courierId}")
+    public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId) {
+        return courierService.uncheckCourierState(courierId);
     }
-//    @PatchMapping("/api/save/check/{courierId}")
-//    public CourierResUpdateDto checkCourierState(@PathVariable Long courierId) {
-//        System.out.println("courierId = " + courierId);
-//        return courierService.checkCourierState(courierId);
-//    }
-//    @PatchMapping("/api/save/uncheck/{courierId}")
-//    public CourierResUpdateDto uncheckCourierState(@PathVariable Long courierId) {
-//        return courierService.uncheckCourierState(courierId);
-//    }
 
     @GetMapping("/api/search/user/courier")
     public SearchResponseDto searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,

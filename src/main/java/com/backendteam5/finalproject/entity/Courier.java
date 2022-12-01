@@ -18,34 +18,25 @@ public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AreaIndex areaIndex;
     private String state;
     private String customer;
     private String arrivalDate;
-
-
+    private String registerDate;
     private double xPos;
-
-
     private double yPos;
-
-
     private String username = "ADMIN";
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "username_id", nullable = false)
-//    private DeliveryAssignment deliveryAssignment;
+    @ManyToOne
+    private DeliveryAssignment deliveryAssignment;
 
-    public Courier(AreaIndex areaIndex, String state, String customer, String arrivalDate, Double xpos, Double ypos) {
+    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+        this.registerDate = registerDate;
         this.xPos = xpos;
         this.yPos = ypos;
-        this.areaIndex = areaIndex;
+        this.deliveryAssignment = deliveryAssignment;
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
-//        this.deliveryAssignment = deliveryAssignment;
     }
 
 //    public void update(CourierReqUpdateDto courierReqUpdateDto) {
@@ -55,6 +46,10 @@ public class Courier {
 //    }
 
     public void setUpdate(int j, String username) {
+        this.username = username;
+    }
+    public void saveUpdate(String state, String username) {
+        this.state = state;
         this.username = username;
     }
 }

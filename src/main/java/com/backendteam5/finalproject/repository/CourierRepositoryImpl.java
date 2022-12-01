@@ -4,6 +4,7 @@ import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
 import com.backendteam5.finalproject.entity.*;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,22 +26,24 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     // 배송 상태별 조회
     @Override
-    public List<CourierDto> searchByUsernameAndState(String username, String state) {
+    public List<CourierDto> searchByUsernameAndState(Account account, String state) {
         return queryFactory
                 .select(getCourierConstructor())
                 .from(courier)
-                .where(usernameEq(username), stateEq(state))
+                .join(courier.deliveryAssignment, deliveryAssignment)
+                .where(usernameEq(account), stateEq(state))
                 .orderBy(courier.arrivalDate.desc())
                 .fetch();
     }
 
     // 배송상태별 택배 개수
     @Override
-    public Long countUsernameAndState(String username, String state) {
+    public Long countUsernameAndState(Account account, String state) {
         return queryFactory
                 .select(courier.count())
                 .from(courier)
-                .where(usernameEq(username), stateEq(state))
+                .join(courier.deliveryAssignment, deliveryAssignment)
+                .where(usernameEq(account), stateEq(state))
                 .fetchOne();
     }
 
@@ -54,25 +57,15 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    @Override
-    public List<CourierDto> test(Account account) {
-
-        return queryFactory
-                .select(getCourierConstructor())
-                .from(courier)
-                .join(courier.areaIndex, areaIndex)
-                .where(areaIndex.deliveryAssignment.account.eq(account))
-                .fetch();
-    }
-
     private static QCourierDto getCourierConstructor() {
         return new QCourierDto(
                 courier.id,
                 courier.state,
                 courier.customer,
                 courier.arrivalDate,
+                courier.registerDate,
                 courier.username,
-                courier.areaIndex
+                deliveryAssignment
         );
     }
 
@@ -80,8 +73,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return courier.customer.eq(customer);
     }
 
-    private BooleanExpression usernameEq(String username) {
-        return courier.username.eq(username);
+    private BooleanExpression usernameEq(Account account) {
+        return deliveryAssignment.account.eq(account);
     }
 
     private BooleanExpression stateEq(String state) {

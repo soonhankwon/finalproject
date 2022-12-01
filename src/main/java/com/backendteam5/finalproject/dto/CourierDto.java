@@ -21,19 +21,21 @@ public class CourierDto {
     private String state;
     private String customer;
     private String arrivalDate;
+    private String registerDate;
     private String username;
     private String courierUsername;
 
     @QueryProjection
-    public CourierDto(Long id, String state, String customer, String arrivalDate, String username, AreaIndex areaIndex) {
+    public CourierDto(Long id, String state, String customer, String arrivalDate,String registerDate, String username, DeliveryAssignment deliveryAssignment) {
         this.id = id;
-        this.area = areaIndex.getArea();
-        this.route = areaIndex.getRoute();
-        this.subRoute = areaIndex.getSubRoute();
+        this.registerDate = registerDate;
+        this.area = deliveryAssignment.getAreaIndex().getArea();
+        this.route = deliveryAssignment.getAreaIndex().getRoute();
+        this.subRoute = deliveryAssignment.getAreaIndex().getSubRoute();
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
         this.username = username;
-        this.courierUsername = areaIndex.getDeliveryAssignment().getAccount().getUsername();
+        this.courierUsername = deliveryAssignment.getAccount().getUsername();
     }
 }

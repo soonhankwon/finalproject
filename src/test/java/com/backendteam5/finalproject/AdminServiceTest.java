@@ -35,17 +35,10 @@ class AdminServiceTest {
 
     @BeforeEach
     public void before() {
-        Courier courier1 = new Courier("A", 1, false, "soonhan", "11-25", "ADMIN");
-        Courier courier2 = new Courier("A", 1, false, "soonhan", "11-25", "ADMIN");
-        Courier courier3 = new Courier("A", 1, false, "soonhan", "11-25", "ADMIN");
-
         Account account1 = new Account("ADMIN", "1", "A", UserRoleEnum.ADMIN);
         Account account2 = new Account("user1", "1", "A", UserRoleEnum.USER);
         Account account3 = new Account("user2", "1", "A", UserRoleEnum.USER);
 
-        em.persist(courier1);
-        em.persist(courier2);
-        em.persist(courier3);
         em.persist(account1);
         em.persist(account2);
         em.persist(account3);
@@ -69,9 +62,7 @@ class AdminServiceTest {
         Optional<Courier> courier4 = courierRepository.findById(1L);
         Optional<Courier> courier5 = courierRepository.findById(2L);
         Optional<Courier> courier6 = courierRepository.findById(3L);
-        assertThat(courier4.get().getUsername()).isEqualTo("soonhan");
-        assertThat(courier5.get().getUsername()).isEqualTo("soonhan");
-        assertThat(courier6.get().getUsername()).isEqualTo("soonhan");
+
     }
 
     private UpdateReqDto getUpdateReqDto() {

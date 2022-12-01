@@ -29,21 +29,21 @@ public class Courier {
     @ManyToOne
     private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+    public Courier(String state, String customer, String arrivalDate, String registerDate ,double xPos, double yPos, DeliveryAssignment deliveryAssignment) {
         this.registerDate = registerDate;
-        this.xPos = xpos;
-        this.yPos = ypos;
+        this.xPos = xPos;
+        this.yPos = yPos;
         this.deliveryAssignment = deliveryAssignment;
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
     }
 
-//    public void update(CourierReqUpdateDto courierReqUpdateDto) {
-//        this.state = courierReqUpdateDto.getState();
-//        this.arrivalDate = courierReqUpdateDto.getArrivalDate();
-//        this.username = courierReqUpdateDto.getUsername();
-//    }
+    public void update(CourierReqUpdateDto courierReqUpdateDto) {
+        this.state = courierReqUpdateDto.getState();
+        this.arrivalDate = courierReqUpdateDto.getArrivalDate();
+        this.username = courierReqUpdateDto.getUsername();
+    }
 
     public void setUpdate(int j, String username) {
         this.username = username;

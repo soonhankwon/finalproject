@@ -1,26 +1,27 @@
-//package com.backendteam5.finalproject.service;
-//
-//import com.backendteam5.finalproject.dto.*;
-//import com.backendteam5.finalproject.entity.Account;
-//import com.backendteam5.finalproject.entity.Courier;
-//import com.backendteam5.finalproject.entity.DeliveryAssignment;
-//import com.backendteam5.finalproject.entity.UserRoleEnum;
-//import com.backendteam5.finalproject.repository.AccountRepository;
-//import com.backendteam5.finalproject.repository.CourierRepository;
-//import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
-//import com.backendteam5.finalproject.security.UserDetailsImpl;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.util.*;
-//
-//@RequiredArgsConstructor
-//@Service
-//public class AdminService {
-//    private final AccountRepository accountRepository;
-//    private final CourierRepository courierRepository;
-//    private final DeliveryAssignmentRepository deliveryAssignmentRepository;
+package com.backendteam5.finalproject.service;
+
+import com.backendteam5.finalproject.dto.*;
+import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.Courier;
+import com.backendteam5.finalproject.entity.DeliveryAssignment;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
+import com.backendteam5.finalproject.repository.AccountRepository;
+import com.backendteam5.finalproject.repository.CourierRepository;
+import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
+import com.backendteam5.finalproject.security.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+
+@RequiredArgsConstructor
+@Service
+public class AdminService {
+    private final AccountRepository accountRepository;
+    private final CourierRepository courierRepository;
+
+    //    private final DeliveryAssignmentRepository deliveryAssignmentRepository;
 //
 //    @Transactional(readOnly = true)
 //    public AdminMainResDto findAll(UserDetailsImpl userDetails) {
@@ -140,45 +141,38 @@
 //        return accountList;
 //    }
 //
-//    @Transactional
-//    public CourierResUpdateDto updateCourier(Long courierId, UserDetailsImpl userDetails,
-//                                             CourierReqUpdateDto courierReqUpdateDto) {
-//
-//        Courier courier = courierRepository.findById(courierId)
-//                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
-//
-//        Account account = accountRepository.findByUsername(courierReqUpdateDto.getDeliveryAssignment().getUsername())
-//                .orElseThrow(() -> new IllegalArgumentException("해당 계정이 존재하지 않습니다."));
-//        courier.update(courierReqUpdateDto);
-//        courierRepository.save(courier);
-//
-//        return new CourierResUpdateDto("운송장 상태 변경완료");
-//    }
-//
-//    @Transactional
-//    public CourierResUpdateDto updateCouriers(UpdateReqDto updateReqDto, UserDetailsImpl userDetails) {
-//
-//        if (updateReqDto.getUsernames().size() == 1) {
-//            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(0))
-//                    .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
-//
-//            for (int i = 0; i < updateReqDto.getCourierIds().size(); i++) {
-//                courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(i), account.getUsername());
-//            }
-//            return new CourierResUpdateDto("운송장 할당완료");
-//        } else if (updateReqDto.getUsernames().size() == updateReqDto.getCourierIds().size()) {
-//            for (int i = 0; i < updateReqDto.getUsernames().size(); i++) {
-//                Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(i))
-//                        .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
-//
-//                Courier courier = courierRepository.findById(updateReqDto.getCourierIds().get(i))
-//                        .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
-//
-//                courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(i), account.getUsername());
-//            }
-//        }
-//        return new CourierResUpdateDto("운송장 할당완료");
-//    }
+    @Transactional
+    public CourierResUpdateDto updateCourier(Long courierId, UserDetailsImpl userDetails,
+                                             CourierReqUpdateDto courierReqUpdateDto) {
+
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
+
+        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("해당 계정이 존재하지 않습니다."));
+        courier.update(courierReqUpdateDto);
+        courierRepository.save(courier);
+
+        return new CourierResUpdateDto("운송장 상태 변경완료");
+    }
+
+
+    @Transactional
+    public CourierResUpdateDto updateCouriers(UpdateReqDto updateReqDto, UserDetailsImpl userDetails) {
+
+        if (updateReqDto.getUsernames().size() == 1) {
+            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(0))
+                    .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
+
+            for (int i = 0; i < updateReqDto.getCourierIds().size(); i++) {
+                courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(i), account.getUsername());
+            }
+            return new CourierResUpdateDto("운송장 할당완료");
+        } else {
+            return new CourierResUpdateDto("운송장 할당불가능");
+        }
+    }
+}
 //
 //
 //    @Transactional

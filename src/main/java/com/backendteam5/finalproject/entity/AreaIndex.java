@@ -1,3 +1,5 @@
+
+
 package com.backendteam5.finalproject.entity;
 
 import lombok.Getter;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 public class AreaIndex {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,23 +27,10 @@ public class AreaIndex {
     @Column(nullable = false)
     private String zipCode;
 
-    @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private double xPos;
-
-    @Column(nullable = false)
-    private double yPos;
-
-    public AreaIndex(String area, String route, int subRoute, String zipCode, String address, double xPos, double yPos) {
+    public AreaIndex(String area, String route, int subRoute, String zipCode) {
         this.area = area;
         this.route = route;
         this.subRoute = subRoute;
         this.zipCode = zipCode;
-        this.address = address;
-        this.xPos = xPos;
-        this.yPos = yPos;
     }
-
 }

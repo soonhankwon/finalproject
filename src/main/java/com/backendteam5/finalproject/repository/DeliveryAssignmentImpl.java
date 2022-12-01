@@ -24,7 +24,7 @@ public class DeliveryAssignmentImpl implements CustomDeliveryAssignmentRepositor
     public void updateByUsername(String username) {
         long execute = queryFactory
                 .update(deliveryAssignment)
-                .set(deliveryAssignment.username, username)
+                .set(deliveryAssignment.account.username, username)
                 .execute();
     }
 }

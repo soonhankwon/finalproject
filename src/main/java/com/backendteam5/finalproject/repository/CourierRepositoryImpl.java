@@ -2,46 +2,50 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
+import com.backendteam5.finalproject.entity.*;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
 import static com.backendteam5.finalproject.entity.QCourier.*;
+import static com.backendteam5.finalproject.entity.QDeliveryAssignment.*;
 
 public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private final JPAQueryFactory queryFactory;
-    @Autowired
-    EntityManager em;
-
     public CourierRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
     // 배송 상태별 조회
     @Override
-    public List<CourierDto> searchByUsernameAndState(String username, Boolean state) {
+    public List<CourierDto> searchByUsernameAndState(Account account, String state) {
         return queryFactory
                 .select(getCourierConstructor())
                 .from(courier)
-                .where(usernameEq(username), stateEq(state))
+                .join(courier.deliveryAssignment, deliveryAssignment)
+                .where(usernameEq(account), stateEq(state))
                 .orderBy(courier.arrivalDate.desc())
                 .fetch();
     }
 
     // 배송상태별 택배 개수
     @Override
-    public Long countUsernameAndState(String username, Boolean state) {
+    public Long countUsernameAndState(Account account, String state) {
         return queryFactory
                 .select(courier.count())
                 .from(courier)
-                .where(usernameEq(username), stateEq(state))
+                .join(courier.deliveryAssignment, deliveryAssignment)
+                .where(usernameEq(account), stateEq(state))
                 .fetchOne();
     }
 
@@ -55,45 +59,36 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    public List<CourierDto> findByRouteAndSubRoute(String route, int subRoute) {
-        return  queryFactory
-                .select(getCourierConstructor())
-                .from(courier)
-                .where(courier.route.eq(route), courier.subRoute.eq(subRoute))
-                .fetch();
+    private static QCourierDto getCourierConstructor() {
+        return new QCourierDto(
+                courier.id,
+                courier.state,
+                courier.customer,
+                courier.arrivalDate,
+                courier.registerDate,
+                courier.username,
+                deliveryAssignment
+        );
     }
-
     @Modifying(clearAutomatically = true)
     @Transactional
     public void updateByCourierId(Long courierId, String username) {
         long execute = queryFactory
                 .update(courier)
-                .set(courier.deliveryAssignment.username, username)
+                .set(courier.username, username)
                 .where(courier.id.eq(courierId))
                 .execute();
-    }
-
-    private static QCourierDto getCourierConstructor() {
-        return new QCourierDto(
-                courier.id,
-                courier.route,
-                courier.subRoute,
-                courier.state,
-                courier.customer,
-                courier.arrivalDate,
-                courier.deliveryAssignment.username
-        );
     }
 
     private BooleanExpression customerEq(String customer) {
         return courier.customer.eq(customer);
     }
 
-    private BooleanExpression usernameEq(String username) {
-        return courier.deliveryAssignment.username.eq(username);
+    private BooleanExpression usernameEq(Account account) {
+        return deliveryAssignment.account.eq(account);
     }
 
-    private BooleanExpression stateEq(Boolean state) {
+    private BooleanExpression stateEq(String state) {
         return courier.state.eq(state);
     }
 }

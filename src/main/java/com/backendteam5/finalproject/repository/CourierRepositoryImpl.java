@@ -2,20 +2,23 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
-import com.backendteam5.finalproject.entity.*;
+import com.backendteam5.finalproject.dto.RouteCountDto;
+import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
-import static com.backendteam5.finalproject.entity.QCourier.*;
-import static com.backendteam5.finalproject.entity.QDeliveryAssignment.*;
+import static com.backendteam5.finalproject.entity.QCourier.courier;
+import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryAssignment;
+
 
 public class CourierRepositoryImpl implements CustomCourierRepository {
 
@@ -57,6 +60,24 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
+    @Override
+    public List<RouteCountDto> countRouteState(String area) {
+        return queryFactory
+                .select(getRouteCountDto())
+                .from(courier)
+                .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
+                .where(areaIndex.area.eq(area), courier.arrivalDate.eq(convertNowDate()))
+                .groupBy(areaIndex.route, courier.state)
+                .fetch();
+    }
+
+    public ConstructorExpression<RouteCountDto> getRouteCountDto(){
+        return Projections.constructor(RouteCountDto.class,
+                areaIndex.route.as("route"),
+                courier.state.as("state"),
+                courier.state.count().as("count"));
+    }
+
     private static QCourierDto getCourierConstructor() {
         return new QCourierDto(
                 courier.id,
@@ -79,5 +100,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private BooleanExpression stateEq(String state) {
         return courier.state.eq(state);
+    }
+
+    private String convertNowDate(){
+        Date now = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(now);
     }
 }

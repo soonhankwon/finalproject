@@ -1,6 +1,7 @@
 package com.backendteam5.finalproject.repository.custom;
 
 import com.backendteam5.finalproject.dto.CourierDto;
+import com.backendteam5.finalproject.dto.RouteCountDto;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 
@@ -11,5 +12,5 @@ public interface CustomCourierRepository {
     List<CourierDto> searchByUsernameAndState(Account account, String state);
     Long countUsernameAndState(Account account, String state);
     List<CourierDto> searchCustomer(String customer);
-
+    List<RouteCountDto> countRouteState(String area);
 }

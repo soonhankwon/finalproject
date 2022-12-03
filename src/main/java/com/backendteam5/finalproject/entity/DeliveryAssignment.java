@@ -3,10 +3,9 @@ package com.backendteam5.finalproject.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.util.Lazy;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -18,12 +17,11 @@ public class DeliveryAssignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "areaIndexId")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "areaIndexId", unique = true)
     private AreaIndex areaIndex;
 
-    // 택배기사는 1명이고 맡을수 있는 구역은 여러개니깐 OneToMany?
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
     private Account account;
 

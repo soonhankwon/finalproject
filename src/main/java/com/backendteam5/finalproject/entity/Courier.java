@@ -24,7 +24,8 @@ public class Courier {
     private String registerDate;
     private double xPos;
     private double yPos;
-    private String username = "ADMIN";
+    private String deliveryPerson = "ADMIN";
+    //@ManyToOne private Account account;
 
     @ManyToOne
     private DeliveryAssignment deliveryAssignment;
@@ -42,14 +43,14 @@ public class Courier {
     public void update(CourierReqUpdateDto courierReqUpdateDto) {
         this.state = courierReqUpdateDto.getState();
         this.arrivalDate = courierReqUpdateDto.getArrivalDate();
-        this.username = courierReqUpdateDto.getUsername();
+        this.deliveryPerson = courierReqUpdateDto.getDeliveryPerson();
     }
 
-    public void setUpdate(int j, String username) {
-        this.username = username;
+    public void setUpdate(int j, String deliveryPerson) {
+        this.deliveryPerson = deliveryPerson;
     }
-    public void saveUpdate(String state, String username) {
+    public void saveUpdate(String state, String deliveryPerson) {
         this.state = state;
-        this.username = username;
+        this.deliveryPerson = deliveryPerson;
     }
 }

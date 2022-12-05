@@ -10,11 +10,11 @@ import lombok.Setter;
 public class CourierReqUpdateDto {
     private String state;
     private String arrivalDate;
-    private String username;
+    private String deliveryPerson;
 
-    public CourierReqUpdateDto (String state, String arrivalDate, String username) {
+    public CourierReqUpdateDto (String state, String arrivalDate, String deliveryPerson) {
         this.state = state;
         this.arrivalDate = arrivalDate;
-        this.username = username;
+        this.deliveryPerson = deliveryPerson;
     }
 }

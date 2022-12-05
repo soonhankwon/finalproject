@@ -66,16 +66,16 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.customer,
                 courier.arrivalDate,
                 courier.registerDate,
-                courier.username,
+                courier.deliveryPerson,
                 deliveryAssignment
         );
     }
     @Modifying(clearAutomatically = true)
     @Transactional
-    public void updateByCourierId(Long courierId, String username) {
+    public void updateByCourierId(Long courierId, String deliveryPerson) {
         long execute = queryFactory
                 .update(courier)
-                .set(courier.username, username)
+                .set(courier.deliveryPerson, deliveryPerson)
                 .where(courier.id.eq(courierId))
                 .execute();
     }

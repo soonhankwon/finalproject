@@ -15,6 +15,7 @@ import java.util.List;
 public class CourierDto {
 
     private Long id;
+    private String address;
     private String area;
     private String route;
     private int subRoute;
@@ -24,9 +25,12 @@ public class CourierDto {
     private String registerDate;
     private String username;
     private String courierUsername;
+    private Double xPos;
+    private Double yPos;
 
     @QueryProjection
-    public CourierDto(Long id, String state, String customer, String arrivalDate,String registerDate, String username, DeliveryAssignment deliveryAssignment) {
+    public CourierDto(Long id, String address, String state, String customer, String arrivalDate,String registerDate, String username, Double xPos, Double yPos, DeliveryAssignment deliveryAssignment) {
+        this.address = address;
         this.id = id;
         this.registerDate = registerDate;
         this.area = deliveryAssignment.getAreaIndex().getArea();
@@ -37,5 +41,7 @@ public class CourierDto {
         this.arrivalDate = arrivalDate;
         this.username = username;
         this.courierUsername = deliveryAssignment.getAccount().getUsername();
+        this.xPos = xPos;
+        this.yPos = yPos;
     }
 }

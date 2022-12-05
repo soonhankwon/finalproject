@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface CustomCourierRepository {
 
-    List<CourierDto> searchByUsernameAndState(Account account, String state);
-    Long countUsernameAndState(Account account, String state);
+    List<CourierDto> searchByUsernameAndState(Account account, String state, String username);
+    Long countUsernameAndState(Account account, String state, String username);
     List<CourierDto> searchCustomer(String customer);
 
 }

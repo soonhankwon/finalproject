@@ -1,21 +1,13 @@
 package com.backendteam5.finalproject.controller;
 
 
-
-import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
-import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.CourierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,15 +15,8 @@ public class CourierController {
 
     private final CourierService courierService;
 
-
-    @GetMapping("/test3")
-    public String test3() {
-        courierService.test3();
-        return "성공";
-    }
     @PatchMapping("/api/save/check/{courierId}")
     public CourierResUpdateDto checkCourierState(@PathVariable Long courierId) {
-        System.out.println("courierId = " + courierId);
         return courierService.checkCourierState(courierId);
     }
 
@@ -43,20 +28,12 @@ public class CourierController {
     @GetMapping("/api/search/user/courier")
     public SearchResponseDto searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                @RequestParam Long state) {
-
-        System.out.println(state);
-        System.out.println(userDetails.getUsername());
-
-        SearchResponseDto responseDto = courierService.searchFilter(userDetails, state);
-        System.out.println("searchFilter = " + responseDto);
-
-        return responseDto;
+        return courierService.searchFilter(userDetails, state);
     }
 
     @GetMapping("/api/search/user/courier/customer")
     public SearchResponseDto searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                  @RequestParam String customer) {
-
         return courierService.searchCustomer(userDetails, customer);
     }
 }

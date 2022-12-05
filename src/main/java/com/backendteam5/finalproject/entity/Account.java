@@ -24,24 +24,24 @@ public class Account {
     private String password;
 
     @Column(nullable = false)
-    private String route;
+    private String area;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
 
-    public Account(String username, String password, String route, UserRoleEnum role){
+    public Account(String username, String password, String area, UserRoleEnum role){
         this.username = username;
         this.password = password;
-        this.route = route;
+        this.area = area;
         this.role = role;
     }
 
     public Account(SignupRequestDto signupRequestDto, UserRoleEnum role) {
         this.username = signupRequestDto.getUsername();
         this.password = signupRequestDto.getPassword();
-        this.route = signupRequestDto.getArea();
+        this.area = signupRequestDto.getArea();
         this.role = role;
     }
 }

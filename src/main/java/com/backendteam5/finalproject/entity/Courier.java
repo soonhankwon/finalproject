@@ -18,18 +18,29 @@ public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "address")
+    private String address;
+    @Column(name = "state")
     private String state;
+    @Column(name = "customer")
     private String customer;
+    @Column(name = "arrival_date")
     private String arrivalDate;
+    @Column(name = "register_date")
     private String registerDate;
+    @Column(name = "x_pos")
     private double xPos;
+    @Column(name = "y_pos")
     private double yPos;
+    @Column(name = "username")
     private String username = "ADMIN";
 
     @ManyToOne
+    @JoinColumn(name = "delivery_assignment_id")
     private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+    public Courier(String state, String address, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+        this.address = address;
         this.registerDate = registerDate;
         this.xPos = xpos;
         this.yPos = ypos;

@@ -16,16 +16,17 @@ public class AreaIndex {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "area")
     private String area;
-    @Column(nullable = false)
+    @Column(name = "route")
     private String route;
 
-    @Column(nullable = false)
+    @Column(name = "sub_route")
     private int subRoute;
 
-    @Column(nullable = false)
+    @Column(name = "zip_code")
     private String zipCode;
+
 
     public AreaIndex(String area, String route, int subRoute, String zipCode) {
         this.area = area;

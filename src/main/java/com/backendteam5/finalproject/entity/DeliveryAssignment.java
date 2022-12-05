@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -19,12 +17,11 @@ public class DeliveryAssignment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "areaIndexId")
+    @JoinColumn(name = "areaIndex_Id")
     private AreaIndex areaIndex;
 
-    // 택배기사는 1명이고 맡을수 있는 구역은 여러개니깐 OneToMany?
     @ManyToOne
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     public DeliveryAssignment(Account account, AreaIndex areaIndex) {

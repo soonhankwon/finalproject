@@ -1,19 +1,16 @@
 package com.backendteam5.finalproject.service;
 
-import com.backendteam5.finalproject.dto.*;
+import com.backendteam5.finalproject.dto.CourierReqUpdateDto;
+import com.backendteam5.finalproject.dto.CourierResUpdateDto;
+import com.backendteam5.finalproject.dto.UpdateReqDto;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
-import com.backendteam5.finalproject.entity.DeliveryAssignment;
-import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
-import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -148,7 +145,7 @@ public class AdminService {
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다."));
 
-        Account account = accountRepository.findByUsername(courierReqUpdateDto.getUsername())
+        Account account = accountRepository.findByUsername(courierReqUpdateDto.getDeliveryPerson())
                 .orElseThrow(() -> new IllegalArgumentException("해당 계정이 존재하지 않습니다."));
         courier.update(courierReqUpdateDto);
         courierRepository.save(courier);
@@ -160,8 +157,8 @@ public class AdminService {
     @Transactional
     public CourierResUpdateDto updateCouriers(UpdateReqDto updateReqDto, UserDetailsImpl userDetails) {
 
-        if (updateReqDto.getUsernames().size() == 1) {
-            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(0))
+        if (updateReqDto.getDeliveryPerson().size() == 1) {
+            Account account = accountRepository.findByUsername(updateReqDto.getDeliveryPerson().get(0))
                     .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
 
             for (int i = 0; i < updateReqDto.getCourierIds().size(); i++) {

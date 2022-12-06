@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class UpdateReqDto {
-    private List<String> usernames;
+    private List<String> deliveryPerson;
     private List<DeliveryAssignment> deliveryAssignments;
     private List<Long> courierIds;
     private List<String> routes;

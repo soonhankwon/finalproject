@@ -1,6 +1,6 @@
 package com.backendteam5.finalproject.repository;
 
-import com.backendteam5.finalproject.dto.CountDirect;
+import com.backendteam5.finalproject.dto.CountDirectDto;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
 import com.backendteam5.finalproject.entity.Account;
@@ -50,12 +50,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .where(usernameEq(account), stateEq(state), stateUsernameEq(username))
                 .fetchOne();
     }
-    // 1. 딜리버리 account 랑 지금 택배기사 비교
-    // 2. 배송상태 비교
-    // 3. 딜리버리맨이 구로어드민 or 현재 택배기사이름
-    // 문제점 : 건 바이 건 으로 할때 할당 받은 택배기사가 조회할때 안보임.
-
-
 
     // 수령인 이름으로 택배 조회
     @Override
@@ -79,7 +73,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     @Override
-    public List<CountDirect> countUsernameDirect(Account account, String date) {
+    public List<CountDirectDto> countUsernameDirect(Account account, String date) {
         return queryFactory
                 .select(getCountDirect())
                 .from(courier)
@@ -94,11 +88,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .selectFrom(courier)
                 .where(
-                        courier.deliveryAssignment.in(
+                        courier.deliveryAssignment.id.in(
                                 JPAExpressions
-                                        .select(deliveryAssignment)
+                                        .select(deliveryAssignment.id)
                                         .from(deliveryAssignment)
-                                        .where(deliveryAssignment.account.eq(account))
+                                        .where(deliveryAssignment.account.id.eq(account.getId()))
                         ),
                         courier.arrivalDate.eq(date),
                         courier.deliveryPerson.ne(account.getUsername()))
@@ -112,8 +106,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.state.count().as("count"));
     }
 
-    public ConstructorExpression<CountDirect> getCountDirect(){
-        return Projections.constructor(CountDirect.class,
+    public ConstructorExpression<CountDirectDto> getCountDirect(){
+        return Projections.constructor(CountDirectDto.class,
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }
@@ -126,12 +120,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.customer,
                 courier.arrivalDate,
                 courier.registerDate,
-
                 courier.deliveryPerson,
                 deliveryAssignment
         );
     }
-  
+
     @Modifying(clearAutomatically = true)
     @Transactional
     public void updateByCourierId(Long courierId, String deliveryPerson) {
@@ -143,7 +136,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     private BooleanExpression stateUsernameEq(String username) {
-        return courier.username.eq(username);
+        return courier.deliveryPerson.eq(username);
     }
 
     private BooleanExpression customerEq(String customer) {
@@ -156,5 +149,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private BooleanExpression stateEq(String state) {
         return courier.state.eq(state);
+    }
+
+    //위치 AdminService로 옴기기
+    private String convertNowDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date());
     }
 }

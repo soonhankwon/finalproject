@@ -39,8 +39,7 @@ public class Courier {
     @JoinColumn(name = "delivery_assignment_id")
     private DeliveryAssignment deliveryAssignment;
 
-
-    public Courier(String state, String customer, String arrivalDate, String registerDate ,double xPos, double yPos, DeliveryAssignment deliveryAssignment) {
+    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
         this.registerDate = registerDate;
         this.xPos = xPos;
         this.yPos = yPos;

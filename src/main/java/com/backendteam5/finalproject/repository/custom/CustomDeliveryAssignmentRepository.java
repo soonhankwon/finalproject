@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface CustomDeliveryAssignmentRepository {
     long updateDelivery(String zipCode, String username);
-
     List<DeliveryAssignmentDto> selectDelivery(String area, String route);
 }

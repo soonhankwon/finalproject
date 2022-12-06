@@ -3,7 +3,10 @@ package com.backendteam5.finalproject.service;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
-import com.backendteam5.finalproject.entity.*;
+import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.AreaIndex;
+import com.backendteam5.finalproject.entity.Courier;
+import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.AreaIndexRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
@@ -146,7 +149,8 @@ public class CourierService {
             if (i < 10) {
                 state = "배송중";
                 courierRepository.save(
-                    new Courier(state, customer + index, arrivalDate, registerDate, 3.421, 3.123, assignment)
+                        new Courier(state, customer + index, arrivalDate, registerDate, 3.421, 3.123, assignment)
+
                 );
             }
             else {
@@ -158,3 +162,4 @@ public class CourierService {
         }
     }
 }
+

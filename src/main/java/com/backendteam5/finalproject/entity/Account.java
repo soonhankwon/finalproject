@@ -35,7 +35,6 @@ public class Account {
         this.area = area;
         this.role = role;
     }
-
     public Account(SignupRequestDto signupRequestDto, UserRoleEnum role) {
         this.username = signupRequestDto.getUsername();
         this.password = signupRequestDto.getPassword();

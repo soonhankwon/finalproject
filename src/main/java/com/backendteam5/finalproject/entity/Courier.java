@@ -23,15 +23,15 @@ public class Courier {
     private String registerDate;
     private double xPos;
     private double yPos;
-    private String deliveryPerson = "ADMIN";
+    private String deliveryPerson = "GUROADMIN";
 
     @ManyToOne
     private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+    public Courier(String state, String customer, String arrivalDate, String registerDate ,double xPos, double yPos, DeliveryAssignment deliveryAssignment) {
         this.registerDate = registerDate;
-        this.xPos = xpos;
-        this.yPos = ypos;
+        this.xPos = xPos;
+        this.yPos = yPos;
         this.deliveryAssignment = deliveryAssignment;
         this.state = state;
         this.customer = customer;
@@ -41,14 +41,15 @@ public class Courier {
     public void update(CourierReqUpdateDto courierReqUpdateDto) {
         this.state = courierReqUpdateDto.getState();
         this.arrivalDate = courierReqUpdateDto.getArrivalDate();
-        this.deliveryPerson = courierReqUpdateDto.getUsername();
+        this.deliveryPerson = courierReqUpdateDto.getDeliveryPerson();
     }
 
-    public void setUpdate(int j, String username) {
-        this.deliveryPerson = username;
+    public void setUpdate(int j, String deliveryPerson) {
+        this.deliveryPerson = deliveryPerson;
     }
-    public void saveUpdate(String state, String username) {
+    public void saveUpdate(String state, String deliveryPerson) {
         this.state = state;
-        this.deliveryPerson = username;
+        this.deliveryPerson = deliveryPerson;
+
     }
 }

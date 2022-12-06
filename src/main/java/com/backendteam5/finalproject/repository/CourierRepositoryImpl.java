@@ -3,24 +3,22 @@ package com.backendteam5.finalproject.repository;
 import com.backendteam5.finalproject.dto.CountDirect;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
-import com.backendteam5.finalproject.dto.RouteCountDto;
-import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.*;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
-import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
-import static com.backendteam5.finalproject.entity.QCourier.courier;
-import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryAssignment;
-
+import static com.backendteam5.finalproject.entity.QCourier.*;
+import static com.backendteam5.finalproject.entity.QDeliveryAssignment.*;
 
 public class CourierRepositoryImpl implements CustomCourierRepository {
 
@@ -124,6 +122,15 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 deliveryAssignment
         );
     }
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    public void updateByCourierId(Long courierId, String deliveryPerson) {
+        long execute = queryFactory
+                .update(courier)
+                .set(courier.deliveryPerson, deliveryPerson)
+                .where(courier.id.eq(courierId))
+                .execute();
+    }
 
     private BooleanExpression customerEq(String customer) {
         return courier.customer.eq(customer);
@@ -135,11 +142,5 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private BooleanExpression stateEq(String state) {
         return courier.state.eq(state);
-    }
-
-    //위치 AdminService로 옴기기
-    private String convertNowDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(new Date());
     }
 }

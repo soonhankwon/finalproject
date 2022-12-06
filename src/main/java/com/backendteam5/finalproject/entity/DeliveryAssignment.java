@@ -11,15 +11,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliveryAssignment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "areaIndexId", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "areaIndexId")
     private AreaIndex areaIndex;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "accountId")
     private Account account;
 

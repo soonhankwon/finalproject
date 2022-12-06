@@ -30,9 +30,10 @@ public class AccountService {
         this.accountRepository = accountRepository;
         this.areaIndexRepository = areaIndexRepository;
     }
+
     public void registerAccount(SignupRequestDto requestDto) {
         Optional<Account> account = accountRepository.findByUsername(requestDto.getUsername());
-        if(account.isPresent()) throw new IllegalArgumentException("중복된 사용자 ID가 존재합니다.");
+        if (account.isPresent()) throw new IllegalArgumentException("중복된 사용자 ID가 존재합니다.");
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
             System.out.println("service" + ADMIN_TOKEN);
@@ -41,13 +42,10 @@ public class AccountService {
             }
             role = UserRoleEnum.ADMIN;
         }
-        accountRepository.findByUsername(requestDto.getUsername());
 
-//        List<AreaIndex> courierInfo = areaIndexRepository.findByAreaStartingWith(requestDto.getArea());
-//        if(courierInfo.size() == 0) throw new IllegalArgumentException("입력하신 구가 없습니다.");
+        accountRepository.findByUsername(requestDto.getUsername());
         accountRepository.save(new Account(requestDto.getUsername(), passwordEncoder.encode(requestDto.getPassword()),
                 requestDto.getArea(), role));
 
-//        accountRepository.save(new Account(requestDto, role));
     }
 }

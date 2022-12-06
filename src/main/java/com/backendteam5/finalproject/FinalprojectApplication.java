@@ -1,11 +1,7 @@
 package com.backendteam5.finalproject;
 
-
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
 
 @SpringBootApplication
 public class FinalprojectApplication  {

@@ -118,17 +118,17 @@ function searchCourier(){
 /* 다대다 할당 */
 function updateCourier(){
     alert("입력된 값의 유효성을 검사합니다.");
-    let usernames = [];
-    let usernamelenth = 0;
+    let deliveryPerson = [];
+    let deliveryPersonlenth = 0;
     let courierIds = [];
     let checkbox = $("input:checkbox[name=User-select]:checked");
     checkbox.each(function (i){
         let tr = checkbox.parent().parent().eq(i);
         let td = tr.children();
-        usernames.push(td.eq(1).text());
+        deliveryPerson.push(td.eq(1).text());
     })
 
-    if(usernames.length <1){
+    if(deliveryPerson.length <1){
         alert("유저를 한명만 선택하세요");
         return;
     }
@@ -141,7 +141,7 @@ function updateCourier(){
         if(!isNaN(result))  courierIds.push(result);
     })
 
-    if(usernames.length !== 1 && usernames.length !== courierIds.length){
+    if(deliveryPerson.length !== 1 && deliveryPerson.length !== courierIds.length){
         alert("user 다중 선택시 운송장 갯수와 같아야 합니다.");
         return;
     }

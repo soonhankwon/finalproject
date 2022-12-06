@@ -10,18 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -51,8 +46,8 @@ class AdminServiceTest {
         UpdateReqDto updateReqDto = getUpdateReqDto();
 
         //when
-        if (updateReqDto.getUsernames().size() == 1) {
-            Account account = accountRepository.findByUsername(updateReqDto.getUsernames().get(0))
+        if (updateReqDto.getDeliveryPerson().size() == 1) {
+            Account account = accountRepository.findByUsername(updateReqDto.getDeliveryPerson().get(0))
                     .orElseThrow(() -> new NullPointerException("해당 계정이 존재하지 않습니다."));
             for (int i = 0; i < updateReqDto.getCourierIds().size(); i++) {
                 courierRepository.updateByCourierId(updateReqDto.getCourierIds().get(i), account.getUsername());
@@ -74,7 +69,7 @@ class AdminServiceTest {
         courierIds.add(2L);
         courierIds.add(3L);
 
-        updateReqDto.setUsernames(usernames);
+        updateReqDto.setDeliveryPerson(usernames);
         updateReqDto.setCourierIds(courierIds);
         return updateReqDto;
     }

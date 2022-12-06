@@ -3,17 +3,23 @@ package com.backendteam5.finalproject.repository;
 import com.backendteam5.finalproject.dto.CountDirectDto;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
+import com.backendteam5.finalproject.dto.RouteCountDto;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
 import static com.backendteam5.finalproject.entity.QCourier.courier;
 import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryAssignment;
 
@@ -121,7 +127,9 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.arrivalDate,
                 courier.registerDate,
                 courier.deliveryPerson,
-                deliveryAssignment
+                courier.xPos,
+                courier.yPos,
+                courier.deliveryAssignment
         );
     }
 

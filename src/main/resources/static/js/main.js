@@ -38,17 +38,22 @@ function execSearch() {
 
             let html = ``
             for(key in courierList){
-                console.log(key)
                 html += '<tr>';
                 html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].area+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
                 html += '<td>'+courierList[key].state+'</td>';
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].registerDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
-                if (!courierList[key].state) {
-                    html += "<td><button>배송완료</button></td>";
+                html += '<td>'+courierList[key].courierUsername+'</td>';
+                if (courierList[key].state === "배송중") {
+                    html += `<td><button onclick="completeSave(${courierList[key].id})">배송완료</button></td>`;
+                }
+                else {
+                    html += `<td><button onclick="completeCancel(${courierList[key].id})">배송완료취소</button></td>`;
                 }
                 html += '</tr>';
             }
@@ -79,19 +84,22 @@ function complete(){
                            `
             $("#button-cnt").append(temphtml);
 
-
             let html = ``
             for(key in courierList){
-                console.log(key)
                 html += '<tr>';
                 html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].area+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
                 html += '<td>'+courierList[key].state+'</td>';
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].registerDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
-                html += `<td><button onclick="completeCancel(${courierList[key].id})">배송완료취소</button></td>`;
+                html += '<td>'+courierList[key].courierUsername+'</td>';
+                if (courierList[key].state === "배송완료") {
+                    html += `<td><button onclick="completeCancel(${courierList[key].id})">배송완료취소</button></td>`;
+                }
                 html += '</tr>';
             }
             $("#courier-table-body").append(html);
@@ -124,13 +132,18 @@ function doing(){
                 console.log(key)
                 html += '<tr>';
                 html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].area+'</td>';
                 html += '<td>'+courierList[key].route+'</td>';
                 html += '<td>'+courierList[key].subRoute+'</td>';
                 html += '<td>'+courierList[key].state+'</td>';
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].registerDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
-                html += `<td><button onclick="completeSave(${courierList[key].id})">배송완료처리</button></td>`;
+                html += '<td>'+courierList[key].courierUsername+'</td>';
+                if (courierList[key].state === "배송중") {
+                    html += `<td><button onclick="completeSave(${courierList[key].id})">배송완료</button></td>`;
+                }
                 html += '</tr>';
             }
             $("#courier-table-body").append(html);
@@ -143,31 +156,12 @@ function doing(){
 
 function completeSave(id){
     let courierId = id;
-    let Params = '?courierId='+courierId;
     $.ajax({
-        url: "/api/save/check"+Params,
+        url: "/api/save/check/" + courierId,
         type: "PATCH",
         success : function(datalist){
-            $("#courier-table-body").empty();
-            let courierList = datalist.data;
-            console.log(courierList);
-            let html = ``
-            for(key in courierList){
-                console.log(key)
-                html += '<tr>';
-                html += '<td>'+courierList[key].id+'</td>';
-                html += '<td>'+courierList[key].route+'</td>';
-                html += '<td>'+courierList[key].subRoute+'</td>';
-                html += '<td>'+courierList[key].state+'</td>';
-                html += '<td>'+courierList[key].customer+'</td>';
-                html += '<td>'+courierList[key].arrivalDate+'</td>';
-                html += '<td>'+courierList[key].username+'</td>';
-                html += "<td><button>배송완료취소</button></td>";
-                html += '</tr>';
-            }
 
-            $("#courier-table-body").append(html);
-
+            window.location.reload();
             alert("배송완료")
             doing()
         },
@@ -178,33 +172,14 @@ function completeSave(id){
 function completeCancel(id){
     console.log(id)
     let courierId = id;
-    let Params = '?courierId='+courierId;
     $.ajax({
-            url: "/api/save/uncheck"+Params,
+            url: "/api/save/uncheck/" + courierId,
         type: "PATCH",
         success : function(datalist){
-            $("#courier-table-body").empty();
-            // console.log(datalist);
-            let courierList = datalist.data;
-            console.log(courierList);
-            let html = ``
-            for(key in courierList){
-                console.log(key)
-                html += '<tr>';
-                html += '<td>'+courierList[key].id+'</td>';
-                html += '<td>'+courierList[key].route+'</td>';
-                html += '<td>'+courierList[key].subRoute+'</td>';
-                html += '<td>'+courierList[key].state+'</td>';
-                html += '<td>'+courierList[key].customer+'</td>';
-                html += '<td>'+courierList[key].arrivalDate+'</td>';
-                html += '<td>'+courierList[key].username+'</td>';
-                html += "<td><button>배송완료</button></td>";
-                html += '</tr>';
-            }
-            $("#courier-table-body").append(html);
 
             alert("배송완료취소")
-            doing()
+            window.location.reload();
+            complete()
         },
         error : function(){alert("통신실패")}
     })

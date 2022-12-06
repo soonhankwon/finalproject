@@ -14,7 +14,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Courier {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,8 +23,7 @@ public class Courier {
     private String registerDate;
     private double xPos;
     private double yPos;
-    private String deliveryPerson = "ADMIN";
-    //@ManyToOne private Account account;
+    private String deliveryPerson = "GUROADMIN";
 
     @ManyToOne
     private DeliveryAssignment deliveryAssignment;
@@ -52,5 +50,6 @@ public class Courier {
     public void saveUpdate(String state, String deliveryPerson) {
         this.state = state;
         this.deliveryPerson = deliveryPerson;
+
     }
 }

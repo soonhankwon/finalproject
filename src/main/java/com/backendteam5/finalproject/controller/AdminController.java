@@ -18,28 +18,6 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    //
-//    @GetMapping("/search/courier")
-//    public AdminMainResDto findAll(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return adminService.findAll(userDetails);
-//    }
-//
-//    @GetMapping("/search/courier/{courierId}")
-//    public AdminMainResDto searchCourier(@PathVariable Long courierId,
-//                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return adminService.searchCourier(courierId, userDetails);
-//    }
-//
-//    @GetMapping("/search/courier/sorted")
-//    public AdminMainResDto sortedCourier(
-//            @RequestParam(value = "username", required = false) String username,
-//            @RequestParam(value = "subRoute", required = false) List<Integer> subRoute,
-//            @RequestParam("state") int state,
-//            @RequestParam("arri") Boolean arri,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return adminService.sortedCourier(username, subRoute, state, arri, userDetails);
-//    }
-//
     @PatchMapping("/save/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -53,10 +31,3 @@ public class AdminController {
         return adminService.updateCouriers(updateReqDto, userDetails);
     }
 }
-//
-//    @PatchMapping("/save/subroutes/courier")
-//    public CourierResUpdateDto updateCourierByAllUserBySubRoute(@RequestBody UpdateReqDto updateReqDto,
-//                                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return adminService.updateCourierByAllUserBySubRoute(updateReqDto, userDetails);
-//    }
-//}

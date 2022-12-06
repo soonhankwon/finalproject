@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.repository;
 
+import com.backendteam5.finalproject.dto.CountDirect;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
 import com.backendteam5.finalproject.entity.*;
@@ -57,6 +58,57 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .from(courier)
                 .where(customerEq(customer))
                 .fetch();
+    }
+
+    @Override
+    public List<RouteCountDto> countRouteState(String area, String date) {
+        return queryFactory
+                .select(getRouteCountDto())
+                .from(courier)
+                .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
+                .where(areaIndex.area.eq(area), courier.arrivalDate.eq(date))
+                .groupBy(areaIndex.route, courier.state)
+                .fetch();
+    }
+
+    @Override
+    public List<CountDirect> countUsernameDirect(Account account, String date) {
+        return queryFactory
+                .select(getCountDirect())
+                .from(courier)
+                .where(courier.deliveryPerson.eq(account.getUsername()),
+                        courier.arrivalDate.eq(date))
+                .groupBy(courier.state)
+                .fetch();
+    }
+
+    @Override
+    public Long countUsernameTemp(Account account, String date) {
+        return queryFactory
+                .selectFrom(courier)
+                .where(
+                        courier.deliveryAssignment.in(
+                                JPAExpressions
+                                        .select(deliveryAssignment)
+                                        .from(deliveryAssignment)
+                                        .where(deliveryAssignment.account.eq(account))
+                        ),
+                        courier.arrivalDate.eq(date),
+                        courier.deliveryPerson.ne(account.getUsername()))
+                .fetchCount();
+    }
+
+    public ConstructorExpression<RouteCountDto> getRouteCountDto(){
+        return Projections.constructor(RouteCountDto.class,
+                areaIndex.route.as("route"),
+                courier.state.as("state"),
+                courier.state.count().as("count"));
+    }
+
+    public ConstructorExpression<CountDirect> getCountDirect(){
+        return Projections.constructor(CountDirect.class,
+                courier.state.as("state"),
+                courier.state.count().as("count"));
     }
 
     private static QCourierDto getCourierConstructor() {

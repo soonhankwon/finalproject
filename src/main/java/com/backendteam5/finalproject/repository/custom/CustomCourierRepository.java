@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.repository.custom;
 
+import com.backendteam5.finalproject.dto.CountDirect;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.entity.Account;
 

@@ -1,5 +1,3 @@
-
-
 package com.backendteam5.finalproject.entity;
 
 import lombok.Getter;

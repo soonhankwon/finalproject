@@ -150,6 +150,7 @@ public class CourierService {
                 state = "배송중";
                 courierRepository.save(
                         new Courier(state, customer + index, arrivalDate, registerDate, 3.421, 3.123, assignment)
+
                 );
             }
             else {
@@ -161,3 +162,4 @@ public class CourierService {
         }
     }
 }
+

@@ -25,7 +25,7 @@ public class AccountService {
 
     @Autowired
     public AccountService(BCryptPasswordEncoder passwordEncoder, AccountRepository accountRepository,
-                          AreaIndexRepository areaIndexRepository) {
+                          AreaIndexRepository areaIndexRepository){
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
         this.areaIndexRepository = areaIndexRepository;
@@ -36,16 +36,16 @@ public class AccountService {
         if (account.isPresent()) throw new IllegalArgumentException("중복된 사용자 ID가 존재합니다.");
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
+            System.out.println("service" + ADMIN_TOKEN);
             if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
-//        List<AreaIndex> courierInfo = areaIndexRepository.findByLocationStartingWith(requestDto.getArea());
-//        if(courierInfo.size() == 0) throw new IllegalArgumentException("입력하신 구가 없습니다.");
+
+        accountRepository.findByUsername(requestDto.getUsername());
         accountRepository.save(new Account(requestDto.getUsername(), passwordEncoder.encode(requestDto.getPassword()),
                 requestDto.getArea(), role));
 
-//        accountRepository.save(new Account(requestDto, role));
     }
 }

@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.repository;
 
+import com.backendteam5.finalproject.dto.CountDirect;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
 import com.backendteam5.finalproject.dto.RouteCountDto;
@@ -8,6 +9,7 @@ import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -61,19 +63,52 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     @Override
-    public List<RouteCountDto> countRouteState(String area) {
+    public List<RouteCountDto> countRouteState(String area, String date) {
         return queryFactory
                 .select(getRouteCountDto())
                 .from(courier)
                 .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
-                .where(areaIndex.area.eq(area), courier.arrivalDate.eq(convertNowDate()))
+                .where(areaIndex.area.eq(area), courier.arrivalDate.eq(date))
                 .groupBy(areaIndex.route, courier.state)
                 .fetch();
+    }
+
+    @Override
+    public List<CountDirect> countUsernameDirect(Account account, String date) {
+        return queryFactory
+                .select(getCountDirect())
+                .from(courier)
+                .where(courier.username.eq(account.getUsername()),
+                        courier.arrivalDate.eq(date))
+                .groupBy(courier.state)
+                .fetch();
+    }
+
+    @Override
+    public Long countUsernameTemp(Account account, String date) {
+        return queryFactory
+                .selectFrom(courier)
+                .where(
+                        courier.deliveryAssignment.in(
+                                JPAExpressions
+                                        .select(deliveryAssignment)
+                                        .from(deliveryAssignment)
+                                        .where(deliveryAssignment.account.eq(account))
+                        ),
+                        courier.arrivalDate.eq(date),
+                        courier.username.ne(account.getUsername()))
+                .fetchCount();
     }
 
     public ConstructorExpression<RouteCountDto> getRouteCountDto(){
         return Projections.constructor(RouteCountDto.class,
                 areaIndex.route.as("route"),
+                courier.state.as("state"),
+                courier.state.count().as("count"));
+    }
+
+    public ConstructorExpression<CountDirect> getCountDirect(){
+        return Projections.constructor(CountDirect.class,
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }
@@ -102,9 +137,9 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return courier.state.eq(state);
     }
 
+    //위치 AdminService로 옴기기
     private String convertNowDate(){
-        Date now = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(now);
+        return format.format(new Date());
     }
 }

@@ -23,7 +23,7 @@ public class Courier {
     private String registerDate;
     private double xPos;
     private double yPos;
-    private String username = "ADMIN";
+    private String deliveryPerson = "ADMIN";
 
     @ManyToOne
     private DeliveryAssignment deliveryAssignment;
@@ -38,17 +38,17 @@ public class Courier {
         this.arrivalDate = arrivalDate;
     }
 
-//    public void update(CourierReqUpdateDto courierReqUpdateDto) {
-//        this.state = courierReqUpdateDto.getState();
-//        this.arrivalDate = courierReqUpdateDto.getArrivalDate();
-//        this.username = courierReqUpdateDto.getUsername();
-//    }
+    public void update(CourierReqUpdateDto courierReqUpdateDto) {
+        this.state = courierReqUpdateDto.getState();
+        this.arrivalDate = courierReqUpdateDto.getArrivalDate();
+        this.deliveryPerson = courierReqUpdateDto.getUsername();
+    }
 
     public void setUpdate(int j, String username) {
-        this.username = username;
+        this.deliveryPerson = username;
     }
     public void saveUpdate(String state, String username) {
         this.state = state;
-        this.username = username;
+        this.deliveryPerson = username;
     }
 }

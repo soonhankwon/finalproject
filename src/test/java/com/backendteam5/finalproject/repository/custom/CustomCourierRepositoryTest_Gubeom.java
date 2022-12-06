@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,9 +25,14 @@ class CustomCourierRepositoryTest_Gubeom {
     @DisplayName("각 Route마다의 state에 따른 Courier 갯수")
     @Test
     void countRouteState() {
-        List<RouteCountDto> results = courierRepository.countRouteState("구로구");
+        List<RouteCountDto> results = courierRepository.countRouteState("구로구", convertNowDate());
         for(RouteCountDto result : results){
             System.out.println(result);
         };
+    }
+
+    private String convertNowDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date());
     }
 }

@@ -1,13 +1,12 @@
 package com.backendteam5.finalproject.dto;
 
 
-import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.AreaIndex;
 import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.*;
-
-import java.util.List;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @NoArgsConstructor

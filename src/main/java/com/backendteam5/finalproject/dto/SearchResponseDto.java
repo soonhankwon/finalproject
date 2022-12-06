@@ -1,7 +1,6 @@
 package com.backendteam5.finalproject.dto;
 
 
-import com.backendteam5.finalproject.entity.Courier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

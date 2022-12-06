@@ -10,8 +10,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class AreaIndex {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -101,4 +101,6 @@ public class CourierService {
 
         return new SearchResponseDto(courList, completeCnt, progressCnt);
     }
+
 }
+

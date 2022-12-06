@@ -2,7 +2,6 @@ package com.backendteam5.finalproject.entity;
 
 import com.backendteam5.finalproject.dto.SignupRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,14 +29,12 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-
     public Account(String username, String password, String area, UserRoleEnum role){
         this.username = username;
         this.password = password;
         this.area = area;
         this.role = role;
     }
-
     public Account(SignupRequestDto signupRequestDto, UserRoleEnum role) {
         this.username = signupRequestDto.getUsername();
         this.password = signupRequestDto.getPassword();

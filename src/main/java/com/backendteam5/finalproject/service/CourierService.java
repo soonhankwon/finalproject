@@ -51,7 +51,7 @@ public class CourierService {
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
 
         if (courier.getState().equals("배송완료")) {
-            courier.saveUpdate("배송중", "ADMIN");
+            courier.saveUpdate("배송중", "GUROADMIN");
             return new CourierResUpdateDto("배송대기상태로 수정되었습니다.");
         } else {
             return new CourierResUpdateDto("해당 운송장은 배송대기중입니다.");
@@ -67,19 +67,19 @@ public class CourierService {
          * completeCnt : 배송완료한 택배의 개수
          */
         String status = "배송중";
-        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
+        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status, "GUROADMIN");
         status = "배송완료";
-        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
+        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status, userDetails.getUsername());
         // state == 0 배송중 조회.
         if (state == 0) {
             status = "배송중";
-            List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUser(), status);
+            List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUser(), status, "GUROADMIN");
             return new SearchResponseDto(courierList, completeCnt, progressCnt);
 
         }
 
         // state == 1 배송 완료 조회.
-        List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUser(), status);
+        List<CourierDto> courierList = courierRepository.searchByUsernameAndState(userDetails.getUser(), status, userDetails.getUsername());
         return new SearchResponseDto(courierList, completeCnt, progressCnt);
     }
 
@@ -92,9 +92,9 @@ public class CourierService {
          * completeCnt : 배송완료한 택배의 개수
          */
         String status = "배송완료";
-        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
+        Long completeCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status, userDetails.getUsername());
         status = "배송중";
-        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status);
+        Long progressCnt = courierRepository.countUsernameAndState(userDetails.getUser(), status, "GUROADMIN");
 
         // 수령인 이름으로 조회.
         List<CourierDto> courList = courierRepository.searchCustomer(customer);
@@ -102,64 +102,5 @@ public class CourierService {
         return new SearchResponseDto(courList, completeCnt, progressCnt);
     }
 
-
-
-    @Transactional
-    public void test3() {
-
-        char newRoute = 'A';
-        for (int i = 0; i <= 20; i++) {
-            for (int j = 1; j <= 10; j++) {
-                areaIndexRepository.save(
-                        new AreaIndex("구로구", String.valueOf((char) (newRoute + i)), j, "집코드")
-                );
-            }
-        }
-
-        // route : A, subRoute : 1, zipCode : 집코드
-        Optional<AreaIndex> optionalAreaIndex = areaIndexRepository.findById(1L);
-        AreaIndex areaIndex = optionalAreaIndex.get();
-
-
-        // route : A, subRoute : 2, zipCode : 집코드
-        Optional<AreaIndex> optionalAreaIndex1 = areaIndexRepository.findById(2L);
-        AreaIndex areaIndex1 = optionalAreaIndex1.get();
-
-
-
-        // account 만들기
-        Optional<Account> optionalAccount = accountRepository.findById(1L);
-        Account account = optionalAccount.get();
-
-        deliveryAssignmentRepository.save(new DeliveryAssignment(account, areaIndex));
-        deliveryAssignmentRepository.save(new DeliveryAssignment(account, areaIndex1));
-
-        Optional<DeliveryAssignment> optionalDeliveryAssignment = deliveryAssignmentRepository.findById(1L);
-        DeliveryAssignment assignment = optionalDeliveryAssignment.get();
-
-        Optional<DeliveryAssignment> optionalDeliveryAssignment1 = deliveryAssignmentRepository.findById(2L);
-        DeliveryAssignment assignment1 = optionalDeliveryAssignment1.get();
-
-        String state;
-        String customer = "수령인";
-        String arrivalDate = "2022-12-01";
-        String registerDate = "2022-12-03";
-        for (int i = 0; i < 20;i++) {
-            String index = Integer.toString(i);
-            if (i < 10) {
-                state = "배송중";
-                courierRepository.save(
-                        new Courier(state, customer + index, arrivalDate, registerDate, 3.421, 3.123, assignment)
-
-                );
-            }
-            else {
-                state = "배송완료";
-                courierRepository.save(
-                        new Courier(state, customer + index, arrivalDate, registerDate,3.421, 3.123, assignment1)
-                );
-            }
-        }
-    }
 }
 

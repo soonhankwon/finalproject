@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long>  {
     Optional<Account> findByUsername(String username);
+
     List<Account> findByUsernameStartingWith(String username);
     List<Account> findByAreaAndRole(String area, UserRoleEnum role);
+
 }

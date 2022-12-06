@@ -15,15 +15,8 @@ public class CourierController {
 
     private final CourierService courierService;
 
-
-    @GetMapping("/test3")
-    public String test3() {
-        courierService.test3();
-        return "성공";
-    }
     @PatchMapping("/api/save/check/{courierId}")
     public CourierResUpdateDto checkCourierState(@PathVariable Long courierId) {
-        System.out.println("courierId = " + courierId);
         return courierService.checkCourierState(courierId);
     }
 
@@ -34,21 +27,14 @@ public class CourierController {
 
     @GetMapping("/api/search/user/courier")
     public SearchResponseDto searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                          @RequestParam Long state) {
+                               @RequestParam Long state) {
+        return courierService.searchFilter(userDetails, state);
 
-        System.out.println(state);
-        System.out.println(userDetails.getUsername());
-
-        SearchResponseDto responseDto = courierService.searchFilter(userDetails, state);
-        System.out.println("searchFilter = " + responseDto);
-
-        return responseDto;
     }
 
     @GetMapping("/api/search/user/courier/customer")
     public SearchResponseDto searchCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                            @RequestParam String customer) {
-
+                                 @RequestParam String customer) {
         return courierService.searchCustomer(userDetails, customer);
     }
 }

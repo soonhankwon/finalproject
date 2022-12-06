@@ -17,11 +17,11 @@ public class DeliveryAssignment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "areaIndexId")
+    @JoinColumn(name = "areaIndex_Id")
     private AreaIndex areaIndex;
 
     @ManyToOne
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     public DeliveryAssignment(Account account, AreaIndex areaIndex) {

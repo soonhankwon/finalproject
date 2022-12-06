@@ -78,7 +78,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getCountDirect())
                 .from(courier)
-                .where(courier.username.eq(account.getUsername()),
+                .where(courier.deliveryPerson.eq(account.getUsername()),
                         courier.arrivalDate.eq(date))
                 .groupBy(courier.state)
                 .fetch();
@@ -96,7 +96,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                                         .where(deliveryAssignment.account.eq(account))
                         ),
                         courier.arrivalDate.eq(date),
-                        courier.username.ne(account.getUsername()))
+                        courier.deliveryPerson.ne(account.getUsername()))
                 .fetchCount();
     }
 
@@ -120,7 +120,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.customer,
                 courier.arrivalDate,
                 courier.registerDate,
-                courier.username,
+                courier.deliveryPerson,
                 deliveryAssignment
         );
     }

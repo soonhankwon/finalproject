@@ -16,6 +16,4 @@ public interface CustomCourierRepository {
 
     List<CountDirect> countUsernameDirect(Account account, String date);
     Long countUsernameTemp(Account account, String date);
-//    List<CourierDto> searchByRouteAndSubRoute(String route, List<String> subRoute);
-//    List<CourierDto> searchBy
 }

@@ -11,5 +11,5 @@ import java.util.List;
 public class MainDto {
     private List<Account> userlist;
     private List<Long> tempAssignment;
-    private List<CountDirect> directAssignment;
+    private List<CountDirectDto> directAssignment;
 }

@@ -17,13 +17,14 @@ public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String state;
-    private String customer;
-    private String arrivalDate;
+    private String address;
     private String registerDate;
+    private String arrivalDate;
+    private String customer;
+    private String state;
+    private String deliveryPerson = "ADMIN";
     private double xPos;
     private double yPos;
-    private String deliveryPerson = "ADMIN";
 
     @ManyToOne
     private DeliveryAssignment deliveryAssignment;

@@ -1,6 +1,6 @@
 package com.backendteam5.finalproject.repository;
 
-import com.backendteam5.finalproject.dto.CountDirect;
+import com.backendteam5.finalproject.dto.CountDirectDto;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.QCourierDto;
 import com.backendteam5.finalproject.dto.RouteCountDto;
@@ -74,7 +74,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     @Override
-    public List<CountDirect> countUsernameDirect(Account account, String date) {
+    public List<CountDirectDto> countUsernameDirect(Account account, String date) {
         return queryFactory
                 .select(getCountDirect())
                 .from(courier)
@@ -89,11 +89,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .selectFrom(courier)
                 .where(
-                        courier.deliveryAssignment.in(
+                        courier.deliveryAssignment.id.in(
                                 JPAExpressions
-                                        .select(deliveryAssignment)
+                                        .select(deliveryAssignment.id)
                                         .from(deliveryAssignment)
-                                        .where(deliveryAssignment.account.eq(account))
+                                        .where(deliveryAssignment.account.id.eq(account.getId()))
                         ),
                         courier.arrivalDate.eq(date),
                         courier.deliveryPerson.ne(account.getUsername()))
@@ -107,8 +107,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.state.count().as("count"));
     }
 
-    public ConstructorExpression<CountDirect> getCountDirect(){
-        return Projections.constructor(CountDirect.class,
+    public ConstructorExpression<CountDirectDto> getCountDirect(){
+        return Projections.constructor(CountDirectDto.class,
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }

@@ -1,14 +1,15 @@
 package com.backendteam5.finalproject.repository.custom;
 
-import com.backendteam5.finalproject.dto.CountDirect;
+import com.backendteam5.finalproject.dto.CountDirectDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
 import com.backendteam5.finalproject.dto.MainDto;
-import com.backendteam5.finalproject.entity.*;
+import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.AreaIndex;
+import com.backendteam5.finalproject.entity.DeliveryAssignment;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
 import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
-import com.querydsl.core.Tuple;
-import org.hibernate.hql.spi.id.TableBasedUpdateHandlerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,12 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -153,6 +153,7 @@ class DeliveryAssignmentRepositoryTest {
         Account user = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER).get(0);
         System.out.println(courierRepository.countUsernameTemp(user, "2022-12-03"));
     }
+
     @DisplayName("직접 할당된 갯수에 대한 테스트")
     @Test
     public void countDirect(){
@@ -165,20 +166,20 @@ class DeliveryAssignmentRepositoryTest {
     public void mainDtoSend(){
         MainDto mainDto = new MainDto();
         List<Account> userlist = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER);
-        String date = "2022-12-03";
+        String date = "2022-12-06";
         mainDto.setUserlist(userlist);
 
         LinkedList<Long> tempCount = new LinkedList<>();
-        LinkedList<CountDirect> directCount = new LinkedList<>();
+        LinkedList<CountDirectDto> directCount = new LinkedList<>();
 
         for(Account user : userlist){
             Long aLong = courierRepository.countUsernameTemp(user, date);
-            List<CountDirect> countDirects = courierRepository.countUsernameDirect(user, date);
+            List<CountDirectDto> countDirects = courierRepository.countUsernameDirect(user, date);
             tempCount.add(aLong);
             if(countDirects.isEmpty())  {
-                directCount.add(new CountDirect("배송중", 0L));
-                directCount.add(new CountDirect("배송완료", 0L));
-                directCount.add(new CountDirect("배송지연", 0L));
+                directCount.add(new CountDirectDto("배송중", 0L));
+                directCount.add(new CountDirectDto("배송완료", 0L));
+                directCount.add(new CountDirectDto("배송지연", 0L));
             } else  directCount.addAll(countDirects);
         }
         mainDto.setTempAssignment(tempCount);

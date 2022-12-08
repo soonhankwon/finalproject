@@ -3,7 +3,6 @@ package com.backendteam5.finalproject.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,7 +18,6 @@ public class SearchReqDto {
     private String state;
     private int currentDay;
 
-    @NotBlank(message = "option이 비어있습니다.")
     private Boolean option;
 
     public String getDate(){

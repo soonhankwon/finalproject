@@ -4,7 +4,6 @@ import com.backendteam5.finalproject.dto.AdminCourierDto;
 import com.backendteam5.finalproject.dto.RouteCountDto;
 import com.backendteam5.finalproject.dto.SearchReqDto;
 import com.backendteam5.finalproject.repository.CourierRepository;
-import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Commit
 class CustomCourierRepositoryTest_Gubeom {
 
     @Autowired
@@ -40,11 +30,7 @@ class CustomCourierRepositoryTest_Gubeom {
         };
     }
 
-    private String convertNowDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(new Date());
-    }
-
+    @DisplayName("조건 검색에 대한 테스트")
     @Test
     void searchByDetail(){
         List<Integer> subroute = Arrays.asList(1,2,3);
@@ -55,24 +41,26 @@ class CustomCourierRepositoryTest_Gubeom {
         searchReqDto.setUsername("GUROUSER1");
         searchReqDto.setCurrentDay(2);
         searchReqDto.setOption(false);
-        for(AdminCourierDto result : courierRepository.searchByDetail("구로구",searchReqDto)
+        for(AdminCourierDto result : courierRepository.searchByDetail("GUROADMIN","구로구",searchReqDto)
         ){
             System.out.println(result);
         }
     }
 
+    @DisplayName("courier의 날짜 업데이트와 deliveryPerosn 초기화 => 쿼리 실행하기")
     @Test
-    void setArrivalDate(){
-        List<String> zipCode = Arrays.asList("001", "002");
-        System.out.println(courierRepository.setArrivalDate(zipCode));
+    void setReset(){
+        System.out.println(courierRepository.setReady());
     }
 
+    @DisplayName("배송지연 상태 업데이트 테스트")
     @Test
     void setUpdateState(){
         List<Long> couriers = Arrays.asList(1L, 2L);
-        System.out.println(courierRepository.setUpdateState(couriers));
+        System.out.println(courierRepository.setUpdateStateDelay(couriers));
     }
 
+    @DisplayName("직접 할당에 대한 테스트")
     @Test
     void setDeliveryPerson(){
         List<Long> couriers = Arrays.asList(1L, 2L);

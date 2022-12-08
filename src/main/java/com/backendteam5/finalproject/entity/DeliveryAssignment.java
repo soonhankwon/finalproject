@@ -16,11 +16,11 @@ public class DeliveryAssignment {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "areaIndexId", unique = true)
+    @JoinColumn(name = "areaIndexId", unique = true, nullable = false)
     private AreaIndex areaIndex;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
     public DeliveryAssignment(Account account, AreaIndex areaIndex) {

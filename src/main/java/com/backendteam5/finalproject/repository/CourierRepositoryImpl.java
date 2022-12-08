@@ -8,6 +8,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.text.DateFormat;
@@ -30,6 +32,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     // 배송 상태별 조회
+    @Transactional(readOnly = true)
     @Override
     public List<CourierDto> searchByUsernameAndState(Account account, String state) {
         return queryFactory
@@ -42,6 +45,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     // 배송상태별 택배 개수
+    @Transactional(readOnly = true)
     @Override
     public Long countUsernameAndState(Account account, String state) {
         return queryFactory
@@ -53,6 +57,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     // 수령인 이름으로 택배 조회
+    @Transactional(readOnly = true)
     @Override
     public List<CourierDto> searchCustomer(String customer) {
         return queryFactory
@@ -62,7 +67,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    //
+    // div에 들어갈 route별 count
+    @Transactional(readOnly = true)
     @Override
     public List<RouteCountDto> countRouteState(String area) {
         return queryFactory
@@ -71,22 +77,28 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
                 .where(areaIndex.area.eq(area), courier.arrivalDate.eq(getNowDate()))
                 .groupBy(areaIndex.route, courier.state)
+                .orderBy(areaIndex.route.asc(), courier.state.desc())
                 .fetch();
     }
 
+    // user테이블에 들어갈 직접 할당의 state별 갯수
+    @Transactional(readOnly = true)
     @Override
-    public List<CountDirectDto> countUsernameDirect(Account account, String date) {
+    public List<CountDirectDto> countUsernameDirect(Account account) {
         return queryFactory
                 .select(getCountDirect())
                 .from(courier)
                 .where(courier.deliveryPerson.eq(account.getUsername()),
-                        courier.arrivalDate.eq(date))
+                        courier.arrivalDate.eq(getNowDate()))
                 .groupBy(courier.state)
+                .orderBy(courier.state.desc())
                 .fetch();
     }
 
+    // user테이블에 들어갈 임시 할당의 갯수
+    @Transactional(readOnly = true)
     @Override
-    public Long countUsernameTemp(Account account, String date) {
+    public Long countUsernameTemp(Account account) {
         return queryFactory
                 .selectFrom(courier)
                 .where(
@@ -96,14 +108,16 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                                         .from(deliveryAssignment)
                                         .where(deliveryAssignment.account.id.eq(account.getId()))
                         ),
-                        courier.arrivalDate.eq(date),
+                        courier.arrivalDate.eq(getNowDate()),
                         courier.deliveryPerson.ne(account.getUsername()))
                 .fetchCount();
     }
 
+    // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당
+    @Transactional(readOnly = true)
     @Override
-    public List<AdminCourierDto> searchByDetail(String area, SearchReqDto searchReqDto){
-        return searchReqDto.getOption() ? searchByDetailDirect(area, searchReqDto) : searchByDetailTemp(area, searchReqDto);
+    public List<AdminCourierDto> searchByDetail(String username,String area, SearchReqDto searchReqDto){
+        return searchReqDto.getOption() ? searchByDetailDirect(area, searchReqDto) : searchByDetailTemp(username, area, searchReqDto);
     }
 
     public List<AdminCourierDto> searchByDetailDirect(String area, SearchReqDto searchReqDto) {
@@ -122,7 +136,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    public List<AdminCourierDto> searchByDetailTemp(String area, SearchReqDto searchReqDto) {
+    @Transactional(readOnly = true)
+    public List<AdminCourierDto> searchByDetailTemp(String username,String area, SearchReqDto searchReqDto) {
         return queryFactory
                 .select(getAdminCourierDto())
                 .from(courier)
@@ -134,29 +149,30 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                         subRouteIn(searchReqDto),
                         stateEq(searchReqDto),
                         tempPersonEq(searchReqDto),
-                        dateLoe(searchReqDto))
+                        dateLoe(searchReqDto),
+                        courier.deliveryPerson.eq(username))
                 .fetch();
     }
 
+    @Modifying(clearAutomatically = true)
+    @Transactional
     @Override
-    public String setArrivalDate(List<String> zipCode) {
+    public String setReady() {
         queryFactory
                 .update(courier)
                 .set(courier.arrivalDate, getNowDate())
-                .where(courier.deliveryAssignment.id.in(
-                        JPAExpressions
-                                .select(deliveryAssignment.id)
-                                .from(deliveryAssignment)
-                                .join(deliveryAssignment.areaIndex, areaIndex)
-                                        .on(areaIndex.zipCode.in(zipCode))
-                        ))
+                .set(courier.deliveryPerson, "ADMIN")
+                .where(courier.state.ne("배송완료"),
+                        courier.arrivalDate.lt(getNowDate()))
                 .execute();
 
         return "업데이트 완료";
     }
 
+    @Modifying(clearAutomatically = true)
+    @Transactional
     @Override
-    public String setUpdateState(List<Long> couriers) {
+    public String setUpdateStateDelay(List<Long> couriers) {
         queryFactory
                 .update(courier)
                 .set(courier.state, "배송지연")
@@ -166,6 +182,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return "업데이트 완료";
     }
 
+    @Modifying(clearAutomatically = true)
+    @Transactional
     @Override
     public String setDeliveryPerson(List<Long> couriers, String username) {
         queryFactory

@@ -13,12 +13,12 @@ public interface CustomCourierRepository {
 
 
     List<RouteCountDto> countRouteState(String area);
-    List<CountDirectDto> countUsernameDirect(Account account, String date);
-    Long countUsernameTemp(Account account, String date);
-    List<AdminCourierDto> searchByDetail(String area, SearchReqDto searchReqDto);
+    List<CountDirectDto> countUsernameDirect(Account account);
+    Long countUsernameTemp(Account account);
+    List<AdminCourierDto> searchByDetail(String username,String area, SearchReqDto searchReqDto);
 
-    String setArrivalDate(List<String> zipCode);
-    String setUpdateState(List<Long> couriers);
+    String setReady();
+    String setUpdateStateDelay(List<Long> couriers);
     String setDeliveryPerson(List<Long> couriers, String username);
 
     String getNowDate();

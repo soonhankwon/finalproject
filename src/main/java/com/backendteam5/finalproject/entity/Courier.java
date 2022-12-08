@@ -22,6 +22,7 @@ public class Courier {
     private String arrivalDate;
     private String customer;
     private String state;
+    @Column(nullable = false)
     private String deliveryPerson = "ADMIN";
     private double xPos;
     private double yPos;

@@ -2,6 +2,8 @@ $(document).ready(function () {
     searchAll();
 });
 
+var BaseUrl = "http://localhost:8080/";
+
 function searchAll(){
     $.ajax({
         type: 'GET',
@@ -77,7 +79,7 @@ function openDelevery(route) {
     const height = 700;
 
     window.name = "parentForm";
-    openWin = window.open("http://localhost:8080/delivery", "setDelivery", stroption(width, height));
+    openWin = window.open(BaseUrl+"delivery", "setDelivery", stroption(width, height));
 }
 
 // 송장번호로 검색
@@ -314,7 +316,7 @@ function updateOne(select){
     const height = 300;
 
     window.name = "parentForm";
-    openWin = window.open("http://localhost:8080/detailSave", "detailSave", stroption(width, height));
+    openWin = window.open(BaseUrl+"detailSave", "detailSave", stroption(width, height));
 }
 
 // 전체선택 함수

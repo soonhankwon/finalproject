@@ -34,6 +34,7 @@ public class Courier {
     private double xPos;
     @Column(name = "y_pos")
     private double yPos;
+    @Column(name = "deliveryPerson")
     @NotNull
     private String deliveryPerson = "ADMIN";
     @ManyToOne(fetch = FetchType.LAZY)

@@ -88,7 +88,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     // user테이블에 들어갈 직접 할당의 state별 갯수
     @Transactional(readOnly = true)
     @Override
-    public List<CountDirectDto> countUsernameDirect(Account account) {
+    public List<CountStateDto> countUsernameDirect(Account account) {
         return queryFactory
                 .select(getCountDirect())
                 .from(courier)
@@ -241,8 +241,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.state.count().as("count"));
     }
 
-    public ConstructorExpression<CountDirectDto> getCountDirect(){
-        return Projections.constructor(CountDirectDto.class,
+    public ConstructorExpression<CountStateDto> getCountDirect(){
+        return Projections.constructor(CountStateDto.class,
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }

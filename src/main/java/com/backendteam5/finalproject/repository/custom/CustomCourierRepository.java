@@ -11,13 +11,9 @@ public interface CustomCourierRepository {
     Long countUsernameAndState(Account account, String state, String username);
     List<CourierDto> searchCustomer(String customer);
 
-
-    List<CountDirectDto> countUsernameDirect(Account account, String date);
-    Long countUsernameTemp(Account account, String date);
-
     void updateByCourierId(Long courierId, String deliveryPerson);
     List<RouteCountDto> countRouteState(String area);
-    List<CountDirectDto> countUsernameDirect(Account account);
+    List<CountStateDto> countUsernameDirect(Account account);
     Long countUsernameTemp(Account account);
     List<AdminCourierDto> searchByDetail(String username,String area, SearchReqDto searchReqDto);
     List<AdminCourierDto> searchByCouriers(List<Long> couriers);

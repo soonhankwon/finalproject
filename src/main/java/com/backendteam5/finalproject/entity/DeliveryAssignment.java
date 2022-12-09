@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {@Index(name = "keyword", columnList = "areaIndex_id, account_id")})
+@Table(indexes = {@Index(name = "keyword", columnList = "areaIndexId, accountId")})
 public class DeliveryAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,5 @@
 package com.backendteam5.finalproject.dto;
 
-import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import lombok.Getter;
 import lombok.Setter;
 

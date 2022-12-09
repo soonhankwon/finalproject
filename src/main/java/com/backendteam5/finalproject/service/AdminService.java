@@ -31,16 +31,17 @@ public class AdminService {
         adminMainDto.setUserlist(userlist);
 
         LinkedList<Long> tempCount = new LinkedList<>();
-        LinkedList<CountDirectDto> directCount = new LinkedList<>();
+        LinkedList<CountStateDto> directCount = new LinkedList<>();
 
-        LinkedList<CountDirectDto> directCase = new LinkedList<>();
-        directCase.add(new CountDirectDto("배송지연", 0L));
-        directCase.add(new CountDirectDto("배송중", 0L));
-        directCase.add(new CountDirectDto("배송완료", 0L));
+        LinkedList<CountStateDto> directCase = new LinkedList<>();
+
+        directCase.add(new CountStateDto("배송지연", 0L));
+        directCase.add(new CountStateDto("배송중", 0L));
+        directCase.add(new CountStateDto("배송완료", 0L));
 
         for(Account deliveryuser : userlist){
             Long aLong = courierRepository.countUsernameTemp(deliveryuser);
-            List<CountDirectDto> countDirects = courierRepository.countUsernameDirect(deliveryuser);
+            List<CountStateDto> countDirects = courierRepository.countUsernameDirect(deliveryuser);
 
             tempCount.add(aLong);
 
@@ -118,7 +119,7 @@ public class AdminService {
         courierReqUpdateDto.checkState();
         checkAdmin(userDetails);
 
-        if(!accountRepository.existsByUsername(courierReqUpdateDto.getUsername()))  throw new IllegalArgumentException("해당 유저는 없습니다.");
+        if(!accountRepository.existsByUsername(courierReqUpdateDto.getDeliveryPerson()))  throw new IllegalArgumentException("해당 유저는 없습니다.");
 
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));

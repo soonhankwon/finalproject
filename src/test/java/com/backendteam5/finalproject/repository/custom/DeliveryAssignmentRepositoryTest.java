@@ -1,7 +1,6 @@
 package com.backendteam5.finalproject.repository.custom;
 
 import com.backendteam5.finalproject.dto.AdminMainDto;
-import com.backendteam5.finalproject.dto.CountDirectDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
@@ -143,30 +142,5 @@ class DeliveryAssignmentRepositoryTest {
     public void countDirect(){
         Account user = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER).get(0);
         System.out.println(courierRepository.countUsernameDirect(user));
-    }
-
-    @DisplayName("왼쪽 테이블을 위한 보내는 데이터")
-    @Test
-    public void mainDtoSend(){
-        AdminMainDto mainDto = new AdminMainDto();
-        List<Account> userlist = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER);
-        mainDto.setUserlist(userlist);
-
-        LinkedList<Long> tempCount = new LinkedList<>();
-        LinkedList<CountDirectDto> directCount = new LinkedList<>();
-
-        for(Account user : userlist){
-            Long aLong = courierRepository.countUsernameTemp(user);
-            List<CountDirectDto> countDirects = courierRepository.countUsernameDirect(user);
-            tempCount.add(aLong);
-            if(countDirects.isEmpty())  {
-                directCount.add(new CountDirectDto("배송중", 0L));
-                directCount.add(new CountDirectDto("배송완료", 0L));
-                directCount.add(new CountDirectDto("배송지연", 0L));
-            } else  directCount.addAll(countDirects);
-        }
-        mainDto.setTempAssignment(tempCount);
-        mainDto.setDirectAssignment(directCount);
-        System.out.println(mainDto);
     }
 }

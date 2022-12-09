@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CountDirectDto {
+public class CountStateDto {
     private String state;
     private Long count;
 
     @QueryProjection
-    public CountDirectDto(String state, Long count){
+    public CountStateDto(String state, Long count){
         this.count = count;
         this.state = state;
     }

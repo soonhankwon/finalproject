@@ -12,12 +12,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -134,15 +131,6 @@ class DeliveryAssignmentRepositoryTest {
         assertThat(deliveryAssignmentRepository.updateDelivery(zipCode, username)).isEqualTo(1);
     }
 
-    @DisplayName("Delivery를 업데이트 하는 메소드 테스트 실패 - 없는 username")
-    @Test
-    public void updateDeliveryTestFail(){
-        String zipCode = "001";
-        String username = "JOUNDONGUSER3";
-
-        assertThat(deliveryAssignmentRepository.updateDelivery(zipCode, username)).isEqualTo(1);
-    }
-
     @DisplayName("임시 할당된 갯수에 대한 테스트")
     @Test
     public void countTemp(){
@@ -180,9 +168,5 @@ class DeliveryAssignmentRepositoryTest {
         mainDto.setTempAssignment(tempCount);
         mainDto.setDirectAssignment(directCount);
         System.out.println(mainDto);
-    }
-    private String convertNowDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(new Date());
     }
 }

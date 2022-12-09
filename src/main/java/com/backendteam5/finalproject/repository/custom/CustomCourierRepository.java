@@ -16,10 +16,13 @@ public interface CustomCourierRepository {
     List<CountDirectDto> countUsernameDirect(Account account);
     Long countUsernameTemp(Account account);
     List<AdminCourierDto> searchByDetail(String username,String area, SearchReqDto searchReqDto);
+    List<AdminCourierDto> searchByCouriers(List<Long> couriers);
 
-    String setReady();
+
     String setUpdateStateDelay(List<Long> couriers);
     String setDeliveryPerson(List<Long> couriers, String username);
+
+    String setReady();
 
     String getNowDate();
 }

@@ -3,22 +3,15 @@ package com.backendteam5.finalproject.service;
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.repository.AccountRepository;
-import com.backendteam5.finalproject.repository.CourierRepository;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -39,7 +32,7 @@ class AdminServiceTest {
         System.out.println("조회된 user이름 들 : "+mainReport.getUserlist().get(1).getUsername());
         System.out.println("조회된 Route별 count : "+mainReport.getRouteCount());
         System.out.println("조회된 User 직접할당 Count : "+mainReport.getDirectAssignment());
-        System.out.println("조회된 User 개별할당 Count : "+mainReport.getTempAssignment());
+        System.out.println("조회된 User 임시할당 Count : "+mainReport.getTempAssignment());
     }
 
     @DisplayName("get Route info")

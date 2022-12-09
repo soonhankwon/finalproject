@@ -30,8 +30,14 @@ public class AdminController {
         return adminService.selectRoute(userDetails, route);
     }
 
+    // 운송장에 대한 검색
+    @GetMapping("/search/courier")
+    public List<AdminCourierDto> searchByCouriers(@RequestParam(value = "courierId") List<Long> courierId){
+        return adminService.searchByCouriers(courierId);
+    }
+
     // 상세겁색에 확인 버튼 누를시
-    @GetMapping("/search")
+    @GetMapping("/search/details")
     public List<AdminCourierDto> searchByDetails(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                  SearchReqDto reqDto){
         return adminService.searchByDetails(userDetails, reqDto);
@@ -54,7 +60,7 @@ public class AdminController {
     // courier에 직접할당을 해줄때
     @PatchMapping("/update/DeliverPerson")
     public String setDeliveryPerson(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                    @RequestBody @Validated SetDeliveryPersonReqDto reqDto){
+                                    @RequestBody SetDeliveryPersonReqDto reqDto){
         return adminService.setDeliveryPerson(userDetails, reqDto);
     }
 

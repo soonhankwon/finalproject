@@ -14,7 +14,6 @@ public class CourierReqUpdateDto {
     private String state;
     @NotBlank(message = "arrivalDate가 비어있습니다.")
     private String arrivalDate;
-    @NotBlank(message = "DeliveryPerson가 비어있습니다.")
     private String username;
 
     public CourierReqUpdateDto (String state, String arrivalDate, String username) {

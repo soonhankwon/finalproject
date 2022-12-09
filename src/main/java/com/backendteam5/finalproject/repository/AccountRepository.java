@@ -11,4 +11,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>  {
     Optional<Account> findByUsername(String username);
     List<Account> findByAreaAndRole(String area, UserRoleEnum role);
     List<Account> findByAreaAndRoleOrderByUsernameAsc(String area, UserRoleEnum role);
+
+    Boolean existsByUsername(String username);
 }

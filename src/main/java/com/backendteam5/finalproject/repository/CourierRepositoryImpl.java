@@ -100,7 +100,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     @Override
     public Long countUsernameTemp(Account account) {
         return queryFactory
-                .selectFrom(courier)
+                .select(courier.count())
+                .from(courier)
                 .where(
                         courier.deliveryAssignment.id.in(
                                 JPAExpressions
@@ -110,7 +111,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                         ),
                         courier.arrivalDate.eq(getNowDate()),
                         courier.deliveryPerson.ne(account.getUsername()))
-                .fetchCount();
+                .fetchOne();
     }
 
     // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당
@@ -151,6 +152,20 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                         tempPersonEq(searchReqDto),
                         dateLoe(searchReqDto),
                         courier.deliveryPerson.eq(username))
+                .fetch();
+    }
+
+    // Courier의 id로 검색
+    @Transactional(readOnly = true)
+    @Override
+    public List<AdminCourierDto> searchByCouriers(List<Long> couriers){
+        return queryFactory
+                .select(getAdminCourierDto())
+                .from(courier)
+                .join(courier.deliveryAssignment, deliveryAssignment)
+                .join(deliveryAssignment.areaIndex, areaIndex)
+                .join(deliveryAssignment.account, account)
+                .where(courier.id.in(couriers))
                 .fetch();
     }
 

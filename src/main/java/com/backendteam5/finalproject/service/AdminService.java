@@ -95,6 +95,10 @@ public class AdminService {
         return courierRepository.searchByDetail(defaultPerson, area, reqDto);
     }
 
+    public List<AdminCourierDto> searchByCouriers(List<Long> courierId) {
+        return courierRepository.searchByCouriers(courierId);
+    }
+
     public String setStateDelay(UserDetailsImpl userDetails, List<Long> couriers){
         checkAdmin(userDetails);
 
@@ -113,6 +117,8 @@ public class AdminService {
                                              CourierReqUpdateDto courierReqUpdateDto) {
         courierReqUpdateDto.checkState();
         checkAdmin(userDetails);
+
+        if(!accountRepository.existsByUsername(courierReqUpdateDto.getUsername()))  throw new IllegalArgumentException("해당 유저는 없습니다.");
 
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));

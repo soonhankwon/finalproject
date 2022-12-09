@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = {@Index(name = "keyword", columnList = "deliveryPerson, state, delivery_assignment_id")})
 public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,7 @@ public class Courier {
     @Column(name = "address")
     private String address;
     @Column(name = "state")
+    @NotNull
     private String state;
     @Column(name = "customer")
     private String customer;
@@ -31,18 +34,17 @@ public class Courier {
     private double xPos;
     @Column(name = "y_pos")
     private double yPos;
-
+    @NotNull
     private String deliveryPerson = "GUROADMIN";
-
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     @JoinColumn(name = "delivery_assignment_id")
     private DeliveryAssignment deliveryAssignment;
 
     public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
         this.registerDate = registerDate;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.xPos = xpos;
+        this.yPos = ypos;
         this.deliveryAssignment = deliveryAssignment;
         this.state = state;
         this.customer = customer;

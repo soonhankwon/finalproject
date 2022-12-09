@@ -1,9 +1,6 @@
 package com.backendteam5.finalproject.repository;
 
-import com.backendteam5.finalproject.dto.CountDirectDto;
-import com.backendteam5.finalproject.dto.CourierDto;
-import com.backendteam5.finalproject.dto.QCourierDto;
-import com.backendteam5.finalproject.dto.RouteCountDto;
+import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.types.ConstructorExpression;
@@ -36,14 +33,16 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     // 배송 상태별 조회
     @Override
+    @Transactional(readOnly = true)
     public List<CourierDto> searchByUsernameAndState(Account account, String state, String username) {
         return queryFactory
                 .select(getCourierConstructor())
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .where(usernameEq(account), stateEq(state), stateUsernameEq(username))
                 .orderBy(courier.arrivalDate.desc())
                 .fetch();
+
     }
 
     // 배송상태별 택배 개수
@@ -55,6 +54,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .join(courier.deliveryAssignment, deliveryAssignment)
                 .where(usernameEq(account), stateEq(state), stateUsernameEq(username))
                 .fetchOne();
+
     }
 
     // 수령인 이름으로 택배 조회

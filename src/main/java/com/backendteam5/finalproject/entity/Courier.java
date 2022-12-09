@@ -35,7 +35,7 @@ public class Courier {
     @Column(name = "y_pos")
     private double yPos;
     @NotNull
-    private String deliveryPerson = "GUROADMIN";
+    private String deliveryPerson = "ADMIN";
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "delivery_assignment_id")

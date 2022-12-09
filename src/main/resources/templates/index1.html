@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -9,6 +9,7 @@
     <meta property="og:description" content="운송장번호에 기반한 운송관리시스템 5조">
     <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c303439fed571295dec718c23b86b7f7"></script>
     <script th:src="@{/js/admin.js}" ></script>
     <title>Transportation Management System</title>
 </head>
@@ -21,74 +22,138 @@
         <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> 로그아웃</a>
     </form>
 </div>
+
+<div class="count-bar" style="position:relative;">
+    <div class="count-bar-element"><b>A지역 : </b><input class="default-text" onclick="openDelevery('A')" type="text" id="route1" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>B지역 : </b><input class="default-text" onclick="openDelevery('B')" type="text" id="route2" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>C지역 : </b><input class="default-text" onclick="openDelevery('C')" type="text" id="route3" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>D지역 : </b><input class="default-text" onclick="openDelevery('D')" type="text" id="route4" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>E지역 : </b><input class="default-text" onclick="openDelevery('E')" type="text" id="route5" value="" readonly/>
+    </div>
+</div>
+<div class="count-bar" style="position:relative;">
+    <div class="count-bar-element"><b>F지역 : </b><input class="default-text" onclick="openDelevery('F')" type="text" id="route6" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>G지역 : </b><input class="default-text" onclick="openDelevery('G')" type="text" id="route7" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>H지역 : </b><input class="default-text" onclick="openDelevery('H')" type="text" id="route8" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>I지역 : </b><input class="default-text" onclick="openDelevery('I')" type="text" id="route9" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>J지역 : </b><input class="default-text" onclick="openDelevery('J')" type="text" id="route10" value="" readonly/>
+    </div>
+</div>
+<div class="count-bar" style="position:relative;">
+    <div class="count-bar-element"><b>K지역 : </b><input class="default-text" onclick="openDelevery('K')" type="text" id="route11" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>L지역 : </b><input class="default-text" onclick="openDelevery('L')" type="text" id="route12" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>M지역 : </b><input class="default-text" onclick="openDelevery('M')" type="text" id="route13" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>N지역 : </b><input class="default-text" onclick="openDelevery('N')" type="text" id="route14" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>O지역 : </b><input class="default-text" onclick="openDelevery('O')" type="text" id="route15" value="" readonly/>
+    </div>
+</div>
+<div class="count-bar" style="position:relative;">
+    <div class="count-bar-element"><b>P지역 : </b><input class="default-text" onclick="openDelevery('P')" type="text" id="route16" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>Q지역 : </b><input class="default-text" onclick="openDelevery('Q')" type="text" id="route17" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>R지역 : </b><input class="default-text" onclick="openDelevery('R')" type="text" id="route18" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>S지역 : </b><input class="default-text" onclick="openDelevery('S')" type="text" id="route19" value="" readonly/>
+    </div>
+    <div class="count-bar-element"><b>T지역 : </b><input class="default-text" onclick="openDelevery('T')" type="text" id="route20" value="" readonly/>
+    </div>
+</div>
+
+<hr style="margin-top: 1px; margin-bottom: 1px; border: dotted 3px #76571d">
+
 <div class="search-bar" style="position:relative;">
+    <div class="search-bar-element">
+        <input class="default-text" type="text" id="courierId" placeholder="1, 2, 3">
+        <button value="송장 검색" onclick="searchCourier()">개별 송장 검색</button>
+    </div>
     <div class="search-bar-element">
     <button value="상세조건 검색" onclick="openDetail()">상세조건 검색</button>
     </div>
     <div class="search-bar-element">
-        <input type="text" id="courierId" placeholder="검색할 송장번호 입력">
-        <button value="송장 검색" onclick="searchCourier()">개별 송장 검색</button>
+    <button value="할당하기" onclick="setState()">지연 배송 적용</button>
     </div>
     <div class="search-bar-element">
-        <input type="text" id="saveCount" placeholder="user:subroute 갯수 입력">
-        <button value="지역단위 할당" onclick="openSubRoute()">지역단위 할당</button>
+        <button value="할당하기" onclick="updateCourier()">할당 내역 적용</button>
     </div>
-    <div class="search-bar-element">
-    <button value="송장 할당" onclick="updateCourier()">할당 내역 적용</button>
-    </div>
-    <div class="search-bar-element">
-        <input type="text" value="" id="barInfo" readonly/>
-        <progress style="height: 40px; vertical-align: middle" value="0" max="100" id="savePer"/>
-    </div>
-    <div class="search-bar-element"><input type="text" id="courierCnt" readonly/>
+    <div class="search-bar-element"><input class="default-text" type="text" id="courierCnt" readonly/>
     </div>
 </div>
-<div class="subRoute-Save" id = "subRoute-Save" style="position:relative; display: none; border: 2px solid palegreen">
-    <table id="subRoute-table">
-        <thead class="subRoute-table-header">
-            <tr>
-                <th>username</th>
-                <th>subroute</th>
-            </tr>
-        </thead>
-        <tbody class="subRoute-table-body" id="subRoute-table-body">
-        </tbody>
-    </table>
-    <button style="margin: auto" value="지역단위 할당 완료" onclick="saveSubRoute()">완료</button>
+
+<div id = "detail-search" style="position:relative; display: none; border: 2px solid palegreen">
+    <b>택배기사 :</b><input class="default-text" type="text" id="username" placeholder="빈값: 전체검색" style="width: auto"><br><br>
+    <b>Route :</b><input class="default-text" type="text" id="route" placeholder="빈값: 전체검색" style="width: auto"><br><br>
+    <b>SubRoute :</b><input class="default-text" type="text" id="subroute" placeholder="빈값: 전체검색" style="width: auto"><br><br>
+    <b>State : </b>
+    <select id="state">
+        <option value=>--default state 전체조회--</option>
+        <option value="배송중">배송중</option>
+        <option value="배송완료">배송완료</option>
+        <option value="배송지연">배송지연</option>
+        <option value=>default</option>
+    </select><br><br>
+    <b>현재 날짜기준 부터</b><input class="courier-input" type="text" id="date" style="width: auto"><b>일 전</b><br><br>
+    <b></b>
+    <input type="radio" name="option" value="1" checked="checked">직접할당을 검색
+    <input type="radio" name="option" value="ㅁ">임시할당을 검색<br><br>
+    <button style="margin: auto" value="검색하기" onclick="searchDetail()">완료</button><button style="margin: auto" value="취소하기" onclick="closeDetail()">취소</button>
 </div>
+
 <div class="user-table">
     <table id="user-table">
         <caption>유저 테이블</caption>
         <thead class="user-table-header">
             <tr>
-                <th width="15%">Check</th>
-                <th>유저 이름</th>
-                <th>할당된 갯수</th>
+                <th>선택</th>
+                <th>택배기사</th>
+                <th>임시할당</th>
+                <th>직접할당<br>(배송지연)</th>
+                <th>직접할당<br>(배송중)</th>
+                <th>직접할당<br>(배송완료)</th>
             </tr>
         </thead>
         <tbody class="user-table-body" id="user-table-body">
         </tbody>
     </table>
 </div>
+
 <div class="courier-table">
     <table id="courier-table">
         <caption>송장 테이블</caption>
         <thead class="courier-table-header">
         <tr>
-            <th width="5%"><input type="checkbox" name="Courier-select" onclick="selectAll(this)"></th>
-            <th width="20%">송장 고유번호</th>
-            <th width="5%">담당 지역</th>
-            <th width="5%">세부 지역</th>
-            <th width="12.5%">배송 상태</th>
-            <th width="12.5%">고객명</th>
-            <th width="20%">도착 날짜</th>
-            <th width="20%">담당자</th>
+            <th><input type="checkbox" name="Courier-select" onclick="selectAll(this)"></th>
+            <th>고유번호</th>
+            <th>등록날짜</th>
+            <th>도착날짜</th>
+            <th>주소지</th>
+            <th>지역</th>
+            <th>세부지역</th>
+            <th>상세지역</th>
+            <th>고객명</th>
+            <th>배송 상태</th>
+            <th>임시할당자</th>
+            <th>직접할당자</th>
         </tr>
         </thead>
         <tbody class="courier-table-body" id="courier-table-body">
         </tbody>
     </table>
 </div>
+<div id="map" style="width:100%;height:250px;"></div>
 <input type="hidden" id="detailSave_send" value="">
+<input type="hidden" id="setDelivery_send" value="">
 </body>
 </html>

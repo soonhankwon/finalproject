@@ -12,17 +12,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(indexes = {@Index(name = "keyword", columnList = "areaIndex_id, account_id")})
 public class DeliveryAssignment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "areaIndex_Id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "areaIndexId", unique = true, nullable = false)
     private AreaIndex areaIndex;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
     public DeliveryAssignment(Account account, AreaIndex areaIndex) {

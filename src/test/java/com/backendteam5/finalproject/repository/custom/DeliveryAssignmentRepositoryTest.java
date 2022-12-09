@@ -1,26 +1,20 @@
 package com.backendteam5.finalproject.repository.custom;
 
+import com.backendteam5.finalproject.dto.AdminMainDto;
 import com.backendteam5.finalproject.dto.CountDirectDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
-import com.backendteam5.finalproject.dto.MainDto;
 import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.AreaIndex;
-import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
 import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Commit
 class DeliveryAssignmentRepositoryTest {
     @Autowired
     EntityManager em;
@@ -138,43 +131,33 @@ class DeliveryAssignmentRepositoryTest {
         assertThat(deliveryAssignmentRepository.updateDelivery(zipCode, username)).isEqualTo(1);
     }
 
-    @DisplayName("Delivery를 업데이트 하는 메소드 테스트 실패 - 없는 username")
-    @Test
-    public void updateDeliveryTestFail(){
-        String zipCode = "001";
-        String username = "JOUNDONGUSER3";
-
-        assertThat(deliveryAssignmentRepository.updateDelivery(zipCode, username)).isEqualTo(1);
-    }
-
     @DisplayName("임시 할당된 갯수에 대한 테스트")
     @Test
     public void countTemp(){
         Account user = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER).get(0);
-        System.out.println(courierRepository.countUsernameTemp(user, "2022-12-03"));
+        System.out.println(courierRepository.countUsernameTemp(user));
     }
 
     @DisplayName("직접 할당된 갯수에 대한 테스트")
     @Test
     public void countDirect(){
         Account user = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER).get(0);
-        System.out.println(courierRepository.countUsernameDirect(user, "2022-12-03"));
+        System.out.println(courierRepository.countUsernameDirect(user));
     }
 
     @DisplayName("왼쪽 테이블을 위한 보내는 데이터")
     @Test
     public void mainDtoSend(){
-        MainDto mainDto = new MainDto();
+        AdminMainDto mainDto = new AdminMainDto();
         List<Account> userlist = accountRepository.findByAreaAndRole("구로구", UserRoleEnum.USER);
-        String date = "2022-12-06";
         mainDto.setUserlist(userlist);
 
         LinkedList<Long> tempCount = new LinkedList<>();
         LinkedList<CountDirectDto> directCount = new LinkedList<>();
 
         for(Account user : userlist){
-            Long aLong = courierRepository.countUsernameTemp(user, date);
-            List<CountDirectDto> countDirects = courierRepository.countUsernameDirect(user, date);
+            Long aLong = courierRepository.countUsernameTemp(user);
+            List<CountDirectDto> countDirects = courierRepository.countUsernameDirect(user);
             tempCount.add(aLong);
             if(countDirects.isEmpty())  {
                 directCount.add(new CountDirectDto("배송중", 0L));
@@ -185,9 +168,5 @@ class DeliveryAssignmentRepositoryTest {
         mainDto.setTempAssignment(tempCount);
         mainDto.setDirectAssignment(directCount);
         System.out.println(mainDto);
-    }
-    private String convertNowDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(new Date());
     }
 }

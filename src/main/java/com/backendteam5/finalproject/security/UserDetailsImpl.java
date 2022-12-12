@@ -52,6 +52,8 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+    public String getArea(){return account.getArea();}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         UserRoleEnum userRole = account.getRole();

@@ -14,26 +14,33 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {@Index(name = "keyword", columnList = "deliveryPerson, state, delivery_assignment_id")})
+@Table(indexes = {@Index(name = "keyword", columnList = "address, state, customer")
+})
 public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "address")
+    @NotNull
     private String address;
     @Column(name = "state")
     @NotNull
     private String state;
     @Column(name = "customer")
+    @NotNull
     private String customer;
     @Column(name = "arrival_date")
+    @NotNull
     private String arrivalDate;
     @Column(name = "register_date")
+    @NotNull
     private String registerDate;
     @Column(name = "x_pos")
     private double xPos;
     @Column(name = "y_pos")
     private double yPos;
+    @Column(name = "deliveryPerson")
     @NotNull
     private String deliveryPerson = "GUROADMIN";
     @ManyToOne(fetch = FetchType.LAZY)

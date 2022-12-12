@@ -27,7 +27,7 @@ public class CourierController {
 
     @GetMapping("/api/search/user/courier")
     public SearchResponseDto searchFilter(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                               @RequestParam Long state) {
+                               @RequestParam(required = false) Long state) {
         return courierService.searchFilter(userDetails, state);
 
     }

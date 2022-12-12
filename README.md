@@ -353,8 +353,25 @@
 
 
 ## 설계
-&nbsp; 📖 &nbsp; [API 설계](노션링크)  
-&nbsp; 🗃️ &nbsp; [DB 설계](노션링크)
+<details>
+<summary>📝 API 설계</summary>
+<div markdown="1">
+<br/>
+	
+![tacbaeticsErd](https://user-images.githubusercontent.com/113872320/206990749-c1b7e39b-0320-403d-939d-0a97fd815d24.png)
+	
+</div>
+</details>
+
+<details>
+<summary>📘 DB 설계</summary>
+<div markdown="1">
+<br/>
+	
+![tacbaeticsErd](https://user-images.githubusercontent.com/113872320/206990749-c1b7e39b-0320-403d-939d-0a97fd815d24.png)
+	
+</div>
+</details>
 
 ## 팀원
 

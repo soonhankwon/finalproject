@@ -5,20 +5,23 @@ import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
+import com.backendteam5.finalproject.repository.AreaIndexRepository;
 import com.backendteam5.finalproject.repository.CourierRepository;
 import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
 public class AdminService {
     private final AccountRepository accountRepository;
     private final CourierRepository courierRepository;
+    private final AreaIndexRepository areaIndexRepository;
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
     private final String defaultPerson = "ADMIN";
 
@@ -27,49 +30,9 @@ public class AdminService {
 
         AdminMainDto adminMainDto = new AdminMainDto();
 
-        List<Account> userlist = accountRepository.findByAreaAndRoleOrderByUsernameAsc(area, UserRoleEnum.USER);
-        adminMainDto.setUserlist(userlist);
+        List<CountTempDto> tempCount = courierRepository.countUsernameTemp(area);
 
-        LinkedList<Long> tempCount = new LinkedList<>();
-        LinkedList<CountStateDto> directCount = new LinkedList<>();
 
-        LinkedList<CountStateDto> directCase = new LinkedList<>();
-
-        directCase.add(new CountStateDto("배송지연", 0L));
-        directCase.add(new CountStateDto("배송중", 0L));
-        directCase.add(new CountStateDto("배송완료", 0L));
-
-        for(Account deliveryuser : userlist){
-            Long aLong = courierRepository.countUsernameTemp(deliveryuser);
-            List<CountStateDto> countDirects = courierRepository.countUsernameDirect(deliveryuser);
-
-            tempCount.add(aLong);
-
-            if(countDirects.isEmpty())  countDirects.addAll(directCase);
-
-            else if(countDirects.size() == 1){
-                if(countDirects.get(0).getState().equals("배송지연")){
-                    countDirects.add(directCase.get(1));
-                    countDirects.add(directCase.get(2));
-                } else if (countDirects.get(0).getState().equals("배송중")) {
-                    countDirects.add(0, directCase.get(0));
-                    countDirects.add(2, directCase.get(2));
-                } else{
-                    countDirects.add(0, directCase.get(0));
-                    countDirects.add(1, directCase.get(1));
-                }
-            }
-
-            else if(countDirects.size() == 2) {
-                if(countDirects.get(0).getState().equals("배송지연") && countDirects.get(1).getState().equals("배송중"))   countDirects.add(directCase.get(2));
-                if(countDirects.get(0).getState().equals("배송지연") && countDirects.get(1).getState().equals("배송완료"))   countDirects.add(1, directCase.get(1));
-                if(countDirects.get(0).getState().equals("배송중") && countDirects.get(1).getState().equals("배송완료"))   countDirects.add(0, directCase.get(0));
-            }
-
-            directCount.addAll(countDirects);
-        }
-        adminMainDto.setTempAssignment(tempCount);
-        adminMainDto.setDirectAssignment(directCount);
 
         adminMainDto.setRouteCount(courierRepository.countRouteState(userDetails.getArea()));
 
@@ -85,7 +48,22 @@ public class AdminService {
         List<String> zipCode = updateDeliveryDto.getZipCode();
         List<String> username = updateDeliveryDto.getUsername();
         if(updateDeliveryDto.getUsername().size() != updateDeliveryDto.getZipCode().size()) throw  new RuntimeException("전달값에 이상이 있습니다.");
-        for(int i=0; i<updateDeliveryDto.getZipCode().size(); i++)  deliveryAssignmentRepository.updateDelivery(zipCode.get(i), username.get(i));
+
+        HashMap<String, List<String>> hashMap = new HashMap<>();
+
+        for(String user : username.parallelStream().distinct().collect(Collectors.toList())){
+            List<Integer> index = IntStream.range(0, username.size())
+                            .filter(i -> Objects.equals(username.get(i), user))
+                            .boxed().collect(Collectors.toList());
+            hashMap.put(user, index.stream().map(zipCode::get).collect(Collectors.toList()));
+        }
+
+        for(Map.Entry<String, List<String>> pair : hashMap.entrySet()) {
+            deliveryAssignmentRepository.updateDelivery(
+                    areaIndexRepository.findIdByzipCode(pair.getValue()),
+                    accountRepository.findIdByUsername(pair.getKey())
+            );
+        }
 
         return "업데이트 성공";
     }

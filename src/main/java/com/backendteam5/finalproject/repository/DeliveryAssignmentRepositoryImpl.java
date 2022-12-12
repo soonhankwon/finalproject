@@ -27,22 +27,11 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     @Modifying(clearAutomatically = true)
     @Transactional
     @Override
-    public long updateDelivery(String zipCode, String username){
-        return queryFactory
+    public void updateDelivery(List<Long> areaId, Long accountId){
+        queryFactory
                 .update(deliveryAssignment)
-                .set(deliveryAssignment.account.id,
-                        JPAExpressions
-                                .select(account.id)
-                                .from(account)
-                                .where(account.username.eq(username))
-                )
-                .where(deliveryAssignment.areaIndex.id.eq(
-                        JPAExpressions
-                            .select(areaIndex.id)
-                            .from(areaIndex)
-                            .where(areaIndex.zipCode.eq(zipCode))
-                        )
-                )
+                .set(deliveryAssignment.account.id, accountId)
+                .where(deliveryAssignment.areaIndex.id.in(areaId))
                 .execute();
     }
 

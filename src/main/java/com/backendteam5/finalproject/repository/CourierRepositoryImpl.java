@@ -2,6 +2,7 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
@@ -79,7 +80,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .select(getRouteCountDto())
                 .from(courier)
                 .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
-                .where(areaIndex.area.eq(area), courier.arrivalDate.eq(getNowDate()))
+                .where(areaIndex.area.eq(area), courier.arrivalDate.goe(getNowDate()))
                 .groupBy(areaIndex.route, courier.state)
                 .orderBy(areaIndex.route.asc(), courier.state.desc())
                 .fetch();
@@ -88,34 +89,50 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     // user테이블에 들어갈 직접 할당의 state별 갯수
     @Transactional(readOnly = true)
     @Override
-    public List<CountStateDto> countUsernameDirect(Account account) {
+    public List<CountStateDto> countUsernameDirect(String area) {
         return queryFactory
                 .select(getCountDirect())
                 .from(courier)
-                .where(courier.deliveryPerson.eq(account.getUsername()),
-                        courier.arrivalDate.eq(getNowDate()))
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.account, account)
+                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
+                .groupBy(account.username)
+                .where(courier.arrivalDate.goe(getNowDate()),
+                        courier.deliveryPerson.eq(account.username))
                 .groupBy(courier.state)
-                .orderBy(courier.state.desc())
                 .fetch();
     }
 
     // user테이블에 들어갈 임시 할당의 갯수
     @Transactional(readOnly = true)
     @Override
-    public Long countUsernameTemp(Account account) {
+//    public Long countUsernameTemp(Account account) {
+    public List<CountTempDto> countUsernameTemp(String area) {
+//        return queryFactory
+//                .select(courier.count())
+//                .from(courier)
+//                .where(
+//                        courier.deliveryAssignment.id.in(
+//                                JPAExpressions
+//                                        .select(deliveryAssignment.id)
+//                                        .from(deliveryAssignment)
+//                                        .where(deliveryAssignment.account.id.eq(account.getId()))
+//                        ),
+//                        courier.arrivalDate.goe(getNowDate()),
+//                        courier.deliveryPerson.ne(account.getUsername()))
+//                .fetchOne();
         return queryFactory
-                .select(courier.count())
+                .select(getCountTemp())
                 .from(courier)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.account, account)
+                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
                 .where(
-                        courier.deliveryAssignment.id.in(
-                                JPAExpressions
-                                        .select(deliveryAssignment.id)
-                                        .from(deliveryAssignment)
-                                        .where(deliveryAssignment.account.id.eq(account.getId()))
-                        ),
-                        courier.arrivalDate.eq(getNowDate()),
-                        courier.deliveryPerson.ne(account.getUsername()))
-                .fetchOne();
+                        courier.arrivalDate.goe(getNowDate()),
+                        courier.deliveryPerson.eq("ADMIN")
+                )
+                .groupBy(account.username)
+                .fetch();
     }
 
     // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당
@@ -243,6 +260,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     public ConstructorExpression<CountStateDto> getCountDirect(){
         return Projections.constructor(CountStateDto.class,
+                account.username.as("username"),
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }
@@ -270,6 +288,12 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .set(courier.deliveryPerson, deliveryPerson)
                 .where(courier.id.eq(courierId))
                 .execute();
+    }
+
+    public ConstructorExpression<CountTempDto> getCountTemp(){
+        return Projections.constructor(CountTempDto.class,
+                account.username.as("username"),
+                account.username.count().as("count"));
     }
 
     private BooleanExpression stateUsernameEq(String username) {

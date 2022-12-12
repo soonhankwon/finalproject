@@ -3,7 +3,10 @@ package com.backendteam5.finalproject.repository;
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.NullExpression;
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -30,44 +33,58 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    /*
-    * 1. username == GUROADMIN and state false and delivery.account == account
-     */
+
 
     // 배송 상태별 조회
     @Override
     @Transactional(readOnly = true)
     public List<CourierDto> searchByUsernameAndState(Account account, String state, String username) {
-        return queryFactory
-                .select(getCourierConstructor())
+        List<Long> ids = queryFactory
+                .select(courier.id)
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .where(usernameEq(account), stateEq(state), stateUsernameEq(username))
-                .orderBy(courier.arrivalDate.desc())
                 .fetch();
 
+        return queryFactory
+                .select(getCourierConstructor())
+                .from(courier)
+                .where(courier.id.in(ids))
+                .fetch();
     }
 
     // 배송상태별 택배 개수
     @Transactional(readOnly = true)
     @Override
-    public Long countUsernameAndState(Account account, String state, String username) {
-        return queryFactory
-                .select(courier.count())
+    public List<Long> stateCount(Account account) {
+        List<Long> ids = queryFactory
+                .select(courier.id)
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
-                .where(usernameEq(account), stateEq(state), stateUsernameEq(username))
-                .fetchOne();
+                .where(usernameEq(account))
+                .fetch();
+
+        return queryFactory
+                .select(courier.id.count())
+                .from(courier)
+                .where(courier.id.in(ids))
+                .groupBy(courier.state)
+                .fetch();
     }
 
     // 수령인 이름으로 택배 조회
     @Transactional(readOnly = true)
     @Override
     public List<CourierDto> searchCustomer(String customer) {
+        List<Long> ids = queryFactory
+                .select(courier.id)
+                .from(courier)
+                .where(customerEq(customer))
+                .fetch();
+
         return queryFactory
                 .select(getCourierConstructor())
                 .from(courier)
-                .where(customerEq(customer))
+                .where(courier.id.in(ids))
                 .fetch();
     }
 
@@ -256,8 +273,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.arrivalDate,
                 courier.registerDate,
                 courier.deliveryPerson,
-                courier.xPos,
-                courier.yPos,
                 courier.deliveryAssignment
         );
     }
@@ -279,7 +294,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     private BooleanExpression customerEq(String customer) {return courier.customer.eq(customer);}
 
     private BooleanExpression usernameEq(Account account) {
-        return deliveryAssignment.account.eq(account);
+        return courier.deliveryAssignment.account.eq(account);
     }
 
     private BooleanExpression stateEq(String state) {return courier.state.eq(state);}

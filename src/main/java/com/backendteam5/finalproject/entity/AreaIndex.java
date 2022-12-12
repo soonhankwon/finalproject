@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(indexes = {@Index(name = "keyword", columnList = "area, route, sub_route, zip_code")})
 public class AreaIndex {
 
     @Id

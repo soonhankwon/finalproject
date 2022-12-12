@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta property="og:title" content="운송 관리 시스템">
+  <meta property="og:description" content="운송장번호에 기반한 운송관리시스템 5조">
+  <!--    <meta property="og:image" content="images/og_chadda.png">-->
+  <!-- Favicon-->
+  <!--    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />-->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!--  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e9e4cac8fc69320387d04a0cbc04e0a2"></script>-->
+  <script th:src="@{/js/main.js}" ></script>
+
+  <title>Transportation Management System</title>
+</head>
+<body>
+<div class="header" style="position:relative;">
+
+  <div id="header-title-select-shop">
+    <!--        <img id="header-title-image" src = "images/chadda_logo.png" alt="">-->
+    WELCOME 오늘의 택배 🚚 <span th:text="${username}"></span>님 반갑습니다.
+  </div>
+  <form id="signout_form" method="post" action="/account/logout" >
+    <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> <span th:text="${username}"></span>님 로그아웃</a>
+  </form>
+</div>
+<!--<div id="kakao-map" style="margin: 0 auto; width: 100%; height: 600px"></div>-->
+
+
+
+<div class="button-center" id="button-cnt">
+
+</div>
+<div id="search-area">
+  <div>
+    <input type="text" id="query">
+  </div>
+</div>
+<div class="courier-table">
+  <table id="courier-table">
+    <caption>송장 테이블</caption>
+    <thead class="courier-table-header">
+    <tr>
+      <th width="20%">Number</th>
+      <th width="5%">Area</th>
+      <th width="5%">Route</th>
+      <th width="5%">SubRoute</th>
+      <th width="12.5%">State</th>
+      <th width="12.5%">Customer</th>
+      <th width="20%">ArrivalDate</th>
+      <th width="20%">RegisterDate</th>
+      <th width="20%">UserName</th>
+      <th width="20%">RealUserName</th>
+      <th width="20%">Button</th>
+    </tr>
+    </thead>
+    <tbody class="courier-table-body" id="courier-table-body">
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

@@ -1,21 +1,19 @@
 package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
-import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.QAccount;
-import com.backendteam5.finalproject.entity.QCourier;
 import com.backendteam5.finalproject.repository.custom.CustomDeliveryAssignmentRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.backendteam5.finalproject.entity.QAccount.account;
 import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
-import static com.backendteam5.finalproject.entity.QCourier.courier;
 import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryAssignment;
 
 public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmentRepository {
@@ -26,6 +24,8 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     }
 
     // Delivery의 account를 업데이트 하는 메소드 (zipcode와 username이 필요함)
+    @Modifying(clearAutomatically = true)
+    @Transactional
     @Override
     public long updateDelivery(String zipCode, String username){
         return queryFactory
@@ -48,6 +48,7 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
 
     // Delivery를 수정을 위해서 지역별로 조회하는 메소드(Area와 Route가 필요함)
     // Area는 Context의 account에 등록된 Area를 조회하여 넣을거임
+    @Transactional(readOnly = true)
     @Override
     public List<DeliveryAssignmentDto> selectDelivery(String area, String route) {
         return queryFactory

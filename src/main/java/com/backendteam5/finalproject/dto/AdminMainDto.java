@@ -8,8 +8,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class MainDto {
+public class AdminMainDto {
     private List<Account> userlist;
     private List<Long> tempAssignment;
-    private List<CountDirectDto> directAssignment;
+    private List<CountStateDto> directAssignment;
+    private List<RouteCountDto> routeCount;
 }

@@ -10,7 +10,7 @@
 <summary>📌 데이터 기준</summary>
 <div markdown="1">
 <br/>
- 1. 택배 데이터 수 : 100만 개, 500만개
+ 1. 택배 데이터 수 : 500만개
  
  - 2021년 택배 물동량 36억건
     - [2021년 택배물동량 36억개, 가격 인상도 145원에 달해](https://www.klnews.co.kr/news/articleView.html?idxno=304003)

@@ -173,29 +173,21 @@
 <div markdown="1">
 
 - **테스트 계기**
-    - 대용량 데이터를 처리하는 패션 플랫폼과 같이 많은 이용자들이 사용해 부하가 많이 발생했을 때 시스템이 정상 작동하는지 여부와 응답 성능을 예측하기 위함
-- **목표값 설정**
-    - [Latency 목표값, Throughput 목표값 설정](https://www.notion.so/MUCOSA-5fe8f0d732234c56b643b24310ab7d33)
+    - 하루 평균 최대 오백만건 가량되는 대량의 택배 데이터량과 이를 사용하는 택배기사의 동시접속자 수에 따른 부하 테스트를 하기위함 
+    - [Latency 목표값, Throughput 목표값 설정](노션링크)
 - **병목 현상 확인**
-    - 조회 성능 검증 단계 진행 중 **rps는 목표값 안**에 들어오지만 **Latency가 급격하게 증가**하고 **Success Rate가 떨어지는 현상** 발견
+    - 확인필요
 
-      ⇒ **DB가 병목 구간**일 것으로 추론
-
-      ⇒ 메인페이지 로딩, 검색 페이지 로딩 시 RDS의 **CPU가 94.47%**까지 상승
-    ![MUCOSA (2)](https://user-images.githubusercontent.com/31721097/190361709-bebc8354-5555-471f-9222-f24bfde5167c.png)
+      ⇒ 택배 조회 , 검색 페이지 로딩 시 RDS의 **CPU % 테스트필요**까지 상승
 
 - **대안**
-    1. ~~일부 Query를 Application단에서 처리함으로써 DB 부하를 낮춤~~
-        - 개발 일정상 무리가 있다고 판단
-    2. ~~DB Scale Out을 통해 DB 성능 개선~~
-        - 개발 일정상 무리가 있다고 판단
+    1. 
+	
+    2. 
     3. **DB Scale Up을 통해 DB 성능 개선**
 - **결과**
 
-  ![MUCOSA (3)](https://user-images.githubusercontent.com/31721097/190361725-375137e1-492a-4534-ae69-cd47a43d5f2e.png)
-
 - **결과분석**
-    - t3.micro ⇒ **r5.8xlarge** 인스턴스로 교체 후 조회 페이지 테스트 진행 시 **목표했던 Latency와 Throughput을 충족**
 
 👇🏻**더 자세한 내용이 알고싶다면?**👇🏻
 
@@ -239,7 +231,7 @@
      |캐싱 메커니즘을 지원하기 위해 플러그인 사용 가능|캐싱이 필요한 경우 자체 캐싱 메커니즘을 작성해야함|
      
    * 선택
-     * GitHub Actions 편의성 및 접근성이 좋아서 의견 수렴 후 선택.
+     * GitHub Actions 편의성 및 접근성이 좋다고 판단, 의견 수렴 후 선택.
 	
 </div>
 </details>
@@ -268,7 +260,7 @@
    ```
    
  👇🏻더 자세한 내용이 알고싶다면?👇🏻<br/>
-    &nbsp; 🚥 &nbsp; [Git](노션링크)
+    &nbsp; 🚥 &nbsp; [Git](https://www.notion.so/Git-3d521c25cdc14f82b8892075a813288a)
 </div>
 </details>
 

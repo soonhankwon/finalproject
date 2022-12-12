@@ -408,6 +408,6 @@
 
 |이름|포지션|분담|@ Email|Github|
 |------|------|------|------|------|
-|권순한|BackEnd|업데이트(쿼리 최적화)<br/>데이터 생성<br/>CD<br/>부하 테스트|soonable@gmail.com|https://github.com/soonhankwon|
+|권순한|BackEnd|업데이트(쿼리 최적화)<br/>데이터 생성<br/>프로젝트 매니징 및 발표<br/>부하 테스트|soonable@gmail.com|https://github.com/soonhankwon|
 |이재선|BackEnd|검색(쿼리 최적화) <br/>택배기사용 조회기능<br/>택배기사용 업데이트<br/>부하 테스트|jason1208@naver.com|https://github.com/|
 |최규범|BackEnd|회원가입<br/>로그인<br/>관리자용 조회기능<br/>관리자용 업데이트<br/>부하 테스트|rbqjachl95@google.com|https://github.com/|

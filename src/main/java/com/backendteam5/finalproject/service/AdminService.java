@@ -3,10 +3,7 @@ package com.backendteam5.finalproject.service;
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
-import com.backendteam5.finalproject.repository.AccountRepository;
-import com.backendteam5.finalproject.repository.AreaIndexRepository;
-import com.backendteam5.finalproject.repository.CourierRepository;
-import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
+import com.backendteam5.finalproject.repository.*;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,8 @@ public class AdminService {
     private final CourierRepository courierRepository;
     private final AreaIndexRepository areaIndexRepository;
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
+
+    private final CourierRepositoryImpl courierImpl;
     private final String defaultPerson = "ADMIN";
 
     public AdminMainDto getMainReport(UserDetailsImpl userDetails){
@@ -32,6 +31,9 @@ public class AdminService {
 
         AdminMainDto adminMainDto = new AdminMainDto();
 
+        List<String> userList = accountRepository.findByAreaAndRole(area, UserRoleEnum.USER);
+
+//        deliveryAssignmentRepository.findByTempCount(area, defaultPerson)
 
         adminMainDto.setRouteCount(courierRepository.countRouteState(userDetails.getArea()));
 
@@ -58,6 +60,8 @@ public class AdminService {
                     .boxed().collect(Collectors.toList());
             hashMap.put(user, index.stream().map(zipCode::get).collect(Collectors.toList()));
         }
+
+        if(hashMap.containsKey(""))   throw new NullPointerException("존재하지 않는 사용자 입니다." + hashMap.get(null));
 
         for(Map.Entry<String, List<String>> pair : hashMap.entrySet()) {
             deliveryAssignmentRepository.updateDelivery(

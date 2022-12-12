@@ -2,7 +2,8 @@ $(document).ready(function () {
     searchAll();
 });
 
-var BaseUrl = "http://3.35.229.160/";
+// var BaseUrl = "http://3.35.229.160/";
+var BaseUrl = "http://localhost:8080/";
 
 function searchAll(){
     $.ajax({
@@ -21,8 +22,7 @@ function searchAll(){
 
             userTable.empty();
             courierTable.empty();
-
-            usertable(userList, tempCount, directCount, userTable);
+            // usertable(userList, tempCount, directCount, userTable);
             routecount(routeCount)
 
             courierTable.append("<tr><td colspan='12'>검색된 정보가 없습니다.</td></tr>")
@@ -34,12 +34,12 @@ function searchAll(){
 function usertable(userList, tempCount, directCount, userTable){
     for (let i = 0; i < userList.length; i++) {
         let j = i*3;
+        let shipping = Number(userList[i]['username'])+Number(directCount[i*3+1]['count'])
         let html = "<tr>" +
             "<td><input type='checkbox' name='User-select'></td>" +
             "<td>" + userList[i]['username'] + "</td>" +
-            "<td>" + tempCount[i] + "</td>"+
+            "<td>" + shipping + "</td>"+
             "<td>" + directCount[i*3]['count'] + "</td>"+
-            "<td>" + directCount[i*3+1]['count'] + "</td>"+
             "<td>" + directCount[i*3+2]['count'] + "</td></tr>"
         userTable.append(html);
     }
@@ -113,6 +113,7 @@ function searchCourier(){
 
 // 택배 테이블 채우기
 function setCourierTable(courierTable, response){
+    console.log(response)
     response.forEach((value, index, array) => {
         let html = "<tr>" +
             "<td><input type='checkbox' name='Courier-select'></td>" +

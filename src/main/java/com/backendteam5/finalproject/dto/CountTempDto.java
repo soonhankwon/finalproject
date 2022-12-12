@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 public class CountTempDto {
     private String username;
     private Long count;
-
     @QueryProjection
     public CountTempDto(String username, Long count){
         this.username = username;

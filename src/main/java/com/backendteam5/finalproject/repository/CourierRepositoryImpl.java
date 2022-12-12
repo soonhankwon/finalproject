@@ -31,8 +31,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-
-
     // 배송 상태별 조회
     @Override
     @Transactional(readOnly = true)
@@ -93,7 +91,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getRouteCountDto())
                 .from(courier)
-                .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
+                .innerJoin(courier.deliveryAssignment.areaIndex, areaIndex)
                 .where(areaIndex.area.eq(area), courier.arrivalDate.goe(getNowDate()))
                 .groupBy(areaIndex.route, courier.state)
                 .orderBy(areaIndex.route.asc(), courier.state.desc())
@@ -258,8 +256,10 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.customer,
                 courier.state,
                 courier.deliveryPerson,
-                areaIndex,
-                account,
+                areaIndex.area,
+                areaIndex.route,
+                areaIndex.subRoute,
+                account.username,
                 courier.address,
                 courier.xPos,
                 courier.yPos);

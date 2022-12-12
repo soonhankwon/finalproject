@@ -24,19 +24,19 @@ public class AdminCourierDto {
     @QueryProjection
     public AdminCourierDto(Long id, String registerDate, String arrivalDate,
                            String customer, String state, String deliveryPerson,
-                           AreaIndex areaIndex, Account account,
+                           String area, String route, int subroute, String tempPerson,
                            String address, double xPos, double yPos) {
         this.id = id;
         this.address = address;
-        this.area = areaIndex.getArea();
-        this.route = areaIndex.getRoute();
-        this.subRoute = areaIndex.getSubRoute();
+        this.area = area;
+        this.route = route;
+        this.subRoute = subroute;
         this.registerDate = registerDate;
         this.arrivalDate = arrivalDate;
         this.customer = customer;
         this.state = state;
         this.deliveryPerson = deliveryPerson;
-        this.tempPerson = account.getUsername();
+        this.tempPerson = tempPerson;
         this.xPos = xPos;
         this.yPos = yPos;
     }

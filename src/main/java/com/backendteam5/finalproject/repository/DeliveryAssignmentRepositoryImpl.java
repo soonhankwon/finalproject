@@ -1,20 +1,26 @@
 package com.backendteam5.finalproject.repository;
 
+import com.backendteam5.finalproject.dto.CountTempDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
+import com.backendteam5.finalproject.dto.SearchReqDto;
 import com.backendteam5.finalproject.repository.custom.CustomDeliveryAssignmentRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.backendteam5.finalproject.entity.QAccount.account;
 import static com.backendteam5.finalproject.entity.QAreaIndex.areaIndex;
+import static com.backendteam5.finalproject.entity.QCourier.courier;
 import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryAssignment;
+
 
 public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmentRepository {
     private final JPAQueryFactory queryFactory;
@@ -50,11 +56,41 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 .fetch();
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<CountTempDto> findByTempCount(String area, String def) {
+        return queryFactory
+                .select(getCountTempDto())
+                .from(deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area))
+                .innerJoin(deliveryAssignment.account, account)
+                .on(account.area.eq(area))
+                .innerJoin(deliveryAssignment, courier.deliveryAssignment)
+                .on(courier.arrivalDate.goe(getNowDate()), courier.deliveryPerson.eq(def))
+                .groupBy(account.username)
+                .orderBy(account.username.asc())
+                .fetch();
+    }
+
 
     public ConstructorExpression<DeliveryAssignmentDto> getDeliveryDto(){
         return Projections.constructor(DeliveryAssignmentDto.class,
                 areaIndex.subRoute,
                 areaIndex.zipCode,
                 account.username);
+    }
+
+    public ConstructorExpression<CountTempDto> getCountTempDto(){
+        return Projections.constructor(CountTempDto.class,
+                account.username,
+                courier.id.count()
+        );
+    }
+
+    public String getNowDate(){
+        Calendar cal = SearchReqDto.getNow();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(cal.getTime());
     }
 }

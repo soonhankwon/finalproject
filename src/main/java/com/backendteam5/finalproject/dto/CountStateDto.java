@@ -9,12 +9,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CountStateDto {
-    private String username;
-    private List<String> state;
-    private List<Long> count;
+    private String state;
+    private Long count;
     @QueryProjection
-    public CountStateDto(String username, List<String> state, List<Long> count){
-        this.username = username;
+    public CountStateDto(String state, Long count){
         this.state = state;
         this.count = count;
     }

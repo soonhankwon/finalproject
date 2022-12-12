@@ -12,7 +12,6 @@ public class AdminCourierDto {
     private String area;
     private String route;
     private int subRoute;
-    private String zipCode;
     private String registerDate;
     private String arrivalDate;
     private String customer;
@@ -32,7 +31,6 @@ public class AdminCourierDto {
         this.area = areaIndex.getArea();
         this.route = areaIndex.getRoute();
         this.subRoute = areaIndex.getSubRoute();
-        this.zipCode = areaIndex.getZipCode();
         this.registerDate = registerDate;
         this.arrivalDate = arrivalDate;
         this.customer = customer;

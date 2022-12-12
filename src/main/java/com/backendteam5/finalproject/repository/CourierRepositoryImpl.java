@@ -4,10 +4,7 @@ import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.NullExpression;
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -123,33 +120,33 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     // user테이블에 들어갈 임시 할당의 갯수
     @Transactional(readOnly = true)
     @Override
-//    public Long countUsernameTemp(Account account) {
-    public List<CountTempDto> countUsernameTemp(String area) {
-//        return queryFactory
-//                .select(courier.count())
-//                .from(courier)
-//                .where(
-//                        courier.deliveryAssignment.id.in(
-//                                JPAExpressions
-//                                        .select(deliveryAssignment.id)
-//                                        .from(deliveryAssignment)
-//                                        .where(deliveryAssignment.account.id.eq(account.getId()))
-//                        ),
-//                        courier.arrivalDate.goe(getNowDate()),
-//                        courier.deliveryPerson.ne(account.getUsername()))
-//                .fetchOne();
+    public Long countUsernameTemp(Account account) {
+//    public List<CountTempDto> countUsernameTemp(String area) {
         return queryFactory
-                .select(getCountTemp())
+                .select(courier.count())
                 .from(courier)
-                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
-                .innerJoin(deliveryAssignment.account, account)
-                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
                 .where(
+                        courier.deliveryAssignment.id.in(
+                                JPAExpressions
+                                        .select(deliveryAssignment.id)
+                                        .from(deliveryAssignment)
+                                        .where(deliveryAssignment.account.id.eq(account.getId()))
+                        ),
                         courier.arrivalDate.goe(getNowDate()),
-                        courier.deliveryPerson.eq("ADMIN")
-                )
-                .groupBy(account.username)
-                .fetch();
+                        courier.deliveryPerson.ne(account.getUsername()))
+                .fetchOne();
+//        return queryFactory
+//                .select(getCountTemp())
+//                .from(courier)
+//                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+//                .innerJoin(deliveryAssignment.account, account)
+//                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
+//                .where(
+//                        courier.arrivalDate.goe(getNowDate()),
+//                        courier.deliveryPerson.eq("ADMIN")
+//                )
+//                .groupBy(account.username)
+//                .fetch();
     }
 
     // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당

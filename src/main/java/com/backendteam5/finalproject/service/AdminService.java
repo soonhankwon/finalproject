@@ -1,7 +1,6 @@
 package com.backendteam5.finalproject.service;
 
 import com.backendteam5.finalproject.dto.*;
-import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.AccountRepository;
@@ -12,7 +11,10 @@ import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,9 +32,6 @@ public class AdminService {
 
         AdminMainDto adminMainDto = new AdminMainDto();
 
-        List<CountTempDto> tempCount = courierRepository.countUsernameTemp(area);
-
-
 
         adminMainDto.setRouteCount(courierRepository.countRouteState(userDetails.getArea()));
 
@@ -45,16 +44,18 @@ public class AdminService {
 
     public String updateDelivery(UserDetailsImpl userDetails, UpdateDeliveryDto updateDeliveryDto){
         checkAdmin(userDetails);
+
         List<String> zipCode = updateDeliveryDto.getZipCode();
         List<String> username = updateDeliveryDto.getUsername();
+
         if(updateDeliveryDto.getUsername().size() != updateDeliveryDto.getZipCode().size()) throw  new RuntimeException("전달값에 이상이 있습니다.");
 
         HashMap<String, List<String>> hashMap = new HashMap<>();
 
         for(String user : username.parallelStream().distinct().collect(Collectors.toList())){
             List<Integer> index = IntStream.range(0, username.size())
-                            .filter(i -> Objects.equals(username.get(i), user))
-                            .boxed().collect(Collectors.toList());
+                    .filter(i -> Objects.equals(username.get(i), user))
+                    .boxed().collect(Collectors.toList());
             hashMap.put(user, index.stream().map(zipCode::get).collect(Collectors.toList()));
         }
 
@@ -64,7 +65,6 @@ public class AdminService {
                     accountRepository.findIdByUsername(pair.getKey())
             );
         }
-
         return "업데이트 성공";
     }
 

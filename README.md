@@ -157,6 +157,60 @@
 </details>
 
 <details>
+<summary>📈 업데이트 성능 개선</summary>
+<div markdown="1">
+
+- **필요성**
+    - 상품 데이터가 100만개로 증가하면서 **메인페이지 로딩 시간이 최대 4.8초까지 증가**
+
+  ⇒ KISSmetrics에 따르면 로딩시간 3초 이상 시 고객의 40% 이탈률 발생
+
+  ![Untitled](https://user-images.githubusercontent.com/31721097/190343898-e73ba4c4-e934-47bc-b404-ec0f699f90c3.png)
+
+  ⇒ 목표 : 페이지 로딩 시간 **2초 이내**
+
+- **진행 단계**
+    - 1. Index 생성
+        - **적용 계기**
+        - **결과 분석**
+
+    - 2. Covering Index 생성
+        - **적용 계기**
+
+          : 성능을 개선하기 위해 Full Scan이 발생하는 product 테이블 개션의 필요성을 알게 됨
+
+          => Covering Index를 통해 'where, order by, offset ~ limit'를 인덱스 검색으로 빠르게 처리하고 **걸러진 데이터를 통해서만 데이터 블록에 접근**
+
+        - **QueryDSL에서의 Covering 인덱스 적용**
+
+          : QueryDSL의 경우 from절의 서브쿼리를 지원하지 않음
+
+          ⇒ `커버링 인덱스를 활용하여 조회 대상의 PK를 조회`하는 부분과 `해당 PK로 필요한 컬럼 항목들을 조회`하는 부분을 나누어 구현
+
+        - **결과 분석**
+            - 개선된 부분
+                - 마지막 페이지 속도가 **최대 236%까지 개선**
+            - 추가 개선이 필요한 부분
+                - 첫페이지에 대해 목표했던 **2초 이내의 결과는 달성하지 못함**
+                - **키워드 검색**에 대한 성능 개선이 다른 항목들에 비해 많이 되지 않음
+    - ~~6. Full-Text Index 생성 및 match()-against() Query 사용~~
+        - **적용 계기**
+
+          : 마지막 페이지 부분이 개선되었으나 처음 목표했던 2초 이내는 달성하지 못함. 그래서 엘라스틱서치 적용도 고려했지만 엘라스틱서치의 역인덱싱 방식과 같은 원리로 동작하는 MySQL의 Full-Text 인덱스를 알게됨
+
+- **결과**
+
+  ![Untitled](https://user-images.githubusercontent.com/31721097/190360338-705e078d-1c1b-4acd-9fb8-0c82a4dd0e14.png)
+
+
+👇🏻**더 자세한 내용이 알고싶다면?**👇🏻
+
+[성능 테스트 및 개선](https://www.notion.so/d08327e203924032879a77930913000e)
+
+</div>
+</details>
+
+<details>
 <summary>📶 부하 테스트</summary>
 <div markdown="1">
 

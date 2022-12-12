@@ -68,7 +68,11 @@ public class CourierService {
         Long progressCnt;
         Long completeCnt;
         List<Long> list = courierRepository.stateCount(userDetails.getUser());
-        if (list.size() == 1) {
+        if (list.size() == 0) {
+            progressCnt = 0L;
+            completeCnt = 0L;
+        }
+        else if (list.size() == 1) {
             progressCnt = list.get(0);
             completeCnt = 0L;
         }

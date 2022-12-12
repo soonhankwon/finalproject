@@ -103,7 +103,7 @@
 ## 트러블슈팅
 
 <details>
-<summary>📈 관리자용 검색 및 업데이트 성능 개선</summary>
+<summary>🏪 관리자용 검색 및 업데이트 성능 개선</summary>
 <div markdown="1">
 
 - **필요성**

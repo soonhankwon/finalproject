@@ -1,5 +1,7 @@
 # TACBAETICS
 
+![TACBAETICS](https://user-images.githubusercontent.com/113872320/207004883-f000f66a-6340-48ca-a242-664b8d4dafc5.png)
+
 ## 프로젝트 기획
 ### 프로젝트 설명
 > 💡 택배를 전략적(Tactics)으로 관리할 수 있는 배송 관리 시스템 **TACBAETICS** 입니다.

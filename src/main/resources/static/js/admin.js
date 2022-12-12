@@ -2,7 +2,7 @@ $(document).ready(function () {
     searchAll();
 });
 
-var BaseUrl = "http://localhost:8080/";
+var BaseUrl = "http://3.35.229.160/";
 
 function searchAll(){
     $.ajax({

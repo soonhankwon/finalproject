@@ -316,7 +316,7 @@
 <div markdown="1">
 <br/>
 	
-[APIdocument](https://www.notion.so/API-f34d6a71a69846749050d51fd0f44bcf)
+- [API 명세서](https://www.notion.so/API-f34d6a71a69846749050d51fd0f44bcf)
 	
 </div>
 </details>

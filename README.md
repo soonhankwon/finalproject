@@ -244,58 +244,6 @@
 </details>
 
 <details>
-<summary>🎮 동시성 제어</summary>
-<div markdown="1">
-
-**대안 검증**
-
-| 종류 | 처리 시간 | 리소스 |
-| --- | --- | --- |
-| Pessimistic | 2.416s | MySQL(RDS) |
-| Optimistic | 40.410s | MySQL(RDS) |
-| Named | 16.458s | MySQL(RDS) |
-| Lettuce | 13.349s | Redis(aws) |
-| Redisson | 10.665s | Redis(aws) |
-
-- 트랜잭션의 잦은 충돌 예상
-
-  → **Optimistic lock 부적합**
-
-- Hold and Wait 미충족
-
-  → 데드락 미발생(**Pessimistic lock**의 문제 해결)👈  *후보지1*
-
-- 검색 로직에 대한 영향 최소화
-
-  → version 컬럼을 가지는 것은 row 사이즈가 커지고 이는 검색 속도에 영향(in **Optimistic lock**)
-
-  → DB의 별도 공간이 필요하여 DB 성능에 영향. 즉, 검색 속도 영향(in **Named lock(Use-Level Lock)**)
-
-- 스핀락의 한계
-
-  → 스핀락은 redis server에 부하를 주어 지연 처리 발생(in **Lettuce**)
-
-- Pub/Sub방식의 이점
-
-  → 스핀락의 한계를 pub/sub 기반의 Lock으로 해결(in **Redisson**))👈  *후보지2*
-
-
-**Pessimistic vs Redission**
-
-![스크린샷 2022-09-14 오전 5 39 53](https://user-images.githubusercontent.com/31721097/190361126-c5d722fe-b245-4699-8e90-14c0d995e09b.png)
-
-→ pub/sub을 통한 lock 획득 시도 과정에서 network latency가 overhead로 발생 추정
-
-→ **최종 Pessimistic lock 적용**
-
-👇🏻**더 자세한 내용이 알고싶다면?**👇🏻
-
-[동시성 제어](https://www.notion.so/a3b60ee964514b03989fc3f687074668)
-
-</div>
-</details>
-
-<details>
 <summary>📶 부하 테스트</summary>
 <div markdown="1">
 

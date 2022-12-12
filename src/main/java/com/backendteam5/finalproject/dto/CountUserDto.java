@@ -6,12 +6,20 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CountTempDto {
+public class CountUserDto {
     private String username;
+    private String state;
     private Long count;
     @QueryProjection
-    public CountTempDto(String username, Long count){
+    public CountUserDto(String username, Long count){
         this.username = username;
+        this.count = count;
+    }
+
+    @QueryProjection
+    public CountUserDto(String username, String state, Long count){
+        this.username = username;
+        this.state = state;
         this.count = count;
     }
 }

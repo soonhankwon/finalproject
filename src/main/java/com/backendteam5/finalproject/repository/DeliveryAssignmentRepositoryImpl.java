@@ -1,6 +1,6 @@
 package com.backendteam5.finalproject.repository;
 
-import com.backendteam5.finalproject.dto.CountTempDto;
+import com.backendteam5.finalproject.dto.CountUserDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
 import com.backendteam5.finalproject.dto.SearchReqDto;
 import com.backendteam5.finalproject.repository.custom.CustomDeliveryAssignmentRepository;
@@ -58,7 +58,7 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
 
     @Transactional(readOnly = true)
     @Override
-    public List<CountTempDto> findByTempCount(String area, String def) {
+    public List<CountUserDto> findByTempCount(String area, String def) {
         return queryFactory
                 .select(getCountTempDto())
                 .from(deliveryAssignment)
@@ -81,8 +81,8 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 account.username);
     }
 
-    public ConstructorExpression<CountTempDto> getCountTempDto(){
-        return Projections.constructor(CountTempDto.class,
+    public ConstructorExpression<CountUserDto> getCountTempDto(){
+        return Projections.constructor(CountUserDto.class,
                 account.username,
                 courier.id.count()
         );

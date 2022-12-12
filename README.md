@@ -169,7 +169,7 @@
 </details>
 
 <details>
-<summary>📶 부하 테스트</summary>
+<summary>🧨 부하 테스트</summary>
 <div markdown="1">
 
 - **테스트 계기**
@@ -194,7 +194,7 @@
 </details>
 
 <details>
-<summary>🤖 로깅</summary>
+<summary>💬 로깅</summary>
 <div markdown="1">
 
 - **로깅 기능의 필요성 및 목표**

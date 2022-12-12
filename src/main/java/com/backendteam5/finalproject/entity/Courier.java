@@ -20,6 +20,7 @@ public class Courier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "address")
+    @NotNull
     private String address;
     @Column(name = "state", length = 25)
     @NotNull

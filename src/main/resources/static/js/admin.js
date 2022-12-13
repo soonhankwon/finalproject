@@ -2,7 +2,7 @@ $(document).ready(function () {
     searchAll();
 });
 
-var BaseUrl = "http://3.35.229.160/";
+var BaseUrl = "http://tacbaetics.shop/";
 var default_person = "GUROADMIN";
 
 function searchAll() {

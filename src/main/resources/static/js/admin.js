@@ -4,11 +4,11 @@ $(document).ready(function () {
 
 var BaseUrl = "http://3.35.229.160/";
 
-function searchAll(){
+function searchAll() {
     $.ajax({
         type: 'GET',
         url: '/api/admin/main',
-        success: function (response){
+        success: function (response) {
             let userTable = $("#user-table-body");
             let courierTable = $("#courier-table-body");
 
@@ -31,47 +31,44 @@ function searchAll(){
 }
 
 // userTable 만들기
-function usertable(userList, tempCount, directCount, userTable){
+function usertable(userList, tempCount, directCount, userTable) {
     for (let i = 0; i < userList.length; i++) {
-        let j = i*3;
-        for (let i = 0; i < userList.length; i++) {
-            let j = i*3;
-            let shipping = Number(userList[i]['username'])+Number(directCount[i*3+1]['count'])
-            let html = "<tr>" +
-                "<td><input type='checkbox' name='User-select'></td>" +
-                "<td>" + userList[i]['username'] + "</td>" +
-                "<td>" + shipping + "</td>"+
-                "<td>" + directCount[i*3]['count'] + "</td>"+
-                "<td>" + directCount[i*3+2]['count'] + "</td></tr>"
-            userTable.append(html);
-        }
+        let j = i * 3;
+        let shipping = Number(userList[i]['username']) + Number(directCount[i * 3 + 1]['count'])
+        let html = "<tr>" +
+            "<td><input type='checkbox' name='User-select'></td>" +
+            "<td>" + userList[i]['username'] + "</td>" +
+            "<td>" + shipping + "</td>" +
+            "<td>" + directCount[i * 3]['count'] + "</td>" +
+            "<td>" + directCount[i * 3 + 2]['count'] + "</td></tr>"
         userTable.append(html);
     }
 }
 
 // Route Div 채우기
-function routecount(routeCount){
+function routecount(routeCount) {
     let routelist = [];
 
-    for(let i = 0; i<20; i++){
-        let route = String.fromCodePoint(i+65);
+    for (let i = 0; i < 20; i++) {
+        let route = String.fromCodePoint(i + 65);
         routelist.push(
             routeCount.filter((item) => {
-            return item.route===route})
+                return item.route === route
+            })
         )
     }
 
     routelist.forEach((value, index, array) => {
         let success = 0;
-        value.filter((item) =>{
-            if(item.state === "배송완료") success = item.count;
+        value.filter((item) => {
+            if (item.state === "배송완료") success = item.count;
         })
 
         let total = value.map(item => item.count)
             .reduce((prev, curr) => prev + curr, 0);
 
-        let html = success + "/" + total +" ("+ Math.floor(success/total*100)+"%)"
-        $(`#route${index+1}`).val(html);
+        let html = success + "/" + total + " (" + Math.floor(success / total * 100) + "%)"
+        $(`#route${index + 1}`).val(html);
     })
 }
 
@@ -83,18 +80,18 @@ function openDelevery(route) {
     const height = 700;
 
     window.name = "parentForm";
-    openWin = window.open(BaseUrl+"delivery", "setDelivery", stroption(width, height));
+    openWin = window.open(BaseUrl + "delivery", "setDelivery", stroption(width, height));
 }
 
 // 송장번호로 검색
-function searchCourier(){
+function searchCourier() {
     let courierId = $('#courierId').val();
-    if(courierId === "")   alert("송장 번호를 입력하세요");
-    else{
+    if (courierId === "") alert("송장 번호를 입력하세요");
+    else {
         $.ajax({
             type: 'GET',
             url: `/api/admin/search/courier?` + `courierId=${courierId}`,
-            success: function (response){
+            success: function (response) {
                 let length = response.length;
                 courierTotal(length);
 
@@ -107,7 +104,7 @@ function searchCourier(){
                 let input = document.getElementById('courierId');
                 input.value = '';
             },
-            error: function (response){
+            error: function (response) {
                 /* 에러시 메시지 뽑는 방법 */
                 alert(response['responseJSON']['message']);
             }
@@ -116,7 +113,7 @@ function searchCourier(){
 }
 
 // 택배 테이블 채우기
-function setCourierTable(courierTable, response){
+function setCourierTable(courierTable, response) {
     response.forEach((value, index, array) => {
         let html = "<tr>" +
             "<td><input type='checkbox' name='Courier-select'></td>" +
@@ -131,7 +128,7 @@ function setCourierTable(courierTable, response){
             `<td align='middle'><input class='courier-input' id='state-${index}' name='state-${index}' type='text' value="${value['state']}" readonly/>` + "</td>" +
             `<td align='middle'><input class='courier-input' id='tempPerson-${index}' name='tempPerson-${index}' type='text' value="${value['tempPerson']}" readonly/>` + "</td>";
 
-        let person = (value['deliveryPerson']==="ADMIN") ? "대상 없음" : value['deliveryPerson'];
+        let person = (value['deliveryPerson'] === "ADMIN") ? "대상 없음" : value['deliveryPerson'];
 
         html += `<td align='middle'><input class='courier-input' id='deliveryPerson-${index}' name='deliveryPerson-${index}' type='text' value='${person}'readonly/>` + "</td></tr>"
         courierTable.append(html);
@@ -139,9 +136,9 @@ function setCourierTable(courierTable, response){
 }
 
 // 배송지연 할당하기
-function setState(){
-    if(!confirm("선택된 courier가 1000개 이상시 많은 시간이 소요됩니다." +
-        "\n그래도 진행하시겟습니까?")){
+function setState() {
+    if (!confirm("선택된 courier가 1000개 이상시 많은 시간이 소요됩니다." +
+        "\n그래도 진행하시겟습니까?")) {
         alert("작업이 취소되었습니다.");
         throw 'finish';
     }
@@ -149,14 +146,17 @@ function setState(){
     let courierIds = [];
     let checkbox = $("input:checkbox[name=Courier-select]:checked");
 
-    checkbox.each(function (i){
+    checkbox.each(function (i) {
         let tr = checkbox.parent().parent().eq(i);
         let td = tr.children().children();
         let result = Number(td.eq(1).val());
-        if(!isNaN(result))  courierIds.push(result);
+        if (!isNaN(result)) courierIds.push(result);
     })
 
-    if(courierIds.length === 0){alert("courier가 선택되지 않았습니다.");  return;}
+    if (courierIds.length === 0) {
+        alert("courier가 선택되지 않았습니다.");
+        return;
+    }
 
     $.ajax({
         type: 'PATCH',
@@ -164,13 +164,13 @@ function setState(){
         contentType: 'application/json; charset=utf-8',
         dataType: "text",
         data: JSON.stringify({
-            "couriers" : courierIds
+            "couriers": courierIds
         }),
-        success: function (response){
+        success: function (response) {
             alert(response);
             location.reload();
-            },
-        error: function (response){
+        },
+        error: function (response) {
             /* 에러시 메시지 뽑는 방법 */
             alert(response['responseJSON']['message']);
         }
@@ -178,24 +178,27 @@ function setState(){
 }
 
 // 직접 할당
-function updateCourier(){
+function updateCourier() {
     let deliveryPerson;
     let courierIds = [];
 
     let count = 0;
 
     let checkbox = $("input:checkbox[name=User-select]:checked");
-    checkbox.each(function (i){
+    checkbox.each(function (i) {
         let tr = checkbox.parent().parent().eq(i);
         let td = tr.children();
         deliveryPerson = td.eq(1).text();
         count++
     })
 
-    if(count > 1){alert("유저를 한명만 선택하세요");   return;}
+    if (count > 1) {
+        alert("유저를 한명만 선택하세요");
+        return;
+    }
 
-    if(!confirm("선택된 courier가 1000개 이상시 많은 시간이 소요됩니다." +
-        "\n그래도 진행하시겟습니까?")){
+    if (!confirm("선택된 courier가 1000개 이상시 많은 시간이 소요됩니다." +
+        "\n그래도 진행하시겟습니까?")) {
         alert("작업이 취소되었습니다.");
         throw 'finish';
     }
@@ -203,15 +206,18 @@ function updateCourier(){
     count = 0;
 
     checkbox = $("input:checkbox[name=Courier-select]:checked");
-    checkbox.each(function (i){
+    checkbox.each(function (i) {
         let tr = checkbox.parent().parent().eq(i);
         let td = tr.children().children();
         let result = Number(td.eq(1).val());
-        if(!isNaN(result))  courierIds.push(result);
+        if (!isNaN(result)) courierIds.push(result);
         count++;
     })
 
-    if(count === 0){alert("courier가 선택되지 않았습니다.");  return;}
+    if (count === 0) {
+        alert("courier가 선택되지 않았습니다.");
+        return;
+    }
 
     $.ajax({
         type: 'PATCH',
@@ -219,21 +225,22 @@ function updateCourier(){
         contentType: 'application/json; charset=utf-8',
         dataType: "text",
         data: JSON.stringify({
-            "username" : deliveryPerson,
-            "couriers" : courierIds
+            "username": deliveryPerson,
+            "couriers": courierIds
         }),
-        success: function (response){
+        success: function (response) {
             alert(response);
-            location.reload();},
-        error: function (response){
+            location.reload();
+        },
+        error: function (response) {
             /* 에러시 메시지 뽑는 방법 */
             alert(response['responseJSON']['message']);
         }
     })
 }
 
-function searchDetail(){
-    if(!confirm("아무것도 입력되지 않았다면 화면구성에 많은 시간이 듭니다. 진행하시겟습니까?")){
+function searchDetail() {
+    if (!confirm("아무것도 입력되지 않았다면 화면구성에 많은 시간이 듭니다. 진행하시겟습니까?")) {
         alert("작업이 취소되었습니다.");
         throw 'finish';
     }
@@ -249,35 +256,42 @@ function searchDetail(){
     let radio = document.getElementsByName('option');
     let option;
 
-    radio.forEach((node) =>{
-        if(node.checked){
+    radio.forEach((node) => {
+        if (node.checked) {
             option = node.value;
         }
     })
 
-    if(username.indexOf(',') !== -1){alert("username은 1개만 입력하세요");   throw 'finish';}
-    if(route.indexOf(',') !== -1){alert("route는 1개만 입력하세요");  throw 'finish';}
-    if(isNaN(currentDay)){
-        if(currentDay)  alert("currentDay는 숫자만 입력하세여"); throw 'finish';
+    if (username.indexOf(',') !== -1) {
+        alert("username은 1개만 입력하세요");
+        throw 'finish';
+    }
+    if (route.indexOf(',') !== -1) {
+        alert("route는 1개만 입력하세요");
+        throw 'finish';
+    }
+    if (isNaN(currentDay)) {
+        if (currentDay) alert("currentDay는 숫자만 입력하세여");
+        throw 'finish';
     }
 
     currentDay = Number(currentDay);
 
-    let Param = '?username='+username;
-    Param += '&route='+route;
-    Param += '&subRoute='+subRoute;
-    Param += '&state='+state;
-    Param += '&currentDay='+currentDay;
-    Param += '&option='+ !isNaN(option);
+    let Param = '?username=' + username;
+    Param += '&route=' + route;
+    Param += '&subRoute=' + subRoute;
+    Param += '&state=' + state;
+    Param += '&currentDay=' + currentDay;
+    Param += '&option=' + !isNaN(option);
 
     $.ajax({
         type: 'GET',
         url: `/api/admin/search/details` + Param,
-        success: function (response){
+        success: function (response) {
             let length = response.length;
 
-            if(!confirm("검색된 갯수는 " + length + "입니다. 1000개 이상시 많은 시간이 소요됩니다." +
-                "\n그래도 진행하시겟습니까?")){
+            if (!confirm("검색된 갯수는 " + length + "입니다. 1000개 이상시 많은 시간이 소요됩니다." +
+                "\n그래도 진행하시겟습니까?")) {
                 alert("작업이 취소되었습니다.");
                 throw 'finish';
             }
@@ -291,36 +305,36 @@ function searchDetail(){
                 : setCourierTable(courierTable, response);
 
             closeDetail();
-            },
-        error: function (response){
+        },
+        error: function (response) {
             console.log(response);
-                /* 에러시 메시지 뽑는 방법 */
+            /* 에러시 메시지 뽑는 방법 */
             alert(response['responseJSON']['message']);
-            }
+        }
     })
 }
 
 // 상세 검색에 대한 열기
-function openDetail(){
+function openDetail() {
     const search = $('#detail-search');
     search.show();
 }
 
 // 상세 검색에 대한 닫기
-function closeDetail(){
+function closeDetail() {
     const search = $('#detail-search');
     search.hide();
 }
 
 // 상세수정 창 열기
-function updateOne(select){
+function updateOne(select) {
     $('#detailSave_send').attr('value', select);
 
     const width = 900;
     const height = 300;
 
     window.name = "parentForm";
-    openWin = window.open(BaseUrl+"detailSave", "detailSave", stroption(width, height));
+    openWin = window.open(BaseUrl + "detailSave", "detailSave", stroption(width, height));
 }
 
 // 전체선택 함수
@@ -332,7 +346,7 @@ function selectAll(selectAll) {
 }
 
 // 새창 위치 지정
-function stroption(width, height){
+function stroption(width, height) {
     let curX = window.screenLeft;
     let curY = window.screenTop;
     let curWidth = document.body.clientWidth;
@@ -351,7 +365,7 @@ function stroption(width, height){
 }
 
 // courier 갯수 세기
-function courierTotal(total){
+function courierTotal(total) {
     let str = "검색된 송장의 갯수 : " + total;
     $('#courierCnt').val(str);
 }

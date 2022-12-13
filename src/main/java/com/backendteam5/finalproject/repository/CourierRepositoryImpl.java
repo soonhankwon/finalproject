@@ -109,9 +109,9 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getAdminCourierDto())
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
-                .join(deliveryAssignment.areaIndex, areaIndex)
-                .join(deliveryAssignment.account, account)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .innerJoin(deliveryAssignment.account, account)
                 .where(areaIndex.area.eq(area),
                         routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
@@ -126,9 +126,9 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getAdminCourierDto())
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
-                .join(deliveryAssignment.areaIndex, areaIndex)
-                .join(deliveryAssignment.account, account)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .innerJoin(deliveryAssignment.account, account)
                 .where(deliveryAssignment.areaIndex.area.eq(area),
                         routeEq(searchReqDto),
                         subRouteIn(searchReqDto),

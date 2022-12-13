@@ -77,7 +77,7 @@ public class AdminController {
     @PatchMapping("/update/courier/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                             @RequestBody @Validated CourierReqUpdateDto courierReqUpdateDto) {
+                                             @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
 

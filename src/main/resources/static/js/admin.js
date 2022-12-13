@@ -34,7 +34,7 @@ function searchAll() {
 function usertable(userList, tempCount, directCount, userTable) {
     for (let i = 0; i < userList.length; i++) {
         let j = i * 3;
-        let shipping = Number(userList[i]['username']) + Number(directCount[i * 3 + 1]['count'])
+        let shipping = Number(tempCount[i]) + Number(directCount[i * 3 + 1]['count'])
         let html = "<tr>" +
             "<td><input type='checkbox' name='User-select'></td>" +
             "<td>" + userList[i]['username'] + "</td>" +

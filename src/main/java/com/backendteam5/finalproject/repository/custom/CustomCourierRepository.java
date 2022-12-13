@@ -9,7 +9,7 @@ import java.util.List;
 public interface CustomCourierRepository {
 
     List<CourierDto> searchByUsernameAndState(Account account, String state, String username);
-    List<Long> stateCount(Account account);
+    CourierCountDto stateCount(Account account);
     List<CourierDto> searchCustomer(String customer);
 
     void updateByCourierId(Long courierId, String deliveryPerson);

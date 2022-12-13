@@ -11,8 +11,8 @@ function getUser(){
         type: 'GET',
         url: '/api/admin/main/user',
         success: function (response){
-
             let courierTable = $("#courier-table-body");
+            courierTable.empty();
             courierTable.append("<tr><td colspan='12'>검색된 정보가 없습니다.</td></tr>")
 
             let userTable = $("#user-table-body");
@@ -21,10 +21,7 @@ function getUser(){
             let directCount = response['directAssignment'];
 
             userTable.empty();
-            courierTable.empty();
             usertable(userList, tempCount, directCount, userTable);
-
-
         }
     })
 }

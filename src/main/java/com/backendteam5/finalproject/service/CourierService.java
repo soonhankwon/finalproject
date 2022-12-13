@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.service;
 
+import com.backendteam5.finalproject.dto.CourierCountDto;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
@@ -65,21 +66,10 @@ public class CourierService {
     public SearchResponseDto searchFilter(UserDetailsImpl userDetails, Long state) {
 
         String status;
-        Long progressCnt;
-        Long completeCnt;
-        List<Long> list = courierRepository.stateCount(userDetails.getUser());
-        if (list.size() == 0) {
-            progressCnt = 0L;
-            completeCnt = 0L;
-        }
-        else if (list.size() == 1) {
-            progressCnt = list.get(0);
-            completeCnt = 0L;
-        }
-        else {
-            progressCnt = list.get(1);
-            completeCnt = list.get(0);
-        }
+
+        CourierCountDto countDto = courierRepository.stateCount(userDetails.getUser());
+        Long progressCnt = countDto.getProgressCnt();
+        Long completeCnt = countDto.getCompleteCnt();
 
         // state == 0 배송중 조회.
         if (state == 0) {
@@ -101,17 +91,10 @@ public class CourierService {
     @Transactional(readOnly = true)
     public SearchResponseDto searchCustomer(UserDetailsImpl userDetails, String customer) {
 
-        Long progressCnt;
-        Long completeCnt;
-        List<Long> list = courierRepository.stateCount(userDetails.getUser());
-        if (list.size() == 1) {
-            progressCnt = list.get(0);
-            completeCnt = 0L;
-        }
-        else {
-            progressCnt = list.get(1);
-            completeCnt = list.get(0);
-        }
+        CourierCountDto countDto = courierRepository.stateCount(userDetails.getUser());
+        Long progressCnt = countDto.getProgressCnt();
+        Long completeCnt = countDto.getCompleteCnt();
+
         // 수령인 이름으로 조회.
         List<CourierDto> courList = courierRepository.searchCustomer(customer);
 //

@@ -60,7 +60,6 @@ function execSearch() {
             }
             $("#courier-table-body").append(html);
 
-            alert("성공3")
         },
         error : function(){alert("통신실패")}
     })
@@ -105,7 +104,7 @@ function complete(){
             }
             $("#courier-table-body").append(html);
 
-            alert("성공2")
+
         },
         error : function(){alert("통신실패")}
     })
@@ -150,47 +149,6 @@ function doing(){
             $("#courier-table-body").append(html);
 
 
-            // var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div
-            //     mapOption = {
-            //         center: new kakao.maps.LatLng(37.512405, 126.8807795), // 지도의 중심좌표
-            //         level: 3 // 지도의 확대 레벨
-            //     };
-            //
-            // var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-            //
-            // // 마커를 표시할 위치와 title 객체 배열입니다
-            //
-            // // 마커 이미지의 이미지 주소입니다
-            // var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-            // var tempAddress = 'sadasd';
-            //
-            // for (var i = 0; i < courierList.length; i++) {
-            //
-            //     var xPos = courierList[i].xpos;
-            //     var yPos = courierList[i].ypos;
-            //     // 마커 이미지의 이미지 크기 입니다
-            //     var imageSize = new kakao.maps.Size(24, 35);
-            //
-            //     // 마커 이미지를 생성합니다
-            //     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-            //     if (tempAddress !== courierList[i].address) {
-            //         var pos = new kakao.maps.LatLng(xPos, yPos);
-            //         console.log(pos);
-            //
-            //         // 마커를 생성합니다
-            //         var marker = new kakao.maps.Marker({
-            //             map: map, // 마커를 표시할 지도
-            //             position: pos, // 마커를 표시할 위치
-            //             title : courierList[i].address, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            //             image : markerImage // 마커 이미지
-            //         });
-            //         tempAddress = courierList[i].address;
-            //         marker.setMap(map);
-            //     }
-            //
-            // }
-
-            alert("성공")
         },
         error : function(){alert("통신실패")}
     })

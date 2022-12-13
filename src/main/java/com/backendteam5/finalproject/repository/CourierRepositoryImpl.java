@@ -4,10 +4,7 @@ import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.NullExpression;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -56,19 +54,31 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     // 배송상태별 택배 개수
     @Transactional(readOnly = true)
     @Override
-    public List<Long> stateCount(Account account) {
+    public CourierCountDto stateCount(Account account) {
         List<Long> ids = queryFactory
                 .select(courier.id)
                 .from(courier)
                 .where(usernameEq(account))
                 .fetch();
 
-        return queryFactory
-                .select(courier.id.count())
+        List<Tuple> list = queryFactory
+                .select(courier.id.count(), courier.state)
                 .from(courier)
                 .where(courier.id.in(ids))
                 .groupBy(courier.state)
                 .fetch();
+
+        Long progressCnt = 0L;
+        Long completeCnt = 0L;
+        for (Tuple tuple : list) {
+            if (tuple.get(1, String.class).equals("배송중")) {
+                progressCnt = tuple.get(0, Long.class);
+            }
+            else {
+                completeCnt = tuple.get(0, Long.class);
+            }
+        }
+        return new CourierCountDto(progressCnt, completeCnt);
     }
 
     // 수령인 이름으로 택배 조회
@@ -197,7 +207,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         queryFactory
                 .update(courier)
                 .set(courier.arrivalDate, getNowDate())
-                .set(courier.deliveryPerson, "ADMIN")
+                .set(courier.deliveryPerson, "GUROADMIN")
                 .where(courier.state.ne("배송완료"),
                         courier.arrivalDate.lt(getNowDate()))
                 .execute();

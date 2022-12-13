@@ -93,7 +93,7 @@ public class AdminService {
     public List<AdminCourierDto> searchByDetails(UserDetailsImpl userDetails, SearchReqDto reqDto){
         String area = checkAdmin(userDetails);
 
-        return courierRepository.searchByDetail(defaultPerson, area, reqDto);
+        return courierRepository.searchByDetail(userDetails.getUsername(), area, reqDto);
     }
 
     public List<AdminCourierDto> searchByCouriers(List<Long> courierId) {

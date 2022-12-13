@@ -33,25 +33,55 @@ function getRouteCount(){
         url: '/api/admin/main/route',
         success: function (response){
             let courierTable = $("#courier-table-body");
-
             routecount(response)
         }
     })
 }
 
 // userTable 만들기
-function usertable(userList, tempCount, directCount, userTable){
-    for (let i = 0; i < userList.length; i++) {
-        let j = i*3;
-        let shipping = Number(userList[i]['username'])+Number(directCount[i*3+1]['count'])
+function usertable(userList, tempCount, directCount, userTable) {
+    let userinfo = [];
+
+    userList.forEach((user) => {
+        userinfo.push(tempCount.filter((item) => {
+            return item.username === user
+        }))
+        userinfo.push(directCount.filter((item) => {
+            return item.username === user
+        }))
+    })
+
+    for (let i = 0; i < userinfo.length / 2; i++) {
+        let idx = i * 2;
+        let shipping = userinfo[idx].length !== 0 ? userinfo[idx][0]['count'] : 0;
+        let array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송중"
+        });
+
+        shipping += zeroFilter(array)
+
+        array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송지연"
+        })
+        let delay = zeroFilter(array)
+
+        array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송완료"
+        })
+        let completion = zeroFilter(array)
+
         let html = "<tr>" +
             "<td><input type='checkbox' name='User-select'></td>" +
-            "<td>" + userList[i]['username'] + "</td>" +
+            "<td>" + userList[i] + "</td>" +
             "<td>" + shipping + "</td>"+
-            "<td>" + directCount[i*3]['count'] + "</td>"+
-            "<td>" + directCount[i*3+2]['count'] + "</td></tr>"
+            "<td>" + delay + "</td>"+
+            "<td>" + completion + "</td></tr>"
         userTable.append(html);
     }
+}
+
+function zeroFilter(array){
+    return array.length !== 0 ? array[0]['count'] : 0;
 }
 
 // Route Div 채우기

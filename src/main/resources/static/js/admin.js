@@ -5,6 +5,7 @@ $(document).ready(function () {
 
 // var BaseUrl = "http://3.35.229.160/";
 var BaseUrl = "http://localhost:8080/";
+var default_person = "GUROADMIN";
 
 function getUser(){
     $.ajax({
@@ -136,7 +137,7 @@ function setCourierTable(courierTable, response){
             `<td align='middle'><input class='courier-input' id='state-${index}' name='state-${index}' type='text' value="${value['state']}" readonly/>` + "</td>" +
             `<td align='middle'><input class='courier-input' id='tempPerson-${index}' name='tempPerson-${index}' type='text' value="${value['tempPerson']}" readonly/>` + "</td>";
 
-        let person = (value['deliveryPerson']==="ADMIN") ? "대상 없음" : value['deliveryPerson'];
+        let person = (value['deliveryPerson'] === default_person) ? "대상 없음" : value['deliveryPerson'];
 
         html += `<td align='middle'><input class='courier-input' id='deliveryPerson-${index}' name='deliveryPerson-${index}' type='text' value='${person}'readonly/>` + "</td></tr>"
         courierTable.append(html);

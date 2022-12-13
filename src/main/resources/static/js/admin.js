@@ -37,9 +37,8 @@ function usertable(userList, tempCount, directCount, userTable){
         let html = "<tr>" +
             "<td><input type='checkbox' name='User-select'></td>" +
             "<td>" + userList[i]['username'] + "</td>" +
-            "<td>" + tempCount[i] + "</td>"+
+            "<td>" + tempCount[i] + directCount[i*3+1]['count'] + "</td>"+
             "<td>" + directCount[i*3]['count'] + "</td>"+
-            "<td>" + directCount[i*3+1]['count'] + "</td>"+
             "<td>" + directCount[i*3+2]['count'] + "</td></tr>"
         userTable.append(html);
     }

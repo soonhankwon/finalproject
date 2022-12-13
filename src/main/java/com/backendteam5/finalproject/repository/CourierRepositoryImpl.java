@@ -197,7 +197,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         queryFactory
                 .update(courier)
                 .set(courier.arrivalDate, getNowDate())
-                .set(courier.deliveryPerson, "ADMIN")
+                .set(courier.deliveryPerson, "GUROADMIN")
                 .where(courier.state.ne("배송완료"),
                         courier.arrivalDate.lt(getNowDate()))
                 .execute();

@@ -23,7 +23,7 @@
 
   <div id="header-title-select-shop">
     <!--        <img id="header-title-image" src = "images/chadda_logo.png" alt="">-->
-    WELCOME 오늘의 택배 🚚 <span th:text="${username}"></span>님 반갑습니다.
+    TACBAETICS⭐️<span th:text="${username}"></span>님 반갑습니다.
   </div>
   <form id="signout_form" method="post" action="/account/logout" >
     <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> <span th:text="${username}"></span>님 로그아웃</a>
@@ -46,16 +46,16 @@
     <caption>송장 테이블</caption>
     <thead class="courier-table-header">
     <tr>
-      <th width="20%">Number</th>
-      <th width="5%">Area</th>
-      <th width="5%">Route</th>
-      <th width="5%">SubRoute</th>
-      <th width="12.5%">State</th>
-      <th width="12.5%">Customer</th>
-      <th width="20%">ArrivalDate</th>
-      <th width="20%">RegisterDate</th>
-      <th width="20%">UserName</th>
-      <th width="20%">RealUserName</th>
+      <th width="20%">송장번호</th>
+      <th width="5%">주소지</th>
+      <th width="5%">지역</th>
+      <th width="5%">세부지역</th>
+      <th width="12.5%">배송 상태</th>
+      <th width="12.5%">고객명</th>
+      <th width="20%">도착날짜</th>
+      <th width="20%">등록날짜</th>
+      <th width="20%">지역배송담당자</th>
+      <th width="20%">실제배송자</th>
       <th width="20%">Button</th>
     </tr>
     </thead>

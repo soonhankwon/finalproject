@@ -34,12 +34,17 @@ function searchAll(){
 function usertable(userList, tempCount, directCount, userTable){
     for (let i = 0; i < userList.length; i++) {
         let j = i*3;
-        let html = "<tr>" +
-            "<td><input type='checkbox' name='User-select'></td>" +
-            "<td>" + userList[i]['username'] + "</td>" +
-            "<td>" + tempCount[i] + directCount[i*3+1]['count'] + "</td>"+
-            "<td>" + directCount[i*3]['count'] + "</td>"+
-            "<td>" + directCount[i*3+2]['count'] + "</td></tr>"
+        for (let i = 0; i < userList.length; i++) {
+            let j = i*3;
+            let shipping = Number(userList[i]['username'])+Number(directCount[i*3+1]['count'])
+            let html = "<tr>" +
+                "<td><input type='checkbox' name='User-select'></td>" +
+                "<td>" + userList[i]['username'] + "</td>" +
+                "<td>" + shipping + "</td>"+
+                "<td>" + directCount[i*3]['count'] + "</td>"+
+                "<td>" + directCount[i*3+2]['count'] + "</td></tr>"
+            userTable.append(html);
+        }
         userTable.append(html);
     }
 }

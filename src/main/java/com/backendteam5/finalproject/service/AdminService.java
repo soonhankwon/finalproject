@@ -20,7 +20,7 @@ public class AdminService {
     private final AccountRepository accountRepository;
     private final CourierRepository courierRepository;
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
-    private final String defaultPerson = "ADMIN";
+    private final String defaultPerson = "GUROADMIN";
 
     public AdminMainDto getMainReport(UserDetailsImpl userDetails){
         String area = checkAdmin(userDetails);

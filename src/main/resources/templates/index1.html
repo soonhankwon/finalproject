@@ -5,17 +5,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta property="og:title" content="운송 관리 시스템">
-    <meta property="og:description" content="운송장번호에 기반한 운송관리시스템 5조">
+    <meta property="og:title" content="TACBAETICS">
+    <meta property="og:description" content="DELIVERY MANAGEMENT SYSTEM">
     <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script th:src="@{/js/admin.js}" ></script>
-    <title>Transportation Management System</title>
+    <title>TACBAETICS 배송관리시스템</title>
 </head>
 <body>
 <div class="body_top" style="position:relative;">
     <div id="title-TMS">
-        WELCOME 오늘의 택배 🚚 <span th:text="${username}"></span>님 반갑습니다.
+        WELCOME TACBAETICS⭐️ <span th:text="${username}"></span>님 반갑습니다.
     </div>
     <form id="signout_form" method="post" action="/account/logout" >
         <a id="logout-text" href="javascript:{}" onclick="document.getElementById('signout_form').submit(); "> 로그아웃</a>
@@ -105,8 +105,8 @@
     </select><br><br>
     <b>현재 날짜기준 부터</b><input class="courier-input" type="text" id="date" style="width: auto"><b>일 전</b><br><br>
     <b></b>
-    <input type="radio" name="option" value="1" checked="checked">직접할당을 검색
-    <input type="radio" name="option" value="ㅁ">임시할당을 검색<br><br>
+    <input type="radio" name="option" value="1" checked="checked">실제배송자로 검색
+    <input type="radio" name="option" value="ㅁ">지역별 배송담당자로 검색<br><br>
     <button style="margin: auto" value="검색하기" onclick="searchDetail()">완료</button><button style="margin: auto" value="취소하기" onclick="closeDetail()">취소</button>
 </div>
 
@@ -117,10 +117,9 @@
             <tr>
                 <th>선택</th>
                 <th>택배기사</th>
-                <th>임시할당</th>
-                <th>직접할당<br>(배송지연)</th>
-                <th>직접할당<br>(배송중)</th>
-                <th>직접할당<br>(배송완료)</th>
+                <th>배송중 수량</th>
+                <th>배송지연 수량</th>
+                <th>배송완료 수량</th>
             </tr>
         </thead>
         <tbody class="user-table-body" id="user-table-body">
@@ -134,7 +133,7 @@
         <thead class="courier-table-header">
         <tr>
             <th><input type="checkbox" name="Courier-select" onclick="selectAll(this)"></th>
-            <th>고유번호</th>
+            <th>운송장번호</th>
             <th>등록날짜</th>
             <th>도착날짜</th>
             <th>주소지</th>
@@ -143,8 +142,8 @@
             <th>상세지역</th>
             <th>고객명</th>
             <th>배송 상태</th>
-            <th>임시할당자</th>
-            <th>직접할당자</th>
+            <th>지역배송담당자</th>
+            <th>실제배송자</th>
         </tr>
         </thead>
         <tbody class="courier-table-body" id="courier-table-body">

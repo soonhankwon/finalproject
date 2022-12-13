@@ -50,25 +50,25 @@ public class AdminService {
     public String updateDelivery(UserDetailsImpl userDetails, UpdateDeliveryDto updateDeliveryDto){
         checkAdmin(userDetails);
 
-        List<String> zipCode = updateDeliveryDto.getZipCode();
+        List<Long> ids = updateDeliveryDto.getIds();
         List<String> username = updateDeliveryDto.getUsername();
 
-        if(updateDeliveryDto.getUsername().size() != updateDeliveryDto.getZipCode().size()) throw  new RuntimeException("전달값에 이상이 있습니다.");
+        if(updateDeliveryDto.getUsername().size() != updateDeliveryDto.getIds().size()) throw  new RuntimeException("전달값에 이상이 있습니다.");
 
-        HashMap<String, List<String>> hashMap = new HashMap<>();
+        HashMap<String, List<Long>> hashMap = new HashMap<>();
 
         for(String user : username.parallelStream().distinct().collect(Collectors.toList())){
             List<Integer> index = IntStream.range(0, username.size())
                     .filter(i -> Objects.equals(username.get(i), user))
                     .boxed().collect(Collectors.toList());
-            hashMap.put(user, index.stream().map(zipCode::get).collect(Collectors.toList()));
+            hashMap.put(user, index.stream().map(ids::get).collect(Collectors.toList()));
         }
 
         if(hashMap.containsKey(""))   throw new NullPointerException("존재하지 않는 사용자 입니다." + hashMap.get(null));
 
-        for(Map.Entry<String, List<String>> pair : hashMap.entrySet()) {
+        for(Map.Entry<String, List<Long>> pair : hashMap.entrySet()) {
             deliveryAssignmentRepository.updateDelivery(
-                    areaIndexRepository.findIdByzipCode(pair.getValue()),
+                    pair.getValue(),
                     accountRepository.findIdByUsername(pair.getKey())
             );
         }

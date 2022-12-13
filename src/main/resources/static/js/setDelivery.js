@@ -25,6 +25,7 @@ function setting(response) {
 
     response.forEach((value, index, array) => {
         let html = "<tr>" +
+            `<td><input class="default-text" name="id" name='id' type="text" value="${value['id']}" style="text-align: center" readOnly>`+"</td>"+
             `<td><input class="default-text" name="subRoute" name='subRoute' type="text" value="${value['subRoute']}" style="text-align: center" readOnly>`+"</td>"+
             `<td><input class="default-text" name="zipCode" name='zipCode' type="text" value="${value['zipCode']}" style="text-align: center" readOnly>`+"</td>"+
             `<td><input class="default-text" name="username" name='username' type="text" value="${value['username']}" style="text-align: center">`+"</td></tr>"
@@ -33,11 +34,11 @@ function setting(response) {
 }
 
 function setDone(){
-    let zipCode = [];
+    let ids = [];
     let username = [];
 
     for(let i=0; i<length; i++){
-        zipCode.push($("input[name=zipCode]").eq(i).val());
+        ids.push($("input[name=id]").eq(i).val());
         username.push($("input[name=username]").eq(i).val());
     }
 
@@ -48,7 +49,7 @@ function setDone(){
         dataType: "text",
         // dataType: "json",
         data: JSON.stringify({
-            "zipCode" : zipCode,
+            "ids" : ids,
             "username" : username
         }),
         success: function (response) {

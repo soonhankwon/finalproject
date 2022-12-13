@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class DeliveryAssignmentDto {
+    private Long id;
     private int subRoute;
     private String zipCode;
     private String username;
 
     @QueryProjection
-    public DeliveryAssignmentDto(int subRoute, String zipCode, String username){
+    public DeliveryAssignmentDto(Long id, int subRoute, String zipCode, String username){
+        this.id = id;
         this.subRoute = subRoute;
         this.zipCode = zipCode;
         this.username = username;

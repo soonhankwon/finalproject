@@ -97,6 +97,7 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
 
     public ConstructorExpression<DeliveryAssignmentDto> getDeliveryDto(){
         return Projections.constructor(DeliveryAssignmentDto.class,
+                areaIndex.id,
                 areaIndex.subRoute,
                 areaIndex.zipCode,
                 account.username);

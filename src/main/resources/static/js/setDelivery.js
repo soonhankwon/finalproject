@@ -7,7 +7,7 @@ var length = 0;
 function setDate(){
     let select = $(opener.document).find("#setDelivery_send").val();
 
-    $('#route').attr('value', select + "지역 임시할당");
+    $('#route').attr('value', select + "지역배송담당자 배정");
 
     $.ajax({
         type: 'GET',

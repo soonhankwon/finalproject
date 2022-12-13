@@ -1,31 +1,42 @@
 $(document).ready(function () {
-    searchAll();
+    getRouteCount()
+    getUser();
 });
 
 // var BaseUrl = "http://3.35.229.160/";
 var BaseUrl = "http://localhost:8080/";
 
-function searchAll(){
+function getUser(){
     $.ajax({
         type: 'GET',
-        url: '/api/admin/main',
+        url: '/api/admin/main/user',
         success: function (response){
-            let userTable = $("#user-table-body");
-            let courierTable = $("#courier-table-body");
 
+            let courierTable = $("#courier-table-body");
+            courierTable.append("<tr><td colspan='12'>검색된 정보가 없습니다.</td></tr>")
+
+            let userTable = $("#user-table-body");
             let userList = response['userlist'];
             let tempCount = response['tempAssignment'];
             let directCount = response['directAssignment'];
 
-            let routeCount = response['routeCount'];
-
-
             userTable.empty();
             courierTable.empty();
-            // usertable(userList, tempCount, directCount, userTable);
-            routecount(routeCount)
+            usertable(userList, tempCount, directCount, userTable);
 
-            courierTable.append("<tr><td colspan='12'>검색된 정보가 없습니다.</td></tr>")
+
+        }
+    })
+}
+
+function getRouteCount(){
+    $.ajax({
+        type: 'GET',
+        url: '/api/admin/main/route',
+        success: function (response){
+            let courierTable = $("#courier-table-body");
+
+            routecount(response)
         }
     })
 }

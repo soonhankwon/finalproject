@@ -21,9 +21,15 @@ public class AdminController {
     private final AdminService adminService;
 
     // 로그인후 페이지에서 자동
-    @GetMapping("/main")
+    @GetMapping("/main/user")
     public AdminMainDto getMainReport(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.getMainReport(userDetails);
+    }
+
+    // 로그인후 페이지에서 자동
+    @GetMapping("/main/route")
+    public List<RouteCountDto> getRouteCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return adminService.getRouteCount(userDetails);
     }
 
     // route 눌럿을때 새창에서 자동

@@ -302,8 +302,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .execute();
     }
 
-    public ConstructorExpression<CountTempDto> getCountTemp(){
-        return Projections.constructor(CountTempDto.class,
+    public ConstructorExpression<CountUserDto> getCountTemp(){
+        return Projections.constructor(CountUserDto.class,
                 account.username.as("username"),
                 account.username.count().as("count"));
     }

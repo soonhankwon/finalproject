@@ -24,20 +24,23 @@ public class AdminService {
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
 
     private final CourierRepositoryImpl courierImpl;
-    private final String defaultPerson = "ADMIN";
+    private final String defaultPerson = "GUROADMIN";
 
     public AdminMainDto getMainReport(UserDetailsImpl userDetails){
         String area = checkAdmin(userDetails);
 
-        AdminMainDto adminMainDto = new AdminMainDto();
-
         List<String> userList = accountRepository.findByAreaAndRole(area, UserRoleEnum.USER);
 
-//        deliveryAssignmentRepository.findByTempCount(area, defaultPerson)
+        List<CountUserDto> tempDto = deliveryAssignmentRepository.findByTempCount(area, defaultPerson);
 
-        adminMainDto.setRouteCount(courierRepository.countRouteState(userDetails.getArea()));
+        List<CountUserDto> directDto = deliveryAssignmentRepository.findByDirectCount(area, defaultPerson);
 
-        return adminMainDto;
+        return new AdminMainDto(userList, tempDto, directDto);
+    }
+
+    public List<RouteCountDto> getRouteCount(UserDetailsImpl userDetails){
+        String area = checkAdmin(userDetails);
+        return courierRepository.countRouteState(area);
     }
 
     public List<DeliveryAssignmentDto> selectRoute(UserDetailsImpl userDetails, String route){

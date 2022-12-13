@@ -66,10 +66,31 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 .on(areaIndex.area.eq(area))
                 .innerJoin(deliveryAssignment.account, account)
                 .on(account.area.eq(area))
-                .innerJoin(deliveryAssignment, courier.deliveryAssignment)
-                .on(courier.arrivalDate.goe(getNowDate()), courier.deliveryPerson.eq(def))
+                .innerJoin(courier)
+                .on(deliveryAssignment.eq(courier.deliveryAssignment),
+                        courier.deliveryPerson.eq(def),
+                        courier.arrivalDate.goe(getNowDate()))
                 .groupBy(account.username)
                 .orderBy(account.username.asc())
+                .fetch();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CountUserDto> findByDirectCount(String area, String def) {
+        return queryFactory
+                .select(getCountDirectDto())
+                .from(deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area))
+                .innerJoin(deliveryAssignment.account, account)
+                .on(account.area.eq(area))
+                .innerJoin(courier)
+                .on(deliveryAssignment.eq(courier.deliveryAssignment),
+                        courier.deliveryPerson.ne(def),
+                        courier.arrivalDate.goe(getNowDate()))
+                .groupBy(courier.deliveryPerson, courier.state)
+                .orderBy(courier.deliveryPerson.asc(), courier.state.asc())
                 .fetch();
     }
 
@@ -83,8 +104,16 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
 
     public ConstructorExpression<CountUserDto> getCountTempDto(){
         return Projections.constructor(CountUserDto.class,
-                account.username,
-                courier.id.count()
+                account.username.as("username"),
+                account.username.count().as("count")
+        );
+    }
+
+    public ConstructorExpression<CountUserDto> getCountDirectDto(){
+        return Projections.constructor(CountUserDto.class,
+                courier.deliveryPerson.as("username"),
+                courier.state.as("state"),
+                courier.state.count().as("count")
         );
     }
 

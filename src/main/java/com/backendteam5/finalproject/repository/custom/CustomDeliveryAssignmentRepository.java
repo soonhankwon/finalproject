@@ -10,5 +10,5 @@ public interface CustomDeliveryAssignmentRepository {
     List<DeliveryAssignmentDto> selectDelivery(String area, String route);
 
     List<CountUserDto> findByTempCount(String area, String def);
-//    List<CountDirectDto> findByTempCount(String area, String def);
+    List<CountUserDto> findByDirectCount(String area, String def);
 }

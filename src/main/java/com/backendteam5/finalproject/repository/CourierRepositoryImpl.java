@@ -98,55 +98,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    // user테이블에 들어갈 직접 할당의 state별 갯수
-    @Transactional(readOnly = true)
-    @Override
-    public List<CountStateDto> countUsernameDirect(String area) {
-        return queryFactory
-                .select(getCountDirect())
-                .from(courier)
-                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
-                .innerJoin(deliveryAssignment.account, account)
-                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
-                .groupBy(account.username)
-                .where(courier.arrivalDate.goe(getNowDate()),
-                        courier.deliveryPerson.eq(account.username))
-                .groupBy(courier.state)
-                .fetch();
-    }
-
-    // user테이블에 들어갈 임시 할당의 갯수
-    @Transactional(readOnly = true)
-    @Override
-    public Long countUsernameTemp(Account account) {
-//    public List<CountTempDto> countUsernameTemp(String area) {
-        return queryFactory
-                .select(courier.count())
-                .from(courier)
-                .where(
-                        courier.deliveryAssignment.id.in(
-                                JPAExpressions
-                                        .select(deliveryAssignment.id)
-                                        .from(deliveryAssignment)
-                                        .where(deliveryAssignment.account.id.eq(account.getId()))
-                        ),
-                        courier.arrivalDate.goe(getNowDate()),
-                        courier.deliveryPerson.ne(account.getUsername()))
-                .fetchOne();
-//        return queryFactory
-//                .select(getCountTemp())
-//                .from(courier)
-//                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
-//                .innerJoin(deliveryAssignment.account, account)
-//                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
-//                .where(
-//                        courier.arrivalDate.goe(getNowDate()),
-//                        courier.deliveryPerson.eq("ADMIN")
-//                )
-//                .groupBy(account.username)
-//                .fetch();
-    }
-
     // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당
     @Transactional(readOnly = true)
     @Override

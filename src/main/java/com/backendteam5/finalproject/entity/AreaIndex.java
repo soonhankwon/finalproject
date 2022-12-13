@@ -15,15 +15,15 @@ public class AreaIndex {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "area")
+    @Column(name = "area", length = 30)
     private String area;
-    @Column(name = "route")
+    @Column(name = "route", length = 5)
     private String route;
 
     @Column(name = "sub_route")
     private int subRoute;
 
-    @Column(name = "zip_code")
+    @Column(name = "zip_code", length = 30)
     private String zipCode;
 
 

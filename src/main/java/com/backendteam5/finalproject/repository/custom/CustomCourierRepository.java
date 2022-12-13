@@ -14,8 +14,6 @@ public interface CustomCourierRepository {
 
     void updateByCourierId(Long courierId, String deliveryPerson);
     List<RouteCountDto> countRouteState(String area);
-    List<CountStateDto> countUsernameDirect(String area);
-    Long countUsernameTemp(Account account);
     List<AdminCourierDto> searchByDetail(String username, String area, SearchReqDto searchReqDto);
     List<AdminCourierDto> searchByCouriers(List<Long> couriers);
 

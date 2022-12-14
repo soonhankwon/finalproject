@@ -7,12 +7,12 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class AdminMainDto {
+public class AdminCountDto {
     private List<String> userlist;
     private List<CountUserDto> tempAssignment;
     private List<CountUserDto> directAssignment;
 
-    public AdminMainDto(List<String> userlist,
+    public AdminCountDto(List<String> userlist,
                         List<CountUserDto> temp,
                         List<CountUserDto> direct){
         this.userlist = userlist;

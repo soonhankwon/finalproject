@@ -1,7 +1,6 @@
 package com.backendteam5.finalproject.service;
 
 import com.backendteam5.finalproject.dto.*;
-import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.*;
@@ -21,13 +20,10 @@ import java.util.stream.IntStream;
 public class AdminService {
     private final AccountRepository accountRepository;
     private final CourierRepository courierRepository;
-    private final AreaIndexRepository areaIndexRepository;
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
-
-    private final CourierRepositoryImpl courierImpl;
     private final String defaultPerson = "GUROADMIN";
 
-    public AdminMainDto getMainReport(UserDetailsImpl userDetails){
+    public AdminCountDto getMainReport(UserDetailsImpl userDetails){
         String area = checkAdmin(userDetails);
 
         List<String> userList = accountRepository.findByAreaAndRole(area, UserRoleEnum.USER);
@@ -36,7 +32,7 @@ public class AdminService {
 
         List<CountUserDto> directDto = deliveryAssignmentRepository.findByDirectCount(area, defaultPerson);
 
-        return new AdminMainDto(userList, tempDto, directDto);
+        return new AdminCountDto(userList, tempDto, directDto);
     }
 
     public List<RouteCountDto> getRouteCount(UserDetailsImpl userDetails){

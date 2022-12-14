@@ -4,7 +4,6 @@ import com.backendteam5.finalproject.dto.CourierCountDto;
 import com.backendteam5.finalproject.dto.CourierDto;
 import com.backendteam5.finalproject.dto.CourierResUpdateDto;
 import com.backendteam5.finalproject.dto.SearchResponseDto;
-import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.repository.AccountRepository;
 import com.backendteam5.finalproject.repository.AreaIndexRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -128,11 +128,12 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
-                .on(areaIndex.area.eq(area), routeEq(searchReqDto),subRouteIn(searchReqDto))
+                .on(areaIndex.area.eq(area))
                 .innerJoin(deliveryAssignment.account, account)
-                .where(deliveryPersonEq(searchReqDto),
-                        stateEq(searchReqDto),
+                .where(routeEq(searchReqDto),
+                        subRouteIn(searchReqDto),
                         deliveryPersonEq(searchReqDto),
+                        stateEq(searchReqDto),
                         dateLoe(searchReqDto))
                 .fetch();
     }
@@ -144,9 +145,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
-                .on(areaIndex.area.eq(area), routeEq(searchReqDto),subRouteIn(searchReqDto))
+                .on(areaIndex.area.eq(area))
                 .innerJoin(deliveryAssignment.account, account)
-                .where(courier.deliveryPerson.eq(username),
+                .where(routeEq(searchReqDto),
+                        subRouteIn(searchReqDto),
+                        courier.deliveryPerson.eq(username),
                         stateEq(searchReqDto),
                         tempPersonEq(searchReqDto),
                         dateLoe(searchReqDto))
@@ -233,13 +236,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     public ConstructorExpression<RouteCountDto> getRouteCountDto(){
         return Projections.constructor(RouteCountDto.class,
                 areaIndex.route.as("route"),
-                courier.state.as("state"),
-                courier.state.count().as("count"));
-    }
-
-    public ConstructorExpression<CountStateDto> getCountDirect(){
-        return Projections.constructor(CountStateDto.class,
-                account.username.as("username"),
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }

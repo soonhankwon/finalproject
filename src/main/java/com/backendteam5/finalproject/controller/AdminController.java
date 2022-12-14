@@ -22,7 +22,7 @@ public class AdminController {
 
     // 로그인후 페이지에서 자동
     @GetMapping("/main/user")
-    public AdminMainDto getMainReport(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public AdminCountDto getMainReport(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.getMainReport(userDetails);
     }
 

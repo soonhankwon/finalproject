@@ -60,9 +60,10 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         envs: GITHUB_SHA
         script: |
-          docker pull leejasun/final-project:${GITHUB_SHA::7}
-          docker tag leejasun/final-project:${GITHUB_SHA::7} final-project
-          docker stop server
-          docker run -d --rm --name server -p 80:8080 final-project
+              export BUILD_NUMBER=${GITHUB_SHA::7}
+              export IMAGE_STORAGE=leejasun
+              export IMAGE_NAME=final-project
+              ./deploy.sh
+
           
           

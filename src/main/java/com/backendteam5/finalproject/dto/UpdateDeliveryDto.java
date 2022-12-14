@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class UpdateDeliveryDto {
-    private List<String> zipCode;
+    private List<Long> ids;
     private List<String> username;
 }

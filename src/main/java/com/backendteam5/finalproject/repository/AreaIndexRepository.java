@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AreaIndexRepository extends JpaRepository<AreaIndex, Long> {
+public interface AreaIndexRepository extends JpaRepository<AreaIndex, Long>{
     List<AreaIndex> findByAreaStartingWith(String location);
 }

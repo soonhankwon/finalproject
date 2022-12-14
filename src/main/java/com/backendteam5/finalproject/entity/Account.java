@@ -11,8 +11,7 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor
 @Entity
-@Table(indexes = {
-        @Index(name = "area_role", columnList = "id, area, role, username")})
+@Table(indexes = {@Index(name = "area_role", columnList = "area, role")})
 public class Account {
     @Id
     @Column

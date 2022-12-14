@@ -14,9 +14,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(indexes = {
-//        @Index(name = "keyword", columnList = "address, state, customer"),
-//        @Index(name = "state_delivery", columnList = "deliveryPerson, state, register_date")})
+@Table(indexes = {@Index(name = "keyword", columnList = "address, state, customer")})
 public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

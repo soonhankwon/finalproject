@@ -91,8 +91,10 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getRouteCountDto())
                 .from(courier)
-                .innerJoin(courier.deliveryAssignment.areaIndex, areaIndex)
-                .where(areaIndex.area.eq(area), courier.arrivalDate.goe(getNowDate()))
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area))
+                .where(courier.arrivalDate.goe(getNowDate()))
                 .groupBy(areaIndex.route, courier.state)
                 .orderBy(areaIndex.route.asc(), courier.state.desc())
                 .fetch();
@@ -111,12 +113,10 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area), routeEq(searchReqDto),subRouteIn(searchReqDto))
                 .innerJoin(deliveryAssignment.account, account)
-                .where(areaIndex.area.eq(area),
-                        routeEq(searchReqDto),
-                        subRouteIn(searchReqDto),
+                .where(deliveryPersonEq(searchReqDto),
                         stateEq(searchReqDto),
-                        deliveryPersonEq(searchReqDto),
                         dateLoe(searchReqDto))
                 .fetch();
     }
@@ -128,14 +128,12 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area), routeEq(searchReqDto),subRouteIn(searchReqDto))
                 .innerJoin(deliveryAssignment.account, account)
-                .where(deliveryAssignment.areaIndex.area.eq(area),
-                        routeEq(searchReqDto),
-                        subRouteIn(searchReqDto),
+                .where(courier.deliveryPerson.eq(username),
                         stateEq(searchReqDto),
                         tempPersonEq(searchReqDto),
-                        dateLoe(searchReqDto),
-                        courier.deliveryPerson.eq(username))
+                        dateLoe(searchReqDto))
                 .fetch();
     }
 
@@ -280,15 +278,15 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     private BooleanExpression tempPersonEq(SearchReqDto searchReqDto){
-        return hasText(searchReqDto.getUsername()) ? deliveryAssignment.account.username.eq(searchReqDto.getUsername()) : null;
+        return hasText(searchReqDto.getUsername()) ? account.username.eq(searchReqDto.getUsername()) : null;
     }
 
     private BooleanExpression routeEq(SearchReqDto searchReqDto){
-        return hasText(searchReqDto.getRoute()) ? deliveryAssignment.areaIndex.route.eq(searchReqDto.getRoute()) : null;
+        return hasText(searchReqDto.getRoute()) ? areaIndex.route.eq(searchReqDto.getRoute()) : null;
     }
 
     private BooleanExpression subRouteIn(SearchReqDto searchReqDto){
-        return searchReqDto.getSubRoute() == null || searchReqDto.getSubRoute().isEmpty() ? null : deliveryAssignment.areaIndex.subRoute.in(searchReqDto.getSubRoute());
+        return searchReqDto.getSubRoute() == null || searchReqDto.getSubRoute().isEmpty() ? null : areaIndex.subRoute.in(searchReqDto.getSubRoute());
     }
 
     private BooleanExpression dateLoe(SearchReqDto searchReqDto){

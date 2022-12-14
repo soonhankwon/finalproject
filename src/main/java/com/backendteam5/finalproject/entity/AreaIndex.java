@@ -15,7 +15,7 @@ public class AreaIndex {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "area", length = 30)
+    @Column(name = "area", length = 50)
     private String area;
     @Column(name = "route", length = 5)
     private String route;

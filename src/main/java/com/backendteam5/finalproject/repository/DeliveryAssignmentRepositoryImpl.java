@@ -50,8 +50,8 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 .select(getDeliveryDto())
                 .from(deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area), areaIndex.route.eq(route))
                 .innerJoin(deliveryAssignment.account, account)
-                .where(areaIndex.area.eq(area), areaIndex.route.eq(route))
                 .orderBy(areaIndex.subRoute.asc())
                 .fetch();
     }

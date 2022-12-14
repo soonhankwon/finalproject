@@ -3,8 +3,8 @@ $(document).ready(function () {
     getUser();
 });
 
-var BaseUrl = "http://mytest2.kro.kr/";
-// var BaseUrl = "http://localhost:8080/";
+// var BaseUrl = "http://mytest2.kro.kr/";
+var BaseUrl = "http://localhost:8080/";
 var default_person = "GUROADMIN";
 
 function getUser(){

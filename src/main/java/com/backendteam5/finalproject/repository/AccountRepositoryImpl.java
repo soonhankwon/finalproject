@@ -3,7 +3,6 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomAccountRepository;
-import com.backendteam5.finalproject.repository.custom.CustomAreaIndexRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.transaction.annotation.Transactional;
 

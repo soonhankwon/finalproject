@@ -37,4 +37,10 @@ public class CourierController {
                                  @RequestParam String customer) {
         return courierService.searchCustomer(userDetails, customer);
     }
+
+    @GetMapping("/api/search/user/courier/complete")
+    public SearchResponseDto searchComplete(@AuthenticationPrincipal UserDetailsImpl userDetails
+                                            ) {
+        return courierService.searchComplete(userDetails);
+    }
 }

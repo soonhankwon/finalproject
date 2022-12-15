@@ -3,8 +3,8 @@ $(document).ready(function () {
     getUser();
 });
 
-var BaseUrl = "http://localhost:8080/";
-// var BaseUrl = "http://tacbaetics.shop/";
+// var BaseUrl = "http://localhost:8080/";
+var BaseUrl = "http://tacbaetics.shop/";
 var default_person = "GUROADMIN";
 
 function getUser(){

@@ -2,10 +2,10 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
-import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 

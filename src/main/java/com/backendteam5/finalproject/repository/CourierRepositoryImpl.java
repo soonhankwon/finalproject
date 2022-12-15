@@ -76,7 +76,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .select(courier.id)
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
-                .where(usernameEq(account), stateEq(state), stateUsernameEq(username), registerDateEq(curDate))
+                .where(usernameEq(account), stateEq(state), stateUsernameEq(username), arrivalDateEq(curDate))
                 .fetch();
 
         return queryFactory
@@ -93,7 +93,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         List<Long> ids = queryFactory
                 .select(courier.id)
                 .from(courier)
-                .where(usernameEq(account), registerDateEq(curDate))
+                .where(usernameEq(account), arrivalDateEq(curDate))
                 .fetch();
 
         List<Tuple> list = queryFactory
@@ -319,8 +319,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return hasText(searchReqDto.getState()) ? courier.state.eq(searchReqDto.getState()) : null;
     }
 
-    private BooleanExpression registerDateEq(String registerDate) {
-        return courier.registerDate.eq(registerDate);
+    private BooleanExpression arrivalDateEq(String arrivalDate) {
+        return courier.arrivalDate.eq(arrivalDate);
     }
 
     private BooleanExpression deliveryPersonEq(SearchReqDto searchReqDto){

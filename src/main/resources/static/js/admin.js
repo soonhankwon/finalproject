@@ -96,11 +96,13 @@ function routecount(routeCount) {
             })
         )
     }
+    let today = getToday();
 
     routelist.forEach((value, index, array) => {
         let success = 0;
+
         value.filter((item) => {
-            if (item.state === "배송완료") success = item.count;
+            if (item.state === today) success = item.count;
         })
 
         let total = value.map(item => item.count)
@@ -109,6 +111,15 @@ function routecount(routeCount) {
         let html = success + "/" + total + " (" + Math.floor(success / total * 100) + "%)"
         $(`#route${index + 1}`).val(html);
     })
+}
+
+function getToday(){
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ("0" + (1 + date.getMonth())).slice(-2);
+    let day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
 }
 
 // 임시할당 페이지 열기

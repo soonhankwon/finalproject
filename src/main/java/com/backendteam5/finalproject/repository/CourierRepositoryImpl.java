@@ -32,7 +32,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-
+    private final String def_date="배송전";
 
     // 배송 상태별 조회
     @Override
@@ -99,23 +99,22 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    // div에 들어갈 route별 count
+    // div에 들어갈 route별 count(수정함)
     @Transactional(readOnly = true)
     @Override
     public List<RouteCountDto> countRouteState(String area) {
         return queryFactory
                 .select(getRouteCountDto())
                 .from(courier)
-                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
-                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
-                .on(areaIndex.area.eq(area))
-                .where(courier.arrivalDate.goe(getNowDate()))
-                .groupBy(areaIndex.route, courier.state)
-                .orderBy(areaIndex.route.asc(), courier.state.desc())
+                .innerJoin(areaIndex)
+                .on(areaIndex.id.eq(courier.deliveryAssignment.id),areaIndex.area.eq(area))
+                .where(courier.deliveredDate.in(getNowDate(),def_date))
+                .groupBy(areaIndex.route, courier.deliveredDate)
+                .orderBy(areaIndex.route.asc(), courier.deliveredDate.desc())
                 .fetch();
     }
 
-    // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당
+    // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당 (수정필요)
     @Transactional(readOnly = true)
     @Override
     public List<AdminCourierDto> searchByDetail(String username,String area, SearchReqDto searchReqDto){
@@ -129,7 +128,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
-                .innerJoin(deliveryAssignment.account, account)
                 .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
                         deliveryPersonEq(searchReqDto),
@@ -147,6 +145,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
                 .innerJoin(deliveryAssignment.account, account)
+                .on(account.area.eq(area))
                 .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
                         courier.deliveryPerson.eq(username),
@@ -163,9 +162,9 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getAdminCourierDto())
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
-                .join(deliveryAssignment.areaIndex, areaIndex)
-                .join(deliveryAssignment.account, account)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .innerJoin(deliveryAssignment.account, account)
                 .where(courier.id.in(couriers))
                 .fetch();
     }
@@ -236,8 +235,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     public ConstructorExpression<RouteCountDto> getRouteCountDto(){
         return Projections.constructor(RouteCountDto.class,
                 areaIndex.route.as("route"),
-                courier.state.as("state"),
-                courier.state.count().as("count"));
+                courier.deliveredDate.as("state"),
+                courier.deliveredDate.count().as("count"));
     }
 
     private static QCourierDto getCourierConstructor() {
@@ -261,12 +260,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .set(courier.deliveryPerson, deliveryPerson)
                 .where(courier.id.eq(courierId))
                 .execute();
-    }
-
-    public ConstructorExpression<CountUserDto> getCountTemp(){
-        return Projections.constructor(CountUserDto.class,
-                account.username.as("username"),
-                account.username.count().as("count"));
     }
 
     private BooleanExpression stateUsernameEq(String username) {

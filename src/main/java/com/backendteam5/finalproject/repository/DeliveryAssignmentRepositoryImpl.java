@@ -26,6 +26,8 @@ import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryA
 public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmentRepository {
     private final JPAQueryFactory queryFactory;
 
+    private final String def_date="배송전";
+
     public DeliveryAssignmentRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
@@ -66,11 +68,11 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
                 .innerJoin(deliveryAssignment.account, account)
-                .on(account.area.eq(area))
+                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
                 .innerJoin(courier)
-                .on(deliveryAssignment.eq(courier.deliveryAssignment),
+                .on(courier.deliveryAssignment.eq(deliveryAssignment),
                         courier.deliveryPerson.eq(def),
-                        courier.arrivalDate.goe(getNowDate()))
+                        courier.deliveredDate.eq(def_date))
                 .groupBy(account.username)
                 .orderBy(account.username.asc())
                 .fetch();
@@ -87,9 +89,9 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 .on(areaIndex.area.eq(area))
                 .innerJoin(account)
                 .on(account.area.eq(area),
-                        account.role.eq(UserRoleEnum.USER),
-                        courier.deliveryPerson.eq(account.username))
-                .where(courier.arrivalDate.eq(getNowDate()))
+                        account.role.eq(UserRoleEnum.USER))
+                .where(courier.deliveredDate.in(getNowDate(),def_date),
+                        account.username.eq(courier.deliveryPerson))
                 .groupBy(account.username, courier.state)
                 .fetch();
     }

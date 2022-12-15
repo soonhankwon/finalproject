@@ -12,4 +12,5 @@ public class SearchResponseDto {
     private List<CourierDto> data;
     private Long completeCnt;
     private Long progressCnt;
+    private Long beforeCnt;
 }

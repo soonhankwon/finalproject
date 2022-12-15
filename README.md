@@ -410,7 +410,7 @@ TACBAETIC 서비스의 상세 내용 및 개발일지 👀
 <div markdown="1">
 <br/>
 	
-![tacbaeticsErd](https://user-images.githubusercontent.com/113872320/206990749-c1b7e39b-0320-403d-939d-0a97fd815d24.png)
+![tacbaeticsERD](https://user-images.githubusercontent.com/113872320/207815616-a32bd7f4-6bef-42f9-8bc1-3b1b43d9117e.png)
 	
 1. 계정 (어드민, 택배기사)
 2. 택배

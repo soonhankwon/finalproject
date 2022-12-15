@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(indexes = {@Index(name = "keyword", columnList = "deliveredDate")})
+@Table(indexes = {@Index(name = "keyword", columnList = "address, state, customer")})
 public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +67,8 @@ public class Courier {
     public void setUpdate(int j, String deliveryPerson) {
         this.deliveryPerson = deliveryPerson;
     }
-    public void saveUpdate(String state, String deliveryPerson) {
+    public void saveUpdate(String state, String deliveryPerson, String deliveredDate) {
+        this.deliveredDate = deliveredDate;
         this.state = state;
         this.deliveryPerson = deliveryPerson;
     }

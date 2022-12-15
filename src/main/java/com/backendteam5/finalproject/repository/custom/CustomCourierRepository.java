@@ -8,9 +8,12 @@ import java.util.List;
 
 public interface CustomCourierRepository {
 
-    List<CourierDto> searchByUsernameAndState(Account account, String state, String username);
-    CourierCountDto stateCount(Account account);
+    List<CourierDto> searchByUsernameAndState(Account account, String state, String username, String curDate);
+    CourierCountDto stateCount(Account account, String curDate);
     List<CourierDto> searchCustomer(String customer);
+
+    List<CourierDto> searchBeforeComplete(String username, String state);
+    Long countTest(String username, String state);
 
     void updateByCourierId(Long courierId, String deliveryPerson);
     List<RouteCountDto> countRouteState(String area);

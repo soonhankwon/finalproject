@@ -50,7 +50,6 @@ function usertable(userList, tempCount, directCount, userTable) {
             return item.username === user
         }))
     })
-    userinfo.map(value => console.log(value))
 
     for (let i = 0; i < userinfo.length / 2; i++) {
         let idx = i * 2;

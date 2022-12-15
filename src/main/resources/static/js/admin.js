@@ -53,17 +53,25 @@ function usertable(userList, tempCount, directCount, userTable) {
 
     for (let i = 0; i < userinfo.length / 2; i++) {
         let idx = i * 2;
-        let shipping = userinfo[idx].length !== 0 ? userinfo[idx][0]['count'] : 0;
-        let array = userinfo[idx + 1].filter((item) => {
+
+        let array = userinfo[idx].filter((item) => {
             return item.state === "배송중"
         });
-
+        let shipping = zeroFilter(array)
+        array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송중"
+        });
         shipping += zeroFilter(array)
 
+        // =======================================
+        array = userinfo[idx].filter((item) => {
+            return item.state === "배송지연"
+        });
+        let delay = zeroFilter(array)
         array = userinfo[idx + 1].filter((item) => {
             return item.state === "배송지연"
         })
-        let delay = zeroFilter(array)
+        delay += zeroFilter(array);
 
         array = userinfo[idx + 1].filter((item) => {
             return item.state === "배송완료"
@@ -96,11 +104,13 @@ function routecount(routeCount) {
             })
         )
     }
+    let today = getToday();
 
     routelist.forEach((value, index, array) => {
         let success = 0;
+
         value.filter((item) => {
-            if (item.state === "배송완료") success = item.count;
+            if (item.state === today) success = item.count;
         })
 
         let total = value.map(item => item.count)
@@ -109,6 +119,15 @@ function routecount(routeCount) {
         let html = success + "/" + total + " (" + Math.floor(success / total * 100) + "%)"
         $(`#route${index + 1}`).val(html);
     })
+}
+
+function getToday(){
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ("0" + (1 + date.getMonth())).slice(-2);
+    let day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
 }
 
 // 임시할당 페이지 열기

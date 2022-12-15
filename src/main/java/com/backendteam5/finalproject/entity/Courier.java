@@ -38,16 +38,16 @@ public class Courier {
     @Column(name = "deliveryPerson", length = 100)
     @NotNull
     private String deliveryPerson = "GUROADMIN";
-
-    @Column(name = "deliveredDate")
-    private String deliveredDate;
-
+    @Column(name = "deliveredDate", length = 45)
+    private String deliveredDate = "배송전";
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "delivery_assignment_id")
     private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+
+    public Courier(String state, String customer, String arrivalDate, String registerDate ,
+                   Double xpos, Double ypos, DeliveryAssignment deliveryAssignment, String deliveredDate) {
         this.registerDate = registerDate;
         this.xPos = xpos;
         this.yPos = ypos;
@@ -55,6 +55,7 @@ public class Courier {
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
+        this.deliveredDate = deliveredDate;
     }
 
     public void update(CourierReqUpdateDto courierReqUpdateDto) {
@@ -70,6 +71,5 @@ public class Courier {
         this.deliveredDate = deliveredDate;
         this.state = state;
         this.deliveryPerson = deliveryPerson;
-
     }
 }

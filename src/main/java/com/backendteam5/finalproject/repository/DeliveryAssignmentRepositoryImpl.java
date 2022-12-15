@@ -3,6 +3,7 @@ package com.backendteam5.finalproject.repository;
 import com.backendteam5.finalproject.dto.CountUserDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
 import com.backendteam5.finalproject.dto.SearchReqDto;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomDeliveryAssignmentRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
@@ -24,6 +25,8 @@ import static com.backendteam5.finalproject.entity.QDeliveryAssignment.deliveryA
 
 public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmentRepository {
     private final JPAQueryFactory queryFactory;
+
+    private final String def_date="배송전";
 
     public DeliveryAssignmentRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
@@ -60,18 +63,17 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     @Override
     public List<CountUserDto> findByTempCount(String area, String def) {
         return queryFactory
-                .select(getCountTempDto())
+                .select(getCountDirectDto())
                 .from(deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
                 .innerJoin(deliveryAssignment.account, account)
-                .on(account.area.eq(area))
+                .on(account.area.eq(area), account.role.eq(UserRoleEnum.USER))
                 .innerJoin(courier)
-                .on(deliveryAssignment.eq(courier.deliveryAssignment),
+                .on(courier.deliveryAssignment.eq(deliveryAssignment),
                         courier.deliveryPerson.eq(def),
-                        courier.arrivalDate.goe(getNowDate()))
-                .groupBy(account.username)
-                .orderBy(account.username.asc())
+                        courier.deliveredDate.eq(def_date))
+                .groupBy(account.username, courier.state)
                 .fetch();
     }
 
@@ -80,17 +82,16 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     public List<CountUserDto> findByDirectCount(String area, String def) {
         return queryFactory
                 .select(getCountDirectDto())
-                .from(deliveryAssignment)
+                .from(courier)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
-                .innerJoin(deliveryAssignment.account, account)
-                .on(account.area.eq(area))
-                .innerJoin(courier)
-                .on(deliveryAssignment.eq(courier.deliveryAssignment),
-                        courier.deliveryPerson.ne(def),
-                        courier.arrivalDate.goe(getNowDate()))
-                .groupBy(courier.deliveryPerson, courier.state)
-                .orderBy(courier.deliveryPerson.asc(), courier.state.asc())
+                .innerJoin(account)
+                .on(account.area.eq(area),
+                        account.role.eq(UserRoleEnum.USER))
+                .where(courier.deliveredDate.in(getNowDate(),def_date),
+                        account.username.eq(courier.deliveryPerson))
+                .groupBy(account.username, courier.state)
                 .fetch();
     }
 
@@ -103,16 +104,9 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 account.username);
     }
 
-    public ConstructorExpression<CountUserDto> getCountTempDto(){
-        return Projections.constructor(CountUserDto.class,
-                account.username.as("username"),
-                account.username.count().as("count")
-        );
-    }
-
     public ConstructorExpression<CountUserDto> getCountDirectDto(){
         return Projections.constructor(CountUserDto.class,
-                courier.deliveryPerson.as("username"),
+                account.username.as("username"),
                 courier.state.as("state"),
                 courier.state.count().as("count")
         );

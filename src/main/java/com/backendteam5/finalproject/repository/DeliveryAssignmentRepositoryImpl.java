@@ -63,7 +63,7 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     @Override
     public List<CountUserDto> findByTempCount(String area, String def) {
         return queryFactory
-                .select(getCountTempDto())
+                .select(getCountDirectDto())
                 .from(deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
@@ -73,8 +73,7 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 .on(courier.deliveryAssignment.eq(deliveryAssignment),
                         courier.deliveryPerson.eq(def),
                         courier.deliveredDate.eq(def_date))
-                .groupBy(account.username)
-                .orderBy(account.username.asc())
+                .groupBy(account.username, courier.state)
                 .fetch();
     }
 
@@ -103,13 +102,6 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 areaIndex.subRoute,
                 areaIndex.zipCode,
                 account.username);
-    }
-
-    public ConstructorExpression<CountUserDto> getCountTempDto(){
-        return Projections.constructor(CountUserDto.class,
-                account.username.as("username"),
-                account.username.count().as("count")
-        );
     }
 
     public ConstructorExpression<CountUserDto> getCountDirectDto(){

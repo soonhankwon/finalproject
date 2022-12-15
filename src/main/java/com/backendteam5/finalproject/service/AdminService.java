@@ -8,6 +8,8 @@ import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -102,7 +104,15 @@ public class AdminService {
 
         Courier courier = courierRepository.findById(courierId)
                 .orElseThrow(() -> new NullPointerException("해당 운송장이 존재하지 않습니다"));
+
         courier.update(courierReqUpdateDto);
+
+        if(Objects.equals(courierReqUpdateDto.getState(), "배송완료")){
+            String nowDate = courierRepository.getNowDate();
+            courier.setArrivalDate(nowDate);
+            courier.setDeliveredDate(nowDate);
+        }
+        
         courierRepository.save(courier);
         return new CourierResUpdateDto("운송장 할당완료");
     }
@@ -114,5 +124,11 @@ public class AdminService {
 
     public void updateArrivalDateAndDeliveryPerson(){
         courierRepository.setReady();
+    }
+
+    public String getNowDate(){
+        Calendar cal = SearchReqDto.getNow();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(cal.getTime());
     }
 }

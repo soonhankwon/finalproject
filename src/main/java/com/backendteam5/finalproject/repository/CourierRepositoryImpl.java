@@ -128,6 +128,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
+                .innerJoin(deliveryAssignment.account, account)
+                .on(account.area.eq(area))
                 .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
                         deliveryPersonEq(searchReqDto),
@@ -236,7 +238,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return Projections.constructor(RouteCountDto.class,
                 areaIndex.route.as("route"),
                 courier.deliveredDate.as("state"),
-                courier.deliveredDate.count().as("count"));
+                courier.id.count().as("count"));
     }
 
     private static QCourierDto getCourierConstructor() {

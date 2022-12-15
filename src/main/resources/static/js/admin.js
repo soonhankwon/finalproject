@@ -3,8 +3,8 @@ $(document).ready(function () {
     getUser();
 });
 
-// var BaseUrl = "http://localhost:8080/";
-var BaseUrl = "http://tacbaetics.shop/";
+var BaseUrl = "http://localhost:8080/";
+// var BaseUrl = "http://tacbaetics.shop/";
 var default_person = "GUROADMIN";
 
 function getUser(){
@@ -50,20 +50,29 @@ function usertable(userList, tempCount, directCount, userTable) {
             return item.username === user
         }))
     })
+    userinfo.map(value => console.log(value))
 
     for (let i = 0; i < userinfo.length / 2; i++) {
         let idx = i * 2;
-        let shipping = userinfo[idx].length !== 0 ? userinfo[idx][0]['count'] : 0;
-        let array = userinfo[idx + 1].filter((item) => {
+
+        let array = userinfo[idx].filter((item) => {
             return item.state === "배송중"
         });
-
+        let shipping = zeroFilter(array)
+        array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송중"
+        });
         shipping += zeroFilter(array)
 
+        // =======================================
+        array = userinfo[idx].filter((item) => {
+            return item.state === "배송지연"
+        });
+        let delay = zeroFilter(array)
         array = userinfo[idx + 1].filter((item) => {
             return item.state === "배송지연"
         })
-        let delay = zeroFilter(array)
+        delay += zeroFilter(array);
 
         array = userinfo[idx + 1].filter((item) => {
             return item.state === "배송완료"

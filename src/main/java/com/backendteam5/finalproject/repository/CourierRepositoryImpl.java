@@ -317,6 +317,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.arrivalDate,
                 courier.registerDate,
                 courier.deliveryPerson,
+                courier.deliveredDate,
                 courier.deliveryAssignment
         );
     }

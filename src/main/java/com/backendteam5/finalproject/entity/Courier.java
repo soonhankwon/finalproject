@@ -43,6 +43,10 @@ public class Courier {
     @Column(name = "deliveryPerson")
     @NotNull
     private String deliveryPerson = "GUROADMIN";
+
+    @Column(name = "deliveredDate")
+    private String deliveredDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "delivery_assignment_id")
@@ -67,7 +71,8 @@ public class Courier {
     public void setUpdate(int j, String deliveryPerson) {
         this.deliveryPerson = deliveryPerson;
     }
-    public void saveUpdate(String state, String deliveryPerson) {
+    public void saveUpdate(String state, String deliveryPerson, String deliveredDate) {
+        this.deliveredDate = deliveredDate;
         this.state = state;
         this.deliveryPerson = deliveryPerson;
 

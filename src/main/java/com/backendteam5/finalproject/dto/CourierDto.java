@@ -24,10 +24,12 @@ public class CourierDto {
     private String registerDate;
     private String username;
     private String courierUsername;
+    private String deliveredDate;
 
     @QueryProjection
-    public CourierDto(Long id, String address, String state, String customer, String arrivalDate,String registerDate, String username, DeliveryAssignment deliveryAssignment) {
+    public CourierDto(Long id, String address, String state, String customer, String arrivalDate,String registerDate, String username, String deliveredDate, DeliveryAssignment deliveryAssignment) {
         this.address = address;
+        this.deliveredDate = deliveredDate;
         this.id = id;
         this.registerDate = registerDate;
         this.area = deliveryAssignment.getAreaIndex().getArea();

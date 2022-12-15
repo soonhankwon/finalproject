@@ -187,7 +187,7 @@ TACBAETIC 서비스의 상세 내용 및 개발일지 👀
 - QueryDSL
 
 ## 아키텍처
-![tacbaeticsArchitect](https://user-images.githubusercontent.com/113872320/206975527-8d22c161-c81f-449f-83d7-8c676e68f1b1.png)
+![tacbaeticsArch](https://user-images.githubusercontent.com/113872320/207789448-894dd686-6654-454a-9095-10bcd336e973.png)
 
 ## 트러블슈팅
 <details>

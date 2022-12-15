@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {@Index(name = "keyword", columnList = "address, state, customer")})
+@Table(indexes = {@Index(name = "keyword", columnList = "deliveredDate, state, customer")})
 public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,13 +37,17 @@ public class Courier {
     private double yPos;
     @Column(name = "deliveryPerson", length = 100)
     @NotNull
-    private String deliveryPerson = "ADMIN";
+    private String deliveryPerson = "GUROADMIN";
+    @Column(name = "deliveredDate", length = 45)
+    private String deliveredDate = "배송전";
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "delivery_assignment_id")
     private DeliveryAssignment deliveryAssignment;
 
-    public Courier(String state, String customer, String arrivalDate, String registerDate ,Double xpos, Double ypos, DeliveryAssignment deliveryAssignment) {
+
+    public Courier(String state, String customer, String arrivalDate, String registerDate ,
+                   Double xpos, Double ypos, DeliveryAssignment deliveryAssignment, String deliveredDate) {
         this.registerDate = registerDate;
         this.xPos = xpos;
         this.yPos = ypos;
@@ -51,6 +55,7 @@ public class Courier {
         this.state = state;
         this.customer = customer;
         this.arrivalDate = arrivalDate;
+        this.deliveredDate = deliveredDate;
     }
 
     public void update(CourierReqUpdateDto courierReqUpdateDto) {
@@ -65,6 +70,5 @@ public class Courier {
     public void saveUpdate(String state, String deliveryPerson) {
         this.state = state;
         this.deliveryPerson = deliveryPerson;
-
     }
 }

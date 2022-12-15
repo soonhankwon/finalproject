@@ -3,6 +3,7 @@ package com.backendteam5.finalproject.repository;
 import com.backendteam5.finalproject.dto.CountUserDto;
 import com.backendteam5.finalproject.dto.DeliveryAssignmentDto;
 import com.backendteam5.finalproject.dto.SearchReqDto;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomDeliveryAssignmentRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
@@ -80,17 +81,16 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     public List<CountUserDto> findByDirectCount(String area, String def) {
         return queryFactory
                 .select(getCountDirectDto())
-                .from(deliveryAssignment)
+                .from(courier)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area))
-                .innerJoin(deliveryAssignment.account, account)
-                .on(account.area.eq(area))
-                .innerJoin(courier)
-                .on(deliveryAssignment.eq(courier.deliveryAssignment),
-                        courier.deliveryPerson.ne(def),
-                        courier.arrivalDate.goe(getNowDate()))
-                .groupBy(courier.deliveryPerson, courier.state)
-                .orderBy(courier.deliveryPerson.asc(), courier.state.asc())
+                .innerJoin(account)
+                .on(account.area.eq(area),
+                        account.role.eq(UserRoleEnum.USER),
+                        courier.deliveryPerson.eq(account.username))
+                .where(courier.arrivalDate.eq(getNowDate()))
+                .groupBy(account.username, courier.state)
                 .fetch();
     }
 
@@ -112,7 +112,7 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
 
     public ConstructorExpression<CountUserDto> getCountDirectDto(){
         return Projections.constructor(CountUserDto.class,
-                courier.deliveryPerson.as("username"),
+                account.username.as("username"),
                 courier.state.as("state"),
                 courier.state.count().as("count")
         );

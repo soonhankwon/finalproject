@@ -1,18 +1,19 @@
 package com.backendteam5.finalproject.service;
 
 import com.backendteam5.finalproject.dto.*;
-import com.backendteam5.finalproject.entity.Account;
 import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.UserRoleEnum;
-import com.backendteam5.finalproject.repository.AccountRepository;
-import com.backendteam5.finalproject.repository.CourierRepository;
-import com.backendteam5.finalproject.repository.DeliveryAssignmentRepository;
+import com.backendteam5.finalproject.repository.*;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
@@ -22,58 +23,21 @@ public class AdminService {
     private final DeliveryAssignmentRepository deliveryAssignmentRepository;
     private final String defaultPerson = "GUROADMIN";
 
-    public AdminMainDto getMainReport(UserDetailsImpl userDetails){
+    public AdminCountDto getMainReport(UserDetailsImpl userDetails){
         String area = checkAdmin(userDetails);
 
-        AdminMainDto adminMainDto = new AdminMainDto();
+        List<String> userList = accountRepository.findByAreaAndRole(area, UserRoleEnum.USER);
 
-        List<Account> userlist = accountRepository.findByAreaAndRoleOrderByUsernameAsc(area, UserRoleEnum.USER);
-        adminMainDto.setUserlist(userlist);
+        List<CountUserDto> tempDto = deliveryAssignmentRepository.findByTempCount(area, defaultPerson);
 
-        LinkedList<Long> tempCount = new LinkedList<>();
-        LinkedList<CountStateDto> directCount = new LinkedList<>();
+        List<CountUserDto> directDto = deliveryAssignmentRepository.findByDirectCount(area, defaultPerson);
 
-        LinkedList<CountStateDto> directCase = new LinkedList<>();
+        return new AdminCountDto(userList, tempDto, directDto);
+    }
 
-        directCase.add(new CountStateDto("배송지연", 0L));
-        directCase.add(new CountStateDto("배송중", 0L));
-        directCase.add(new CountStateDto("배송완료", 0L));
-
-        for(Account deliveryuser : userlist){
-            Long aLong = courierRepository.countUsernameTemp(deliveryuser);
-            List<CountStateDto> countDirects = courierRepository.countUsernameDirect(deliveryuser);
-
-            tempCount.add(aLong);
-
-            if(countDirects.isEmpty())  countDirects.addAll(directCase);
-
-            else if(countDirects.size() == 1){
-                if(countDirects.get(0).getState().equals("배송지연")){
-                    countDirects.add(directCase.get(1));
-                    countDirects.add(directCase.get(2));
-                } else if (countDirects.get(0).getState().equals("배송중")) {
-                    countDirects.add(0, directCase.get(0));
-                    countDirects.add(2, directCase.get(2));
-                } else{
-                    countDirects.add(0, directCase.get(0));
-                    countDirects.add(1, directCase.get(1));
-                }
-            }
-
-            else if(countDirects.size() == 2) {
-                if(countDirects.get(0).getState().equals("배송지연") && countDirects.get(1).getState().equals("배송중"))   countDirects.add(directCase.get(2));
-                if(countDirects.get(0).getState().equals("배송지연") && countDirects.get(1).getState().equals("배송완료"))   countDirects.add(1, directCase.get(1));
-                if(countDirects.get(0).getState().equals("배송중") && countDirects.get(1).getState().equals("배송완료"))   countDirects.add(0, directCase.get(0));
-            }
-
-            directCount.addAll(countDirects);
-        }
-        adminMainDto.setTempAssignment(tempCount);
-        adminMainDto.setDirectAssignment(directCount);
-
-        adminMainDto.setRouteCount(courierRepository.countRouteState(userDetails.getArea()));
-
-        return adminMainDto;
+    public List<RouteCountDto> getRouteCount(UserDetailsImpl userDetails){
+        String area = checkAdmin(userDetails);
+        return courierRepository.countRouteState(area);
     }
 
     public List<DeliveryAssignmentDto> selectRoute(UserDetailsImpl userDetails, String route){
@@ -82,11 +46,29 @@ public class AdminService {
 
     public String updateDelivery(UserDetailsImpl userDetails, UpdateDeliveryDto updateDeliveryDto){
         checkAdmin(userDetails);
-        List<String> zipCode = updateDeliveryDto.getZipCode();
-        List<String> username = updateDeliveryDto.getUsername();
-        if(updateDeliveryDto.getUsername().size() != updateDeliveryDto.getZipCode().size()) throw  new RuntimeException("전달값에 이상이 있습니다.");
-        for(int i=0; i<updateDeliveryDto.getZipCode().size(); i++)  deliveryAssignmentRepository.updateDelivery(zipCode.get(i), username.get(i));
 
+        List<Long> ids = updateDeliveryDto.getIds();
+        List<String> username = updateDeliveryDto.getUsername();
+
+        if(updateDeliveryDto.getUsername().size() != updateDeliveryDto.getIds().size()) throw  new RuntimeException("전달값에 이상이 있습니다.");
+
+        HashMap<String, List<Long>> hashMap = new HashMap<>();
+
+        for(String user : username.parallelStream().distinct().collect(Collectors.toList())){
+            List<Integer> index = IntStream.range(0, username.size())
+                    .filter(i -> Objects.equals(username.get(i), user))
+                    .boxed().collect(Collectors.toList());
+            hashMap.put(user, index.stream().map(ids::get).collect(Collectors.toList()));
+        }
+
+        if(hashMap.containsKey(""))   throw new NullPointerException("존재하지 않는 사용자 입니다." + hashMap.get(null));
+
+        for(Map.Entry<String, List<Long>> pair : hashMap.entrySet()) {
+            deliveryAssignmentRepository.updateDelivery(
+                    pair.getValue(),
+                    accountRepository.findIdByUsername(pair.getKey())
+            );
+        }
         return "업데이트 성공";
     }
 

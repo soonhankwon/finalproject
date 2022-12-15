@@ -32,7 +32,7 @@ function setDone(){
         data: JSON.stringify({
             "state" : $('#state').val(),
             "arrivalDate" : $('#arrivaldate').val(),
-            "username" : $('#deliveryPerson').val()
+            "deliveryPerson" : $('#deliveryPerson').val()
         }),
         success: function (response) {
             alert(response['msg']);

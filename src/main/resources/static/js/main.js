@@ -34,6 +34,7 @@ function execSearch() {
             let temphtml = `
                             <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
                             <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                            <button type="button" className="button-js" onClick="beforeComplete()">과거배송완료(${datalist.beforeCnt})</button>
                            `
             $("#button-cnt").append(temphtml);
 
@@ -67,6 +68,51 @@ function execSearch() {
 }
 
 
+function beforeComplete(){
+    $.ajax({
+        url: "/api/search/user/courier/complete",
+        type: "GET",
+        success : function(datalist){
+            // console.log(datalist);
+            $("#courier-table-body").empty();
+            $("#button-cnt").empty();
+            let courierList = datalist.data;
+            console.log(courierList);
+
+            let temphtml = `
+                            <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
+                            <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                            <button type="button" className="button-js" onClick="beforeComplete()">과거배송완료(${datalist.beforeCnt})</button>
+                           `
+            $("#button-cnt").append(temphtml);
+
+            let html = ``
+            for(key in courierList){
+                html += '<tr>';
+                html += '<td>'+courierList[key].id+'</td>';
+                html += '<td>'+courierList[key].area+'</td>';
+                html += '<td>'+courierList[key].route+'</td>';
+                html += '<td>'+courierList[key].subRoute+'</td>';
+                html += '<td>'+courierList[key].state+'</td>';
+                html += '<td>'+courierList[key].customer+'</td>';
+                html += '<td>'+courierList[key].arrivalDate+'</td>';
+                html += '<td>'+courierList[key].registerDate+'</td>';
+                html += '<td>'+courierList[key].username+'</td>';
+                html += '<td>'+courierList[key].courierUsername+'</td>';
+                if (courierList[key].state === "배송완료") {
+                    html += `<td><button onclick="completeCancel(${courierList[key].id})">배송완료취소</button></td>`;
+                }
+                html += '</tr>';
+            }
+            $("#courier-table-body").append(html);
+
+
+        },
+        error : function(){alert("통신실패")}
+    })
+}
+
+
 function complete(){
     $.ajax({
         url: "/api/search/user/courier?state=1",
@@ -81,6 +127,7 @@ function complete(){
             let temphtml = `
                             <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
                             <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                            <button type="button" className="button-js" onClick="beforeComplete()">과거배송완료(${datalist.beforeCnt})</button>
                            `
             $("#button-cnt").append(temphtml);
 
@@ -125,6 +172,7 @@ function doing(){
             let temphtml = `
                             <button type="button" className="button-js" onClick="doing()">배송중(${datalist.progressCnt})</button>
                             <button type="button" className="button-js" onClick="complete()">배송완료(${datalist.completeCnt})</button>
+                            <button type="button" className="button-js" onClick="beforeComplete()">과거배송완료(${datalist.beforeCnt})</button>
                            `
             $("#button-cnt").append(temphtml);
 

@@ -33,16 +33,50 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
 
-
-    // 배송 상태별 조회
     @Override
-    @Transactional(readOnly = true)
-    public List<CourierDto> searchByUsernameAndState(Account account, String state, String username) {
+    public List<CourierDto> searchBeforeComplete(String username, String state) {
         List<Long> ids = queryFactory
                 .select(courier.id)
                 .from(courier)
                 .innerJoin(courier.deliveryAssignment, deliveryAssignment)
-                .where(usernameEq(account), stateEq(state), stateUsernameEq(username))
+                .where(stateEq(state), stateUsernameEq(username))
+                .fetch();
+
+        return queryFactory
+                .select(getCourierConstructor())
+                .from(courier)
+                .where(courier.id.in(ids))
+                .fetch();
+    }
+
+    @Override
+    public Long countTest(String username, String state ) {
+
+        List<Long> ids = queryFactory
+                .select(courier.id)
+                .from(courier)
+                .where(stateUsernameEq(username), stateEq(state) )
+                .fetch();
+
+        return queryFactory
+                .select(courier.id.count())
+                .from(courier)
+                .where(courier.id.in(ids))
+                .groupBy(courier.state)
+                .fetchOne();
+    }
+
+
+    // 배송 상태별 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourierDto> searchByUsernameAndState(Account account, String state, String username, String curDate) {
+
+        List<Long> ids = queryFactory
+                .select(courier.id)
+                .from(courier)
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .where(usernameEq(account), stateEq(state), stateUsernameEq(username), registerDateEq(curDate))
                 .fetch();
 
         return queryFactory
@@ -55,11 +89,11 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     // 배송상태별 택배 개수
     @Transactional(readOnly = true)
     @Override
-    public CourierCountDto stateCount(Account account) {
+    public CourierCountDto stateCount(Account account, String curDate) {
         List<Long> ids = queryFactory
                 .select(courier.id)
                 .from(courier)
-                .where(usernameEq(account))
+                .where(usernameEq(account), registerDateEq(curDate))
                 .fetch();
 
         List<Tuple> list = queryFactory
@@ -283,6 +317,10 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
 
     private BooleanExpression stateEq(SearchReqDto searchReqDto) {
         return hasText(searchReqDto.getState()) ? courier.state.eq(searchReqDto.getState()) : null;
+    }
+
+    private BooleanExpression registerDateEq(String registerDate) {
+        return courier.registerDate.eq(registerDate);
     }
 
     private BooleanExpression deliveryPersonEq(SearchReqDto searchReqDto){

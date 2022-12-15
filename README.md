@@ -357,6 +357,24 @@ TACBAETIC 서비스의 상세 내용 및 개발일지 👀
 </details>
 
 <details>
+<summary>무중단 배포</summary>
+<div markdown="1">
+
+   * 무중단 배포의 필요성
+     * 새로운 배포가 완료되기 전 까지 기존에 배포되었던 프로세스가 종료 (서비스가 중단), 무중단 배포의 필요성 인식
+   * 대안
+     * AWS 블루그린 
+     * Nginx
+     
+   * 선택
+     * 가장 저렴한 Nginx로 선택 및 사용.
+	
+   * Github Actions & Docker 와 연동하여 Merge 시 무중단 배포 구현
+</div>
+</details>
+
+
+<details>
 <summary>Git</summary>
 <div markdown="1">
 <br/>

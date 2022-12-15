@@ -2,6 +2,7 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.UserRoleEnum;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.*;
@@ -139,44 +140,13 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getRouteCountDto())
                 .from(courier)
-                .leftJoin(courier.deliveryAssignment.areaIndex, areaIndex)
-                .where(areaIndex.area.eq(area), courier.arrivalDate.eq(getNowDate()))
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area))
+                .where(courier.arrivalDate.goe(getNowDate()))
                 .groupBy(areaIndex.route, courier.state)
                 .orderBy(areaIndex.route.asc(), courier.state.desc())
                 .fetch();
-    }
-
-    // user테이블에 들어갈 직접 할당의 state별 갯수
-    @Transactional(readOnly = true)
-    @Override
-    public List<CountStateDto> countUsernameDirect(Account account) {
-        return queryFactory
-                .select(getCountDirect())
-                .from(courier)
-                .where(courier.deliveryPerson.eq(account.getUsername()),
-                        courier.arrivalDate.eq(getNowDate()))
-                .groupBy(courier.state)
-                .orderBy(courier.state.desc())
-                .fetch();
-    }
-
-    // user테이블에 들어갈 임시 할당의 갯수
-    @Transactional(readOnly = true)
-    @Override
-    public Long countUsernameTemp(Account account) {
-        return queryFactory
-                .select(courier.count())
-                .from(courier)
-                .where(
-                        courier.deliveryAssignment.id.in(
-                                JPAExpressions
-                                        .select(deliveryAssignment.id)
-                                        .from(deliveryAssignment)
-                                        .where(deliveryAssignment.account.id.eq(account.getId()))
-                        ),
-                        courier.arrivalDate.eq(getNowDate()),
-                        courier.deliveryPerson.ne(account.getUsername()))
-                .fetchOne();
     }
 
     // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당
@@ -190,14 +160,14 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getAdminCourierDto())
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
-                .join(deliveryAssignment.areaIndex, areaIndex)
-                .join(deliveryAssignment.account, account)
-                .where(areaIndex.area.eq(area),
-                        routeEq(searchReqDto),
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area))
+                .innerJoin(deliveryAssignment.account, account)
+                .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
-                        stateEq(searchReqDto),
                         deliveryPersonEq(searchReqDto),
+                        stateEq(searchReqDto),
                         dateLoe(searchReqDto))
                 .fetch();
     }
@@ -207,16 +177,16 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return queryFactory
                 .select(getAdminCourierDto())
                 .from(courier)
-                .join(courier.deliveryAssignment, deliveryAssignment)
-                .join(deliveryAssignment.areaIndex, areaIndex)
-                .join(deliveryAssignment.account, account)
-                .where(deliveryAssignment.areaIndex.area.eq(area),
-                        routeEq(searchReqDto),
+                .innerJoin(courier.deliveryAssignment, deliveryAssignment)
+                .innerJoin(deliveryAssignment.areaIndex, areaIndex)
+                .on(areaIndex.area.eq(area))
+                .innerJoin(deliveryAssignment.account, account)
+                .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
+                        courier.deliveryPerson.eq(username),
                         stateEq(searchReqDto),
                         tempPersonEq(searchReqDto),
-                        dateLoe(searchReqDto),
-                        courier.deliveryPerson.eq(username))
+                        dateLoe(searchReqDto))
                 .fetch();
     }
 
@@ -288,8 +258,10 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 courier.customer,
                 courier.state,
                 courier.deliveryPerson,
-                areaIndex,
-                account,
+                areaIndex.area,
+                areaIndex.route,
+                areaIndex.subRoute,
+                account.username,
                 courier.address,
                 courier.xPos,
                 courier.yPos);
@@ -298,12 +270,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     public ConstructorExpression<RouteCountDto> getRouteCountDto(){
         return Projections.constructor(RouteCountDto.class,
                 areaIndex.route.as("route"),
-                courier.state.as("state"),
-                courier.state.count().as("count"));
-    }
-
-    public ConstructorExpression<CountStateDto> getCountDirect(){
-        return Projections.constructor(CountStateDto.class,
                 courier.state.as("state"),
                 courier.state.count().as("count"));
     }
@@ -332,6 +298,12 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .execute();
     }
 
+    public ConstructorExpression<CountUserDto> getCountTemp(){
+        return Projections.constructor(CountUserDto.class,
+                account.username.as("username"),
+                account.username.count().as("count"));
+    }
+
     private BooleanExpression stateUsernameEq(String username) {
         return courier.deliveryPerson.eq(username);
     }
@@ -357,15 +329,15 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     private BooleanExpression tempPersonEq(SearchReqDto searchReqDto){
-        return hasText(searchReqDto.getUsername()) ? deliveryAssignment.account.username.eq(searchReqDto.getUsername()) : null;
+        return hasText(searchReqDto.getUsername()) ? account.username.eq(searchReqDto.getUsername()) : null;
     }
 
     private BooleanExpression routeEq(SearchReqDto searchReqDto){
-        return hasText(searchReqDto.getRoute()) ? deliveryAssignment.areaIndex.route.eq(searchReqDto.getRoute()) : null;
+        return hasText(searchReqDto.getRoute()) ? areaIndex.route.eq(searchReqDto.getRoute()) : null;
     }
 
     private BooleanExpression subRouteIn(SearchReqDto searchReqDto){
-        return searchReqDto.getSubRoute() == null || searchReqDto.getSubRoute().isEmpty() ? null : deliveryAssignment.areaIndex.subRoute.in(searchReqDto.getSubRoute());
+        return searchReqDto.getSubRoute() == null || searchReqDto.getSubRoute().isEmpty() ? null : areaIndex.subRoute.in(searchReqDto.getSubRoute());
     }
 
     private BooleanExpression dateLoe(SearchReqDto searchReqDto){

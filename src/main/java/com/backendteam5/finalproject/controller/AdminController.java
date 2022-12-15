@@ -1,9 +1,11 @@
 package com.backendteam5.finalproject.controller;
 
 import com.backendteam5.finalproject.dto.*;
+import com.backendteam5.finalproject.repository.CourierRepositoryImpl;
 import com.backendteam5.finalproject.security.UserDetailsImpl;
 import com.backendteam5.finalproject.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -14,13 +16,20 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
+@Slf4j
 public class AdminController {
     private final AdminService adminService;
 
     // 로그인후 페이지에서 자동
-    @GetMapping("/main")
-    public AdminMainDto getMainReport(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @GetMapping("/main/user")
+    public AdminCountDto getMainReport(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return adminService.getMainReport(userDetails);
+    }
+
+    // 로그인후 페이지에서 자동
+    @GetMapping("/main/route")
+    public List<RouteCountDto> getRouteCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return adminService.getRouteCount(userDetails);
     }
 
     // route 눌럿을때 새창에서 자동
@@ -68,7 +77,7 @@ public class AdminController {
     @PatchMapping("/update/courier/{courierId}")
     public CourierResUpdateDto updateCourier(@PathVariable Long courierId,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                             @RequestBody @Validated CourierReqUpdateDto courierReqUpdateDto) {
+                                             @RequestBody CourierReqUpdateDto courierReqUpdateDto) {
         return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
 

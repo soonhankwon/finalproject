@@ -1,49 +1,87 @@
 $(document).ready(function () {
-    searchAll();
+    getRouteCount()
+    getUser();
 });
 
+// var BaseUrl = "http://localhost:8080/";
 var BaseUrl = "http://tacbaetics.shop/";
 var default_person = "GUROADMIN";
 
-function searchAll() {
+function getUser(){
     $.ajax({
         type: 'GET',
-        url: '/api/admin/main',
-        success: function (response) {
-            let userTable = $("#user-table-body");
+        url: '/api/admin/main/user',
+        success: function (response){
             let courierTable = $("#courier-table-body");
+            courierTable.empty();
+            courierTable.append("<tr><td colspan='12'>검색된 정보가 없습니다.</td></tr>")
 
+            let userTable = $("#user-table-body");
             let userList = response['userlist'];
             let tempCount = response['tempAssignment'];
             let directCount = response['directAssignment'];
 
-            let routeCount = response['routeCount'];
-
-
             userTable.empty();
-            courierTable.empty();
-
             usertable(userList, tempCount, directCount, userTable);
-            routecount(routeCount)
+        }
+    })
+}
 
-            courierTable.append("<tr><td colspan='12'>검색된 정보가 없습니다.</td></tr>")
+function getRouteCount(){
+    $.ajax({
+        type: 'GET',
+        url: '/api/admin/main/route',
+        success: function (response){
+            let courierTable = $("#courier-table-body");
+            routecount(response)
         }
     })
 }
 
 // userTable 만들기
 function usertable(userList, tempCount, directCount, userTable) {
-    for (let i = 0; i < userList.length; i++) {
-        let j = i * 3;
-        let shipping = Number(tempCount[i]) + Number(directCount[i * 3 + 1]['count'])
+    let userinfo = [];
+
+    userList.forEach((user) => {
+        userinfo.push(tempCount.filter((item) => {
+            return item.username === user
+        }))
+        userinfo.push(directCount.filter((item) => {
+            return item.username === user
+        }))
+    })
+
+    for (let i = 0; i < userinfo.length / 2; i++) {
+        let idx = i * 2;
+        let shipping = userinfo[idx].length !== 0 ? userinfo[idx][0]['count'] : 0;
+        let array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송중"
+        });
+
+        shipping += zeroFilter(array)
+
+        array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송지연"
+        })
+        let delay = zeroFilter(array)
+
+        array = userinfo[idx + 1].filter((item) => {
+            return item.state === "배송완료"
+        })
+        let completion = zeroFilter(array)
+
         let html = "<tr>" +
             "<td><input type='checkbox' name='User-select'></td>" +
-            "<td>" + userList[i]['username'] + "</td>" +
-            "<td>" + shipping + "</td>" +
-            "<td>" + directCount[i * 3]['count'] + "</td>" +
-            "<td>" + directCount[i * 3 + 2]['count'] + "</td></tr>"
+            "<td>" + userList[i] + "</td>" +
+            "<td>" + shipping + "</td>"+
+            "<td>" + delay + "</td>"+
+            "<td>" + completion + "</td></tr>"
         userTable.append(html);
     }
+}
+
+function zeroFilter(array){
+    return array.length !== 0 ? array[0]['count'] : 0;
 }
 
 // Route Div 채우기

@@ -11,22 +11,23 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor
 @Entity
+@Table(indexes = {@Index(name = "area_role", columnList = "area, role")})
 public class Account {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String username;
 
     @Column(nullable = false)
     @JsonIgnore
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String area;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 

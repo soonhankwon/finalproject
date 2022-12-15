@@ -49,6 +49,7 @@ function execSearch() {
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].registerDate+'</td>';
+                html += '<td>'+courierList[key].deliveredDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
                 html += '<td>'+courierList[key].courierUsername+'</td>';
                 if (courierList[key].state === "배송중") {
@@ -97,6 +98,7 @@ function beforeComplete(){
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].registerDate+'</td>';
+                html += '<td>'+courierList[key].deliveredDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
                 html += '<td>'+courierList[key].courierUsername+'</td>';
                 if (courierList[key].state === "배송완료") {
@@ -142,6 +144,7 @@ function complete(){
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].registerDate+'</td>';
+                html += '<td>'+courierList[key].deliveredDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
                 html += '<td>'+courierList[key].courierUsername+'</td>';
                 if (courierList[key].state === "배송완료") {
@@ -187,6 +190,7 @@ function doing(){
                 html += '<td>'+courierList[key].customer+'</td>';
                 html += '<td>'+courierList[key].arrivalDate+'</td>';
                 html += '<td>'+courierList[key].registerDate+'</td>';
+                html += '<td>'+courierList[key].deliveredDate+'</td>';
                 html += '<td>'+courierList[key].username+'</td>';
                 html += '<td>'+courierList[key].courierUsername+'</td>';
                 if (courierList[key].state === "배송중") {

@@ -25,7 +25,7 @@ public class AdminService {
     public AdminCountDto getMainReport(UserDetailsImpl userDetails){
         String area = checkAdmin(userDetails);
 
-        List<String> userList = accountRepository.findByAreaAndRole(area, UserRoleEnum.USER);
+        List<UserDto> userList = accountRepository.findByAreaAndRole(area, UserRoleEnum.USER);
 
         List<CountUserDto> tempDto = deliveryAssignmentRepository.findByTempCount(area, defaultPerson);
 
@@ -40,7 +40,7 @@ public class AdminService {
     }
 
     public List<DeliveryAssignmentDto> selectRoute(UserDetailsImpl userDetails, String route){
-        return deliveryAssignmentRepository.selectDelivery(userDetails.getArea(), route);
+        return deliveryAssignmentRepository.selectDelivery(userDetails.getArea(), route, defaultPerson);
     }
 
     public String updateDelivery(UserDetailsImpl userDetails, UpdateDeliveryDto updateDeliveryDto){
@@ -130,5 +130,60 @@ public class AdminService {
         Calendar cal = SearchReqDto.getNow();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(cal.getTime());
+    }
+
+    public List<String> autoDelivery(AutoDto autoReqDto) {
+        List<Integer> capacity = autoReqDto.getCapacity();
+        List<String> userList = autoReqDto.getUserList();
+        List<Long> count = autoReqDto.getSubRouteCount();
+        List<Double> difficulty = autoReqDto.getDifficulty();
+
+        ArrayList<Integer> correctionValue = new ArrayList<>();
+        for (int i = 0; i < count.size(); i++) {correctionValue.add((int) (difficulty.get(i) * count.get(i)));}
+
+        ArrayList<Integer> realCap = new ArrayList<>(capacity);
+
+        for (int i = 0; i < count.size();i++) {
+            if (count.get(i) == 0){
+                count.set(i, -1L);
+                continue;
+            }
+
+            capacity = new ArrayList<>(realCap);
+
+            int tempCapacity = correctionValue.get(i);
+            int nearestCapacity = 10000;
+            boolean fin = false;
+
+            for (int j = 0; j < capacity.size(); j++) {
+                int number = capacity.get(j);
+                if (number > tempCapacity) {
+                    int div = number-tempCapacity;
+                    if (nearestCapacity > div) {
+                        nearestCapacity = div;
+                        count.set(i, (long) j);
+                        capacity.set(j, nearestCapacity);
+
+                        fin = true;
+                    }
+                }
+            }
+
+            if (!fin) {
+                count.set(i, -1L);
+                continue;
+            }
+
+            realCap.set(Math.toIntExact(count.get(i)), capacity.get(Math.toIntExact(count.get(i))));
+        }
+
+        LinkedList<String> result = new LinkedList<>();
+
+        for (Long aLong : count) {
+            int idx = Math.toIntExact(aLong);
+            if (idx == -1)  result.add("");
+            else    result.add(userList.get(idx));
+        }
+        return result;
     }
 }

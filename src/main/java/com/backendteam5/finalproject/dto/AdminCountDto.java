@@ -8,11 +8,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class AdminCountDto {
-    private List<String> userlist;
+    private List<UserDto> userlist;
     private List<CountUserDto> tempAssignment;
     private List<CountUserDto> directAssignment;
 
-    public AdminCountDto(List<String> userlist,
+    public AdminCountDto(List<UserDto> userlist,
                         List<CountUserDto> temp,
                         List<CountUserDto> direct){
         this.userlist = userlist;

@@ -26,11 +26,14 @@ public class AreaIndex {
     @Column(name = "zip_code", length = 30)
     private String zipCode;
 
+    @Column(name = "difficulty")
+    private float difficulty;
 
-    public AreaIndex(String area, String route, int subRoute, String zipCode) {
+    public AreaIndex(String area, String route, int subRoute, String zipCode, float difficulty) {
         this.area = area;
         this.route = route;
         this.subRoute = subRoute;
         this.zipCode = zipCode;
+        this.difficulty = difficulty;
     }
 }

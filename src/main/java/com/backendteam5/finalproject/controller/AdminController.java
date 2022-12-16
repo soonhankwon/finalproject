@@ -81,6 +81,11 @@ public class AdminController {
         return adminService.updateCourier(courierId, userDetails, courierReqUpdateDto);
     }
 
+    @PostMapping("/update/delivery/auto")
+    public List<String> autoDelivery(@RequestBody AutoDto autoReqDto){
+        return adminService.autoDelivery(autoReqDto);
+    }
+
     @Scheduled(cron = "0 1 0 * * ?")
     public void updateArrivalDateAndDeliveryPerson(){
         adminService.updateArrivalDateAndDeliveryPerson();

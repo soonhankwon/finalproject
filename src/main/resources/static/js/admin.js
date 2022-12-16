@@ -3,8 +3,8 @@ $(document).ready(function () {
     getUser();
 });
 
-// var BaseUrl = "http://localhost:8080/";
-var BaseUrl = "http://tacbaetics.shop/";
+var BaseUrl = "http://localhost:8080/";
+// var BaseUrl = "http://tacbaetics.shop/";
 var default_person = "GUROADMIN";
 
 function getUser(){
@@ -44,10 +44,10 @@ function usertable(userList, tempCount, directCount, userTable) {
 
     userList.forEach((user) => {
         userinfo.push(tempCount.filter((item) => {
-            return item.username === user
+            return item.username === user.username
         }))
         userinfo.push(directCount.filter((item) => {
-            return item.username === user
+            return item.username === user.username
         }))
     })
 
@@ -80,12 +80,15 @@ function usertable(userList, tempCount, directCount, userTable) {
 
         let html = "<tr>" +
             "<td><input type='checkbox' name='User-select'></td>" +
-            "<td>" + userList[i] + "</td>" +
-            "<td>" + shipping + "</td>"+
-            "<td>" + delay + "</td>"+
-            "<td>" + completion + "</td></tr>"
+            `<td align='middle'><input class='courier-input' id='username-${i}' name='username-${i}' type='text' value="${userList[i]['username']}" readonly/>` + "</td>" +
+            `<td align='middle'><input class='courier-input' id='shipping-${i}' name='shipping-${i}' type='text' value="${shipping}" readonly/>` + "</td>" +
+            `<td align='middle'><input class='courier-input' id='delay-${i}' name='delay-${i}' type='text' value="${delay}" readonly/>` + "</td>" +
+            `<td align='middle'><input class='courier-input' id='completion-${i}' name='completion-${i}' type='text' value="${completion}" readonly/>` + "</td>" +
+            `<td align='middle'><input class='courier-input' id='capacity-${i}' name='capacity-${i}' type='text' value="${userList[i]['capacity']}" readonly/>` + "</td></tr>"
         userTable.append(html);
     }
+
+    $('#user_length').attr('value', userList.length);
 }
 
 function zeroFilter(array){

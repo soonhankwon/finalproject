@@ -10,13 +10,16 @@ public class DeliveryAssignmentDto {
     private Long id;
     private int subRoute;
     private String zipCode;
-    private String username;
+    private float difficulty;
+    private Long count;
 
     @QueryProjection
-    public DeliveryAssignmentDto(Long id, int subRoute, String zipCode, String username){
+    public DeliveryAssignmentDto(Long id, int subRoute, String zipCode,
+                                 float difficulty, Long count){
         this.id = id;
         this.subRoute = subRoute;
         this.zipCode = zipCode;
-        this.username = username;
+        this.difficulty = difficulty;
+        this.count = count;
     }
 }

@@ -31,6 +31,9 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @Column(nullable = false)
+    private short capacity;
+
     public Account(String username, String password, String area, UserRoleEnum role){
         this.username = username;
         this.password = password;

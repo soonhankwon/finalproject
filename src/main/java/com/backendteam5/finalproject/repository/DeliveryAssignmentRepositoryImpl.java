@@ -48,13 +48,17 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
     // Area는 Context의 account에 등록된 Area를 조회하여 넣을거임
     @Transactional(readOnly = true)
     @Override
-    public List<DeliveryAssignmentDto> selectDelivery(String area, String route) {
+    public List<DeliveryAssignmentDto> selectDelivery(String area, String route, String def) {
         return queryFactory
                 .select(getDeliveryDto())
                 .from(deliveryAssignment)
                 .innerJoin(deliveryAssignment.areaIndex, areaIndex)
                 .on(areaIndex.area.eq(area), areaIndex.route.eq(route))
-                .innerJoin(deliveryAssignment.account, account)
+                .innerJoin(courier)
+                .on(courier.deliveryAssignment.eq(deliveryAssignment),
+                        courier.deliveredDate.eq(def_date),
+                        courier.deliveryPerson.eq(def))
+                .groupBy(areaIndex.subRoute)
                 .orderBy(areaIndex.subRoute.asc())
                 .fetch();
     }
@@ -101,7 +105,8 @@ public class DeliveryAssignmentRepositoryImpl implements CustomDeliveryAssignmen
                 areaIndex.id,
                 areaIndex.subRoute,
                 areaIndex.zipCode,
-                account.username);
+                areaIndex.difficulty,
+                areaIndex.subRoute.count().as("count"));
     }
 
     public ConstructorExpression<CountUserDto> getCountDirectDto(){

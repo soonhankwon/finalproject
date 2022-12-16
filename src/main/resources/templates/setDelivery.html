@@ -12,13 +12,16 @@
     <table id="delivery-table">
         <thead class="delivery-table-header">
         <tr>
-            <th colspan="4"><input id="route" type="text" value="" style="text-align: center" readonly>
-            <button style="float: right; margin: 0; padding: 0; display: flex" onclick="setDone()">변경사항 저장</button></th>
+            <th colspan="6"><input id="route" type="text" value="" style="text-align: center" readonly>
+            <button style="float: right; margin: 0; padding: 0; display: flex" onclick="setDone()">변경사항 저장</button>
+            <button style="float: right; margin: 0; padding: 0; display: flex" onclick="autoSet()">자동 배정</button></th>
         </tr>
         <tr>
             <th>지역번호</th>
             <th>세부지역</th>
             <th>우편번호</th>
+            <th>지역난이도</th>
+            <th>남은 수량</th>
             <th>지역배송담당자</th>
         </tr>
         </thead>

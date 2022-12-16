@@ -141,7 +141,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .from(courier)
                 .innerJoin(areaIndex)
                 .on(areaIndex.id.eq(courier.deliveryAssignment.id),areaIndex.area.eq(area))
-                .where(courier.deliveredDate.in(getNowDate(),def_date))
+                .where(courier.deliveredDate.in(getNowDate(),def_date),
+                        courier.arrivalDate.goe(getNowDate()))
                 .groupBy(areaIndex.route, courier.deliveredDate)
                 .orderBy(areaIndex.route.asc(), courier.deliveredDate.desc())
                 .fetch();

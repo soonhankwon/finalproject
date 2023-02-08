@@ -25,12 +25,4 @@ public class AreaIndex {
 
     @Column(name = "zip_code", length = 30)
     private String zipCode;
-
-
-    public AreaIndex(String area, String route, int subRoute, String zipCode) {
-        this.area = area;
-        this.route = route;
-        this.subRoute = subRoute;
-        this.zipCode = zipCode;
-    }
 }

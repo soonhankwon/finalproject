@@ -23,8 +23,4 @@ public class DeliveryAssignment {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    public DeliveryAssignment(Account account, AreaIndex areaIndex) {
-        this.areaIndex = areaIndex;
-        this.account = account;
-    }
 }

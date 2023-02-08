@@ -4,11 +4,10 @@ import com.backendteam5.finalproject.dto.SignupRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(indexes = {@Index(name = "area_role", columnList = "area, role")})

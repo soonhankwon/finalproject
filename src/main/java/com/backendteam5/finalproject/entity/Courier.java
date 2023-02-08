@@ -59,4 +59,9 @@ public class Courier {
         this.state = state;
         this.deliveryPerson = deliveryPerson;
     }
+
+    public void updateArrivalDateAndDeliveredDate(String arrivalDate, String deliveredDate) {
+        this.arrivalDate = arrivalDate;
+        this.deliveredDate = deliveredDate;
+    }
 }

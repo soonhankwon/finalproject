@@ -2,6 +2,7 @@ package com.backendteam5.finalproject.repository;
 
 import com.backendteam5.finalproject.dto.*;
 import com.backendteam5.finalproject.entity.Account;
+import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.repository.custom.CustomCourierRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstructorExpression;
@@ -34,7 +35,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     private final String def_date="배송전";
 
     @Override
-    public List<CourierDto> searchBeforeComplete(String username, String state) {
+    public List<CourierDto> searchBeforeComplete(String username, Courier.State state) {
         List<Long> ids = queryFactory
                 .select(courier.id)
                 .from(courier)
@@ -50,7 +51,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     @Override
-    public Long countTest(String username, String state ) {
+    public Long countPreviousDeliveries(String username, Courier.State state ) {
 
         List<Long> ids = queryFactory
                 .select(courier.id)
@@ -67,9 +68,8 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     }
 
     // 배송 상태별 조회
-    @Override
     @Transactional(readOnly = true)
-    public List<CourierDto> searchByUsernameAndState(Account account, String state, String username, String curDate) {
+    public List<CourierDto> searchByUsernameAndState(Account account, Courier.State state, String username, String curDate) {
 
         List<Long> ids = queryFactory
                 .select(courier.id)
@@ -147,7 +147,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .fetch();
     }
 
-    // 상세 조회 기능 Optinal을 true면 직접할당 아니면 임시할당 (수정함)
+    // 상세 조회 기능 Optional을 true면 직접할당 아니면 임시할당 (수정함)
     @Transactional(readOnly = true)
     @Override
     public List<AdminCourierDto> searchByDetail(String username,String area, SearchReqDto searchReqDto){
@@ -166,7 +166,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
                         deliveryPersonEq(searchReqDto),
-                        stateEq(searchReqDto),
                         dateLoe(searchReqDto))
                 .fetch();
     }
@@ -184,7 +183,6 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .where(routeEq(searchReqDto),
                         subRouteIn(searchReqDto),
                         courier.deliveryPerson.eq(username),
-                        stateEq(searchReqDto),
                         tempPersonEq(searchReqDto),
                         dateLoe(searchReqDto))
                 .fetch();
@@ -212,7 +210,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 .update(courier)
                 .set(courier.arrivalDate, getNowDate())
                 .set(courier.deliveryPerson, "GUROADMIN")
-                .where(courier.state.ne("배송완료"),
+                .where(courier.state.ne(Courier.State.DELIVERED),
                         courier.arrivalDate.lt(getNowDate()))
                 .execute();
 
@@ -225,7 +223,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
     public String setUpdateStateDelay(List<Long> couriers) {
         queryFactory
                 .update(courier)
-                .set(courier.state, "배송지연")
+                .set(courier.state, Courier.State.DELAYED)
                 .where(courier.id.in(couriers))
                 .execute();
 
@@ -262,9 +260,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
                 areaIndex.route,
                 areaIndex.subRoute,
                 account.username,
-                courier.address,
-                courier.xPos,
-                courier.yPos);
+                courier.address);
     }
 
     public ConstructorExpression<RouteCountDto> getRouteCountDto(){
@@ -308,11 +304,7 @@ public class CourierRepositoryImpl implements CustomCourierRepository {
         return courier.deliveryAssignment.account.eq(account);
     }
 
-    private BooleanExpression stateEq(String state) {return courier.state.eq(state);}
-
-    private BooleanExpression stateEq(SearchReqDto searchReqDto) {
-        return hasText(searchReqDto.getState()) ? courier.state.eq(searchReqDto.getState()) : null;
-    }
+    private BooleanExpression stateEq(Courier.State state) {return courier.state.eq(state);}
 
     private BooleanExpression arrivalDateEq(String arrivalDate) {
         return courier.arrivalDate.eq(arrivalDate);

@@ -1,6 +1,7 @@
 package com.backendteam5.finalproject.dto;
 
 
+import com.backendteam5.finalproject.entity.Courier;
 import com.backendteam5.finalproject.entity.DeliveryAssignment;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class CourierDto {
     private String area;
     private String route;
     private int subRoute;
-    private String state;
+    private Courier.State state;
     private String customer;
     private String arrivalDate;
     private String registerDate;
@@ -27,7 +28,7 @@ public class CourierDto {
     private String deliveredDate;
 
     @QueryProjection
-    public CourierDto(Long id, String address, String state, String customer, String arrivalDate,String registerDate, String username, String deliveredDate, DeliveryAssignment deliveryAssignment) {
+    public CourierDto(Long id, String address, Courier.State state, String customer, String arrivalDate, String registerDate, String username, String deliveredDate, DeliveryAssignment deliveryAssignment) {
         this.address = address;
         this.deliveredDate = deliveredDate;
         this.id = id;

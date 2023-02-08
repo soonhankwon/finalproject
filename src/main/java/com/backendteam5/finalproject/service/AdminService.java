@@ -107,10 +107,9 @@ public class AdminService {
 
         courier.update(courierReqUpdateDto);
 
-        if(Objects.equals(courierReqUpdateDto.getState(), "배송완료")){
+        if(Objects.equals(courierReqUpdateDto.getState(), Courier.State.DELIVERED)){
             String nowDate = courierRepository.getNowDate();
-            courier.setArrivalDate(nowDate);
-            courier.setDeliveredDate(nowDate);
+            courier.updateArrivalDateAndDeliveredDate(nowDate, nowDate);
         }
         
         courierRepository.save(courier);
@@ -124,11 +123,5 @@ public class AdminService {
 
     public void updateArrivalDateAndDeliveryPerson(){
         courierRepository.setReady();
-    }
-
-    public String getNowDate(){
-        Calendar cal = SearchReqDto.getNow();
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(cal.getTime());
     }
 }

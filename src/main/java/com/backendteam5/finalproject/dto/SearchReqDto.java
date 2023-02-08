@@ -1,5 +1,6 @@
 package com.backendteam5.finalproject.dto;
 
+import com.backendteam5.finalproject.entity.Courier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,7 @@ public class SearchReqDto {
     private String username;
     private String route;
     private List<Integer> subRoute;
-    private String state;
+    private Courier.State state;
     private int currentDay;
 
     private Boolean option;

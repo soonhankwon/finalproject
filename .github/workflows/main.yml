@@ -1,69 +1,101 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-name: Java CI with Gradle
-
+name: Spring Boot & Gradle & Docker & EC2 CD
 
 on:
   push:
-    branches: [ soonhan ]
+    branches:
+      - master
+#   pull_request:
+#     branches:
+#       - master
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        
-    - uses: actions/checkout@v3
-    - run: touch ./src/main/resources/application-information.properties
-    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application-information.properties
-    - run: cat ./src/main/resources/application-information.properties
-    - uses: actions/upload-artifact@v3
-      with:
-        name: application-information.properties
-        path: ./src/main/resources/application-information.properties
+      # 기본 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      # JDK version 설정
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          
+      # Gradle Caching
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-   
+            
+      # main 설정 파일 생성 및 write
+      - name: Set .properties for main
+        run: |
+          # main 설정 파일 디렉토리로 이동
+          cd ./src/main/resources
+          touch ./application.properties
+          echo "${{ secrets.APPLICATION }}" >> ./application.properties
+        shell: bash
 
-    - name: Docker build
-      run: |
-        docker login -u ${{ secrets.USERNAME }} -p ${{ secrets.PASSWORD }}
-        docker build -t final-project .
-        docker tag final-project ${{ secrets.USERNAME }}/final-project:${GITHUB_SHA::7}
-        docker push ${{ secrets.USERNAME }}/final-project:${GITHUB_SHA::7}
+      # Gradle build
+      - name: Build with Gradle
+        run: ./gradlew bootJar
       
-    - name: Deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ec2-user
-        key: ${{ secrets.PRIVATE_KEY }}
-        envs: GITHUB_SHA
-        script: |
-              export BUILD_NUMBER=${GITHUB_SHA::7}
-              export IMAGE_STORAGE=leejasun
-              export IMAGE_NAME=final-project
-              ./deploy.sh
+      - name: EC2 Docker Cleanup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            # 구동중인 모든 컨테이너 스탑 & 삭제
+            sudo docker stop $(sudo docker ps -q --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/tacbaetics")
+            sudo docker rm $(sudo docker ps -aq --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/tacbaetics")
 
-          
-          
+            # 도커 이미지 삭제
+            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/tacbaetics
+
+            # 안쓰는 이미지 삭제
+            sudo docker image prune -a -f
+      
+      # Spring 어플리케이션 Docker Image 빌드
+      - name: Build Docker Image For Spring
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/tacbaetics .
+          docker push ${{ secrets.DOCKER_USERNAME }}/tacbaetics
+
+      # 서버에서 Docker 이미지 실행
+      - name: EC2 Docker Run
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/tacbaetics
+            sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/tacbaetics
+            sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+#   Slack-Notification:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Slack Notification
+#         uses: rtCamp/action-slack-notify@v2.0.0
+#         env:
+#           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+#         with:
+#           status: ${{ job.status }}
+#           fields: repo,commit,message,author
+#           mention: here
+#           if_mention: failure,cancelled
